@@ -20,17 +20,17 @@ meter     hub      constellation
 
 ```mermaid
 graph TB
-    subgraph HIVE_LAYER ["☁  HIVE Constellation — Global SaaS"]
+    subgraph HIVE_LAYER ["HIVE Constellation — Global SaaS"]
         direction LR
-        MAP["🗺  Map View\nDeck.gl WebGL"]
-        LB["🏆  Leaderboard\nReal-time ranks"]
-        BM["📊  Benchmarks\nSector · Country · Model"]
-        PP["👤  Public Profiles\nTokenPrint · Badges"]
-        AI["🤖  Agent Index\nAutonomous agent registry"]
-        INS["💡  Intelligence\nBenchmark data API"]
+        MAP["Map View\nDeck.gl WebGL"]
+        LB["Leaderboard\nReal-time ranks"]
+        BM["Benchmarks\nSector · Country · Model"]
+        PP["Public Profiles\nTokenPrint · Badges"]
+        AI["Agent Index\nAutonomous agent registry"]
+        INS["Intelligence\nBenchmark data API"]
     end
 
-    subgraph NODE_A ["🏢  NODE — Org A Hub (On-prem · Dubai HQ)"]
+    subgraph NODE_A ["NODE — Org A Hub (On-prem · Dubai HQ)"]
         direction TB
         NA_EX["Express API\nHTTP + WebSocket"]
         NA_PG[("PostgreSQL\n+ TimescaleDB")]
@@ -43,7 +43,7 @@ graph TB
         NA_SYNC <--> NA_EX
     end
 
-    subgraph NODE_B ["🏢  NODE — Org B Hub (On-prem · Abu Dhabi)"]
+    subgraph NODE_B ["NODE — Org B Hub (On-prem · Abu Dhabi)"]
         direction TB
         NB_EX["Express API"]
         NB_PG[("PostgreSQL\n+ TimescaleDB")]
@@ -53,7 +53,7 @@ graph TB
         NB_SYNC <--> NB_EX
     end
 
-    subgraph SCOUTS ["🔍  Scout Agents — Interception Layer"]
+    subgraph SCOUTS ["Scout Agents — Interception Layer"]
         direction LR
         S1["Network Proxy\nRouter / firewall level\nOrg-wide coverage"]
         S2["Desktop Agent\nmacOS menubar\nOS network hooks"]
@@ -62,13 +62,13 @@ graph TB
         S5["Mobile Agent\niOS / Android\n(Phase 4+)"]
     end
 
-    subgraph VAULT_LAYER ["🔐  Vault — Zero-Knowledge Key Storage"]
+    subgraph VAULT_LAYER ["Vault — Zero-Knowledge Key Storage"]
         direction LR
         VS["libsodium-wrappers\nClient-side ONLY\nKey never transmitted"]
         VE["Encrypted blob\nAt rest only\nUseless without Scout key"]
     end
 
-    subgraph CONN_ECO ["🔌  Connector Ecosystem — @hive/connector npm spec"]
+    subgraph CONN_ECO ["Connector Ecosystem — @hive/connector npm spec"]
         direction LR
         OAI["OpenAI"]
         ANT["Anthropic"]

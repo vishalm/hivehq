@@ -17,12 +17,12 @@ The free tier exists to build the data asset, the social graph, and the brand gr
 
 ```mermaid
 flowchart LR
-    A(["👤 Users join free\nPersonal + Org tier"])
-    B(["📊 Score becomes real\nIdentity has value"])
-    C(["🔗 Platforms integrate\nLogin with HIVE"])
-    D(["📈 More telemetry\nRicher benchmark data"])
-    E(["🏆 Benchmarks become\nauthoritative signal"])
-    F(["💼 Employers verify\nscores in hiring"])
+    A(["Users join free\nPersonal + Org tier"])
+    B(["Score becomes real\nIdentity has value"])
+    C(["Platforms integrate\nLogin with HIVE"])
+    D(["More telemetry\nRicher benchmark data"])
+    E(["Benchmarks become\nauthoritative signal"])
+    F(["Employers verify\nscores in hiring"])
 
     A --> B --> C --> D --> E --> F --> A
 
@@ -44,7 +44,7 @@ Everything here is free, forever, with no time limit:
 
 ```mermaid
 graph TD
-    FREE["🆓 HIVE Free Tier — Forever"]
+    FREE["HIVE Free Tier — Forever"]
 
     subgraph PERSONAL_FREE ["Personal Tier"]
         PF1["Scout agent install\nmacOS · Windows · Linux · Browser"]

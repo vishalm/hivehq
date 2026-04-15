@@ -107,7 +107,7 @@ This is the LinkedIn flywheel. Except LinkedIn's data is self-reported. **HIVE's
 
 ```mermaid
 graph TB
-    subgraph HIVE ["☁  HIVE — constellation (Global SaaS)"]
+    subgraph HIVE ["HIVE — constellation (Global SaaS)"]
         direction LR
         MAP[Map View]
         LB[Leaderboard]
@@ -116,7 +116,7 @@ graph TB
         AI[Agent Index]
     end
 
-    subgraph NODE_A ["🏢  NODE A — Dubai HQ (On-prem)"]
+    subgraph NODE_A ["NODE A — Dubai HQ (On-prem)"]
         direction TB
         NA_PG[(PostgreSQL\n+ TimescaleDB)]
         NA_RD[(Redis Queue)]
@@ -124,7 +124,7 @@ graph TB
         NA_VT[Vault Key Manager]
     end
 
-    subgraph NODE_B ["🏢  NODE B — Abu Dhabi (On-prem)"]
+    subgraph NODE_B ["NODE B — Abu Dhabi (On-prem)"]
         direction TB
         NB_PG[(PostgreSQL\n+ TimescaleDB)]
         NB_RD[(Redis Queue)]
@@ -132,7 +132,7 @@ graph TB
         NB_VT[Vault Key Manager]
     end
 
-    subgraph SCOUTS ["🔍  Scout Agents"]
+    subgraph SCOUTS ["Scout Agents"]
         direction LR
         S1[Network Proxy\nRouter-level]
         S2[Desktop Agent\nmacOS menubar]
@@ -141,7 +141,7 @@ graph TB
         S5[Mobile Agent\niOS / Android]
     end
 
-    subgraph CONNECTORS ["🔌  Connector Ecosystem"]
+    subgraph CONNECTORS ["Connector Ecosystem"]
         direction LR
         C1[OpenAI]
         C2[Anthropic]
@@ -342,7 +342,7 @@ Open source the spec. Community builds connectors. You get ecosystem without hir
 
 ```mermaid
 graph TB
-    ROOT["🔑 HIVE Account\nOne cryptographic root"]
+    ROOT["HIVE Account\nOne cryptographic root"]
 
     subgraph PERSONAL ["Personal ID"]
         P1[Self-sovereign]
@@ -701,20 +701,20 @@ These must be resolved before Phase 2 begins. Each is a decision point that affe
 
 ```mermaid
 graph TD
-    subgraph BLOCK ["🚨 Blocking Violations — Fix Immediately"]
-        B1["✗ .env not in .gitignore\n$ echo '.env' >> .gitignore"]
-        B2["✗ No environment validation\nAdd Zod schema for env vars"]
-        B3["✗ No health check endpoint\nGET /health → 200 + uptime"]
-        B4["✗ No test framework\nVitest — config first, tests second"]
-        B5["✗ No CI/CD pipeline\nGitHub Actions — lint + test + build"]
-        B6["✗ Not in version control\ngit init && git remote add origin"]
-        B7["✗ No package.json\nnpm init + Turborepo setup"]
-        B8["✗ TypeScript strict mode off\ntsconfig.json strict: true"]
-        B9["✗ No linter\nESLint + @typescript-eslint"]
-        B10["✗ No README\nThis PLAN.md links to docs/"]
+    subgraph BLOCK ["Blocking Violations — Fix Immediately"]
+        B1[".env not in .gitignore\n$ echo '.env' >> .gitignore"]
+        B2["No environment validation\nAdd Zod schema for env vars"]
+        B3["No health check endpoint\nGET /health → 200 + uptime"]
+        B4["No test framework\nVitest — config first, tests second"]
+        B5["No CI/CD pipeline\nGitHub Actions — lint + test + build"]
+        B6["Not in version control\ngit init && git remote add origin"]
+        B7["No package.json\nnpm init + Turborepo setup"]
+        B8["TypeScript strict mode off\ntsconfig.json strict: true"]
+        B9["No linter\nESLint + @typescript-eslint"]
+        B10["No README\nThis PLAN.md links to docs/"]
     end
 
-    subgraph WARN ["⚠️  Warnings — Fix in Phase 1"]
+    subgraph WARN ["Warnings — Fix in Phase 1"]
         W1["Dependency lockfile\npackage-lock.json committed"]
         W2["Input validation\nZod on all API boundaries"]
         W3["ORM for DB access\nDrizzle ORM — type-safe, lightweight"]

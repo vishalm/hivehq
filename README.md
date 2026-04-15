@@ -43,19 +43,19 @@ There is no single pane of glass.
 <tr>
 <td align="center" width="33%">
 
-### 😰 The CFO Problem
+###  The CFO Problem
 AI spend scattered across every team's expense reports. Nobody can answer "how much do we spend on AI?"
 
 </td>
 <td align="center" width="33%">
 
-### 📋 The Compliance Problem
+###  The Compliance Problem
 DIFC, ADGM, EU AI Act, UAE AI regulations — all incoming. You need an audit trail. You don't have one.
 
 </td>
 <td align="center" width="33%">
 
-### 👻 The Shadow AI Problem
+###  The Shadow AI Problem
 Personal ChatGPT. Expensed API keys. Rogue Mistral deployments. IT is flying blind.
 
 </td>
@@ -68,15 +68,15 @@ Personal ChatGPT. Expensed API keys. Rogue Mistral deployments. IT is flying bli
 
 ```mermaid
 graph TB
-    subgraph HIVE ["☁  HIVE Constellation — Global SaaS"]
+    subgraph HIVE ["HIVE Constellation — Global SaaS"]
         direction LR
-        LB["🏆 Leaderboard"]
-        BM["📊 Benchmarks"]
-        PP["👤 Public Profiles"]
-        AI["🤖 Agent Index"]
+        LB["Leaderboard"]
+        BM["Benchmarks"]
+        PP["Public Profiles"]
+        AI["Agent Index"]
     end
 
-    subgraph NODE ["🏢 NODE — Your Org (On-Prem)"]
+    subgraph NODE ["NODE — Your Org (On-Prem)"]
         direction TB
         EX["Express API"]
         PG[("PostgreSQL\n+ TimescaleDB")]
@@ -85,7 +85,7 @@ graph TB
         EX --> PG & SH
     end
 
-    subgraph SCOUTS ["🔍 Scout Agents"]
+    subgraph SCOUTS ["Scout Agents"]
         direction LR
         S1["Network Proxy\nOrg-wide"]
         S2["Desktop App\nmacOS menubar"]
@@ -93,7 +93,7 @@ graph TB
         S4["SDK Wrapper\n@hive/connector"]
     end
 
-    subgraph VAULT ["🔐 Zero-Knowledge Vault"]
+    subgraph VAULT ["Zero-Knowledge Vault"]
         V1["libsodium · Client-side only\nKeys never leave your device"]
     end
 
@@ -220,7 +220,7 @@ graph LR
 
 ```mermaid
 graph TB
-    ROOT["🔑 HIVE Account\nOne cryptographic root"]
+    ROOT["HIVE Account\nOne cryptographic root"]
 
     subgraph PERSONAL ["Personal Identity"]
         P1["Self-sovereign · Private vault\nYour personal AI mirror"]
@@ -260,12 +260,12 @@ pie title TokenPrint Score Composition
 
 ```mermaid
 graph TD
-    FREE["🆓 FREE — Core Product Forever\nPersonal dashboard · Org on-prem\nTokenPrint score · Social feed"]
+    FREE["FREE — Core Product Forever\nPersonal dashboard · Org on-prem\nTokenPrint score · Social feed"]
 
-    FREE --> S1["💜 Identity Infrastructure\nLogin with HIVE · OAuth2\n$0.02 / MAU — like Auth0"]
-    FREE --> S2["💚 Verified Credentials\nTokenPrint API · employer verify\n$2 / lookup · bulk pricing"]
-    FREE --> S3["🟠 Benchmark Intelligence\nThe dataset nobody else has\n$5k–1M / yr — gov · VC · consultant"]
-    FREE --> S4["🔴 UAE Gov Partnership\nSovereign node · federal data\nOne deal = 3 years runway"]
+    FREE --> S1["Identity Infrastructure\nLogin with HIVE · OAuth2\n$0.02 / MAU — like Auth0"]
+    FREE --> S2["Verified Credentials\nTokenPrint API · employer verify\n$2 / lookup · bulk pricing"]
+    FREE --> S3["Benchmark Intelligence\nThe dataset nobody else has\n$5k–1M / yr — gov · VC · consultant"]
+    FREE --> S4["UAE Gov Partnership\nSovereign node · federal data\nOne deal = 3 years runway"]
 
     style FREE fill:#007AFF,color:#fff,stroke:none
     style S1 fill:#F0EEFF,stroke:#5856D6,color:#1D1D1F
@@ -278,11 +278,11 @@ graph TD
 
 ```mermaid
 flowchart LR
-    A(["👤 Users join free"]) --> B(["📊 Score has value"])
-    B --> C(["🔗 Platforms integrate"])
-    C --> D(["📈 Richer data"])
-    D --> E(["🏆 Authoritative benchmarks"])
-    E --> F(["💼 Employers verify"])
+    A(["Users join free"]) --> B(["Score has value"])
+    B --> C(["Platforms integrate"])
+    C --> D(["Richer data"])
+    D --> E(["Authoritative benchmarks"])
+    E --> F(["Employers verify"])
     F --> A
 
     style A fill:#007AFF,color:#fff,stroke:none
@@ -493,7 +493,7 @@ In Arabic: **خلية** (Khaliya) — it sounds powerful.
 
 **HIVE is pre-alpha. Phase 0 customer discovery is underway.**
 
-[📋 Read the Plan](./PLAN.md) · [🏗 Architecture](./docs/architecture.md) · [💼 Business Model](./docs/business-model.md)
+[ Read the Plan](./PLAN.md) · [ Architecture](./docs/architecture.md) · [ Business Model](./docs/business-model.md)
 
 <br/>
 

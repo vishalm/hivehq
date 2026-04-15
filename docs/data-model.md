@@ -319,7 +319,7 @@ The calibration table is open source. Researchers and auditors can verify it is 
 
 ```mermaid
 graph TD
-    NEVER["⛔  NEVER collected · architecturally impossible"]
+    NEVER["NEVER collected · architecturally impossible"]
 
     NEVER --> N1["Prompt text\nThe question you asked the AI"]
     NEVER --> N2["Completion text\nThe AI's response"]

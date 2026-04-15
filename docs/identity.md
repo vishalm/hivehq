@@ -21,7 +21,7 @@ Nobody has built this. The space is empty exactly here.
 
 ```mermaid
 graph TB
-    ROOT["🔑 HIVE Account\nOne cryptographic root\nPortable · Yours forever"]
+    ROOT["HIVE Account\nOne cryptographic root\nPortable · Yours forever"]
 
     subgraph PERSONAL ["Personal Identity"]
         P_DEF["Self-sovereign\nYou control everything"]
@@ -145,24 +145,24 @@ Badges are not self-assigned. They are earned automatically by the telemetry dat
 ```mermaid
 graph TD
     subgraph GENESIS ["Genesis Tier · Lifetime"]
-        B1["🔷 Genesis\nFirst 1,000 users ever\nNon-transferable"]
-        B2["⚗️ Early Adopter\nBefore 10k users"]
+        B1["Genesis\nFirst 1,000 users ever\nNon-transferable"]
+        B2["Early Adopter\nBefore 10k users"]
     end
 
     subgraph ACTIVITY ["Activity Signals"]
-        B3["⚡ Streak N days\nConsecutive active days\nUpdates dynamically"]
-        B4["🌍 Multi-model ×N\nDistinct models used\nUpdates as you grow"]
-        B5["🤖 Agent Builder\nOwns N+ enrolled agents"]
+        B3["Streak N days\nConsecutive active days\nUpdates dynamically"]
+        B4["Multi-model ×N\nDistinct models used\nUpdates as you grow"]
+        B5["Agent Builder\nOwns N+ enrolled agents"]
     end
 
     subgraph VERIFIED ["Verification Tier · Highest trust"]
-        B6["🏛️ Gov Verified\nSmart Dubai node attested\nFederal entity confirmed"]
-        B7["🏢 Org Verified\nCorporate node attested"]
+        B6["Gov Verified\nSmart Dubai node attested\nFederal entity confirmed"]
+        B7["Org Verified\nCorporate node attested"]
     end
 
     subgraph RANK ["Ranking Tier"]
-        B8["🇦🇪 UAE #N\nCountry rank · live"]
-        B9["👑 Top N%\nGlobal percentile · live"]
+        B8["UAE #N\nCountry rank · live"]
+        B9["Top N%\nGlobal percentile · live"]
         B10["#1 Sector\nTop in your industry"]
     end
 
@@ -183,15 +183,15 @@ These tags travel with the person everywhere HIVE Login is used. Every integrate
 ```mermaid
 graph TB
     subgraph HUMAN ["Human Citizens"]
-        IND["👤 Individual\nPersonal + professional\nTokenPrint score"]
-        ORG["🏢 Organisation\nNode-level identity\nDept breakdown"]
-        DEPT["👥 Department / Team\nSub-org unit\nProject-tagged telemetry"]
+        IND["Individual\nPersonal + professional\nTokenPrint score"]
+        ORG["Organisation\nNode-level identity\nDept breakdown"]
+        DEPT["Department / Team\nSub-org unit\nProject-tagged telemetry"]
     end
 
     subgraph AGENT ["Agent Citizens"]
-        AUT["🤖 Autonomous Agent\nFully automated\nNo human in loop"]
-        BOT["🔁 Bot Fleet\nMulti-agent orchestration\nOwner: individual or org"]
-        SYS["⚙️ System / Pipeline\nInfrastructure-level agent\nCI/CD · data processing"]
+        AUT["Autonomous Agent\nFully automated\nNo human in loop"]
+        BOT["Bot Fleet\nMulti-agent orchestration\nOwner: individual or org"]
+        SYS["System / Pipeline\nInfrastructure-level agent\nCI/CD · data processing"]
     end
 
     IND -->|"spawns · owns"| AUT
@@ -272,7 +272,7 @@ graph LR
     TEL -->|"crosses milestone"| E1["2B tokens processed\n→ auto post to feed"]
     TEL -->|"weekly report"| E2["Agent completes\n847th eval cycle\n→ auto post to feed"]
     TEL -->|"rank change"| E3["Moved to UAE #2\n→ notify + optional share"]
-    TEL -->|"new badge earned"| E4["🔷 Genesis badge\n→ auto post + share card"]
+    TEL -->|"new badge earned"| E4["Genesis badge\n→ auto post + share card"]
     TEL -->|"annual wrapped"| E5["AI Year in Review\nJan 1st · viral loop"]
 
     style TEL fill:#007AFF,color:#fff,stroke:none

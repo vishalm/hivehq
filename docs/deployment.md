@@ -244,7 +244,7 @@ graph TB
         subgraph HIVE_OPEN ["Hive Constellation — Public"]
             PROF_OPEN["Named public profile\n@smart-dubai-ai-office"]
             LB_OPEN["Public leaderboard\nUAE · Global · Sector ranks"]
-            BADGE_OPEN["Gov Verified badge\n🏛️ Smart Dubai attested"]
+            BADGE_OPEN["Gov Verified badge\n Smart Dubai attested"]
             FEED_OPEN["Social feed\nAuto-generated from telemetry"]
         end
 
@@ -269,9 +269,9 @@ graph TB
 graph LR
     subgraph LB ["HIVE UAE Gov Leaderboard — Live"]
         direction TB
-        R1["🥇 #1 Smart Dubai AI Office\n8.2B tokens · 94 models · 847 days"]
-        R2["🥈 #2 ADNOC AI Hub\n6.1B tokens · 72 models · 612 days"]
-        R3["🥉 #3 DEWA Digital\n4.8B tokens · 58 models · 501 days"]
+        R1["#1 Smart Dubai AI Office\n8.2B tokens · 94 models · 847 days"]
+        R2["#2 ADNOC AI Hub\n6.1B tokens · 72 models · 612 days"]
+        R3["#3 DEWA Digital\n4.8B tokens · 58 models · 501 days"]
         R4["#4 RTA Innovation Lab\n3.2B tokens · 44 models · 390 days"]
         R5["#5 MOHRE AI Unit\n2.1B tokens · 31 models · 280 days"]
     end
