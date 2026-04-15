@@ -75,6 +75,170 @@
     .btn--ghost{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}
     .btn--ghost:hover{background:var(--blue-tint)}
 
+    /* ── HATP Protocol ───────────────────────────── */
+    .protocol{
+      position:relative;overflow:hidden;
+      background:linear-gradient(135deg,#0a0824 0%,#0d1135 40%,#0a0f2e 70%,#060820 100%);
+      padding:120px 0;
+    }
+    /* animated mesh orbs */
+    .protocol__orb{
+      position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;
+      animation:orbFloat 8s ease-in-out infinite;
+    }
+    .protocol__orb--1{
+      width:600px;height:600px;top:-200px;left:-150px;
+      background:radial-gradient(circle,rgba(88,86,214,.22) 0%,transparent 70%);
+    }
+    .protocol__orb--2{
+      width:500px;height:500px;bottom:-180px;right:-100px;
+      background:radial-gradient(circle,rgba(0,122,255,.18) 0%,transparent 70%);
+      animation-delay:-4s;
+    }
+    .protocol__orb--3{
+      width:300px;height:300px;top:50%;left:50%;transform:translate(-50%,-50%);
+      background:radial-gradient(circle,rgba(52,199,89,.08) 0%,transparent 70%);
+      animation-delay:-2s;
+    }
+    @keyframes orbFloat{
+      0%,100%{transform:translate(0,0) scale(1)}
+      33%{transform:translate(30px,-20px) scale(1.04)}
+      66%{transform:translate(-20px,30px) scale(.97)}
+    }
+    /* glass card base */
+    .glass{
+      background:rgba(255,255,255,.06);
+      -webkit-backdrop-filter:blur(24px) saturate(1.4);
+      backdrop-filter:blur(24px) saturate(1.4);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:var(--radius-lg);
+      box-shadow:0 8px 40px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.15);
+    }
+    .glass--strong{
+      background:rgba(255,255,255,.10);
+      border-color:rgba(255,255,255,.18);
+    }
+    /* protocol heading */
+    .protocol__kicker{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 14px;border-radius:100px;
+      background:rgba(88,86,214,.25);
+      border:1px solid rgba(88,86,214,.5);
+      font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+      color:rgba(165,163,255,.9);margin-bottom:20px;
+    }
+    .protocol__version{
+      display:inline-block;padding:2px 8px;border-radius:4px;
+      background:rgba(88,86,214,.35);color:rgba(165,163,255,1);
+      font-size:10px;font-weight:700;letter-spacing:.06em;
+      font-family:var(--font-mono);
+    }
+    .protocol__title{
+      font-size:clamp(38px,4.5vw,64px);font-weight:800;
+      letter-spacing:-.04em;line-height:1.05;
+      color:#fff;margin-bottom:16px;
+    }
+    .protocol__title span{
+      background:linear-gradient(90deg,#A5A3FF,#60B4FF);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .protocol__sub{font-size:18px;line-height:1.6;color:rgba(255,255,255,.55);max-width:560px}
+    /* stack */
+    .protocol__body{
+      display:grid;grid-template-columns:1fr 1.1fr;gap:40px;margin-top:64px;align-items:start;
+    }
+    .stack{display:flex;flex-direction:column;gap:10px}
+    .stack__layer{
+      padding:16px 20px;border-radius:var(--radius-md);
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.09);
+      cursor:default;transition:all .25s ease;
+      position:relative;overflow:hidden;
+    }
+    .stack__layer::before{
+      content:'';position:absolute;inset:0;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.03),transparent);
+      transform:translateX(-100%);transition:transform .5s ease;
+    }
+    .stack__layer:hover::before{transform:translateX(100%)}
+    .stack__layer:hover{
+      background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.18);
+      transform:translateX(4px);
+      box-shadow:0 4px 24px rgba(0,0,0,.25),-4px 0 0 var(--layer-accent,var(--indigo));
+    }
+    .stack__layer--l1{--layer-accent:#007AFF}
+    .stack__layer--l2{--layer-accent:#34C759}
+    .stack__layer--l3{--layer-accent:#FF9500}
+    .stack__layer--l4{--layer-accent:#5856D6}
+    .stack__layer--l5{--layer-accent:#FF3B30}
+    .stack__num{
+      font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+      color:var(--layer-accent);margin-bottom:4px;font-family:var(--font-mono);
+    }
+    .stack__name{font-size:15px;font-weight:600;color:rgba(255,255,255,.9);margin-bottom:3px}
+    .stack__desc{font-size:13px;color:rgba(255,255,255,.45);line-height:1.4}
+    /* code card */
+    .proto-code{
+      font-family:var(--font-mono);font-size:12.5px;line-height:1.7;
+      padding:28px;border-radius:var(--radius-lg);
+      background:rgba(0,0,0,.4);
+      border:1px solid rgba(255,255,255,.1);
+      color:rgba(255,255,255,.75);overflow:auto;max-height:520px;
+      box-shadow:0 20px 60px rgba(0,0,0,.5);
+    }
+    .proto-code .c-key{color:#A5A3FF}
+    .proto-code .c-str{color:#60B4FF}
+    .proto-code .c-cmt{color:rgba(255,255,255,.3);font-style:italic}
+    .proto-code .c-kw{color:#FF9A5C}
+    .proto-code .c-bool{color:#63DA83}
+    /* chrome bar */
+    .code-chrome{
+      display:flex;align-items:center;gap:6px;margin-bottom:16px;
+      padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.07);
+    }
+    .code-chrome__dot{width:10px;height:10px;border-radius:50%}
+    .code-chrome__label{
+      margin-left:8px;font-size:11px;font-weight:600;color:rgba(255,255,255,.4);
+      letter-spacing:.06em;text-transform:uppercase;
+    }
+    /* features row */
+    .proto-features{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px;
+    }
+    .proto-feat{
+      padding:20px;border-radius:var(--radius-md);
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      transition:all .2s;
+    }
+    .proto-feat:hover{background:rgba(255,255,255,.08);transform:translateY(-2px)}
+    .proto-feat__icon{
+      width:38px;height:38px;border-radius:10px;
+      display:flex;align-items:center;justify-content:center;
+      margin-bottom:12px;
+    }
+    .proto-feat__title{font-size:14px;font-weight:600;color:rgba(255,255,255,.9);margin-bottom:5px}
+    .proto-feat__desc{font-size:13px;color:rgba(255,255,255,.45);line-height:1.45}
+    /* open standard banner */
+    .proto-open{
+      margin-top:40px;padding:24px 32px;
+      display:flex;align-items:center;justify-content:space-between;gap:24px;
+      border-radius:var(--radius-lg);
+      background:linear-gradient(90deg,rgba(88,86,214,.2),rgba(0,122,255,.15));
+      border:1px solid rgba(88,86,214,.35);
+      flex-wrap:wrap;
+    }
+    .proto-open__text{font-size:15px;color:rgba(255,255,255,.7);max-width:480px}
+    .proto-open__text strong{color:#fff}
+    .proto-open__badges{display:flex;gap:8px;flex-wrap:wrap}
+    .proto-badge{
+      padding:5px 12px;border-radius:100px;font-size:11px;font-weight:600;
+      letter-spacing:.04em;border:1px solid;
+    }
+    .proto-badge--mit{background:rgba(52,199,89,.15);border-color:rgba(52,199,89,.4);color:#63DA83}
+    .proto-badge--open{background:rgba(0,122,255,.15);border-color:rgba(0,122,255,.4);color:#60B4FF}
+    .proto-badge--hatp{background:rgba(88,86,214,.2);border-color:rgba(88,86,214,.5);color:#A5A3FF}
+
     /* ── Nav ─────────────────────────────────────── */
     .nav{
       position:fixed;top:0;left:0;right:0;z-index:100;
@@ -511,6 +675,7 @@
       </a>
       <ul class="nav__links" role="list">
         <li><a href="#solution">How it works</a></li>
+        <li><a href="#protocol">Protocol</a></li>
         <li><a href="#deployment">Deploy</a></li>
         <li><a href="#identity">Identity</a></li>
         <li><a href="docs/architecture.md">Docs</a></li>
@@ -909,6 +1074,195 @@
   </div>
 </section>
 
+<!-- ── HATP Protocol ──────────────────────────────── -->
+<section id="protocol" class="protocol" aria-labelledby="protocol-heading">
+  <!-- ambient orbs -->
+  <div class="protocol__orb protocol__orb--1" aria-hidden="true"></div>
+  <div class="protocol__orb protocol__orb--2" aria-hidden="true"></div>
+  <div class="protocol__orb protocol__orb--3" aria-hidden="true"></div>
+
+  <div class="container" style="position:relative;z-index:1">
+
+    <!-- header -->
+    <div style="max-width:640px">
+      <div class="protocol__kicker">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <circle cx="6" cy="6" r="5" stroke="rgba(165,163,255,.8)" stroke-width="1.2"/>
+          <path d="M6 2v4l2.5 1.5" stroke="rgba(165,163,255,.8)" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        Open Standard
+        <span class="protocol__version">HATP / 0.1</span>
+      </div>
+      <h2 class="protocol__title" id="protocol-heading">
+        The wire protocol<br/>for <span>AI telemetry</span>
+      </h2>
+      <p class="protocol__sub">HATP — Hive AI Telemetry Protocol. One canonical event schema. Any provider. Governance baked into every packet. The standard nobody built — until now.</p>
+    </div>
+
+    <!-- body: stack + code -->
+    <div class="protocol__body">
+
+      <!-- left: protocol stack -->
+      <div>
+        <p style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:16px">Protocol stack — 5 layers</p>
+        <div class="stack">
+          <div class="stack__layer stack__layer--l5 reveal">
+            <div class="stack__num">Layer 5 · Governance</div>
+            <div class="stack__name">Consent · Residency · Retention</div>
+            <div class="stack__desc">GovernanceBlock is a required field. Protocol rejects events without it. Compliance is enforced at the wire level, not the app level.</div>
+          </div>
+          <div class="stack__layer stack__layer--l4 reveal">
+            <div class="stack__num">Layer 4 · Identity</div>
+            <div class="stack__name">Signed events · Org attestation</div>
+            <div class="stack__desc">ed25519 signatures over canonical JSON. Node Hub attests provenance. Every event traces to a verified origin.</div>
+          </div>
+          <div class="stack__layer stack__layer--l3 reveal">
+            <div class="stack__num">Layer 3 · Registry</div>
+            <div class="stack__name">Provider namespace · Model fingerprints</div>
+            <div class="stack__desc">Community-maintained registry of provider IDs and model fingerprints. <code style="font-size:11px;color:rgba(255,153,0,.8)">provider: 'openai'</code> means the same thing everywhere.</div>
+          </div>
+          <div class="stack__layer stack__layer--l2 reveal">
+            <div class="stack__num">Layer 2 · Transport</div>
+            <div class="stack__name">HTTPS/2 push · Streaming · msgpack</div>
+            <div class="stack__desc">60-second batch flush, up to 500 events. Binary msgpack for high-throughput. SSE streaming for real-time dashboards.</div>
+          </div>
+          <div class="stack__layer stack__layer--l1 reveal">
+            <div class="stack__num">Layer 1 · Schema</div>
+            <div class="stack__name">HATPEvent · Canonical JSON · Semver</div>
+            <div class="stack__desc">The normative event type. Versioned with backward-compat guarantees. Any compliant implementation produces exactly this.</div>
+          </div>
+        </div>
+
+        <!-- open standard callout -->
+        <div class="proto-open reveal" style="margin-top:24px">
+          <div class="proto-open__text">
+            <strong>The standard is open. The network is HIVE.</strong><br/>
+            HATP is MIT-licensed. Any implementation can talk to any HIVE Node. HIVE cannot unilaterally break backward compatibility.
+          </div>
+          <div class="proto-open__badges">
+            <span class="proto-badge proto-badge--mit">MIT</span>
+            <span class="proto-badge proto-badge--open">Open spec</span>
+            <span class="proto-badge proto-badge--hatp">HATP WG</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- right: canonical event code -->
+      <div class="reveal">
+        <div class="proto-code glass">
+          <div class="code-chrome">
+            <div class="code-chrome__dot" style="background:#FF3B30"></div>
+            <div class="code-chrome__dot" style="background:#FF9500"></div>
+            <div class="code-chrome__dot" style="background:#34C759"></div>
+            <div class="code-chrome__label">HATPEvent · v0.1 · canonical schema</div>
+          </div>
+<pre><span class="c-cmt">// Open standard — governed by HATP Working Group
+// Reference implementation: HIVE Scout
+// Privacy guarantee: content architecturally excluded</span>
+
+<span class="c-kw">interface</span> <span class="c-key">HATPEvent</span> {
+
+  <span class="c-cmt">// Protocol</span>
+  <span class="c-key">hatp_version</span>:  <span class="c-str">'0.1'</span>
+  <span class="c-key">event_id</span>:      <span class="c-str">string</span>   <span class="c-cmt">// uuid v4</span>
+  <span class="c-key">schema_hash</span>:   <span class="c-str">string</span>   <span class="c-cmt">// sha256 · self-verifying</span>
+
+  <span class="c-cmt">// Origin — always hashed</span>
+  <span class="c-key">emitter_id</span>:    <span class="c-str">string</span>   <span class="c-cmt">// rotates monthly</span>
+  <span class="c-key">session_hash</span>:  <span class="c-str">string</span>   <span class="c-cmt">// links req+res · not the user</span>
+
+  <span class="c-cmt">// Provider fingerprint</span>
+  <span class="c-key">provider</span>:      <span class="c-key">AIProvider</span>  <span class="c-cmt">// 'openai' | 'anthropic' | ...</span>
+  <span class="c-key">endpoint</span>:      <span class="c-str">string</span>      <span class="c-cmt">// '/v1/chat/completions'</span>
+  <span class="c-key">model_hint</span>:    <span class="c-str">string</span>      <span class="c-cmt">// from response headers · not user</span>
+
+  <span class="c-cmt">// Signal — zero content, always</span>
+  <span class="c-key">direction</span>:     <span class="c-str">'request'</span> | <span class="c-str">'response'</span> | <span class="c-str">'error'</span>
+  <span class="c-key">payload_bytes</span>: <span class="c-str">number</span>   <span class="c-cmt">// size proxy · never content</span>
+  <span class="c-key">latency_ms</span>:    <span class="c-str">number</span>
+  <span class="c-key">estimated_tokens</span>: <span class="c-str">number</span> <span class="c-cmt">// derived · not from content</span>
+
+  <span class="c-cmt">// Governance — required · no exceptions</span>
+  <span class="c-key">governance</span>: {
+    <span class="c-key">consent_basis</span>:   <span class="c-str">'org_policy'</span> | <span class="c-str">'explicit'</span>
+    <span class="c-key">data_residency</span>:  <span class="c-str">'AE'</span> | <span class="c-str">'EU'</span> | <span class="c-str">'US'</span> | <span class="c-str">'global'</span>
+    <span class="c-key">retention_days</span>:  <span class="c-str">number</span>
+    <span class="c-key">regulation_tags</span>: <span class="c-str">RegulationTag</span>[]
+    <span class="c-key">pii_asserted</span>:    <span class="c-bool">false</span>   <span class="c-cmt">// protocol enforced</span>
+    <span class="c-key">content_asserted</span>: <span class="c-bool">false</span>  <span class="c-cmt">// protocol enforced</span>
+  }
+
+  <span class="c-cmt">// Signature — ed25519 over canonical JSON</span>
+  <span class="c-key">signature</span>?:    <span class="c-str">string</span>
+}</pre>
+        </div>
+
+        <!-- SDK drop-in -->
+        <div class="proto-code glass" style="margin-top:16px;padding:20px 28px">
+          <div class="code-chrome">
+            <div class="code-chrome__dot" style="background:#FF3B30"></div>
+            <div class="code-chrome__dot" style="background:#FF9500"></div>
+            <div class="code-chrome__dot" style="background:#34C759"></div>
+            <div class="code-chrome__label">@hatp/sdk — drop-in</div>
+          </div>
+<pre><span class="c-kw">import</span> { <span class="c-key">HATProtocol</span> } <span class="c-kw">from</span> <span class="c-str">'@hatp/sdk'</span>
+
+<span class="c-kw">const</span> <span class="c-key">hatp</span> = <span class="c-kw">new</span> <span class="c-key">HATProtocol</span>({
+  endpoint: <span class="c-str">'https://node.your-org/hatp/ingest'</span>,
+  governance: {
+    data_residency: <span class="c-str">'AE'</span>,
+    regulation_tags: [<span class="c-str">'UAE_AI_LAW'</span>, <span class="c-str">'GDPR'</span>],
+    retention_days: <span class="c-str">90</span>,
+  }
+})
+
+<span class="c-cmt">// Wrap any provider — zero behaviour change</span>
+<span class="c-kw">const</span> res = <span class="c-kw">await</span> <span class="c-key">hatp</span>.wrap(openai.chat.completions.create(…))
+<span class="c-cmt">// HATPEvent emitted. Governance enforced. Done.</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- feature trio -->
+    <div class="proto-features" style="margin-top:40px">
+      <div class="proto-feat reveal">
+        <div class="proto-feat__icon" style="background:rgba(88,86,214,.2)">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M10 2L3 5.5v7c0 4.14 3.07 8.02 7 9 3.93-.98 7-4.86 7-9v-7L10 2z" stroke="#A5A3FF" stroke-width="1.4" stroke-linejoin="round"/>
+            <path d="M7 10.5l2 2 4-4" stroke="#A5A3FF" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="proto-feat__title">Governance-native</div>
+        <div class="proto-feat__desc">GovernanceBlock is mandatory. Every event carries consent basis, data residency, retention policy, and regulation tags. Not optional.</div>
+      </div>
+      <div class="proto-feat reveal">
+        <div class="proto-feat__icon" style="background:rgba(0,122,255,.2)">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="10" cy="10" r="8" stroke="#60B4FF" stroke-width="1.4"/>
+            <path d="M10 6v4l3 2" stroke="#60B4FF" stroke-width="1.4" stroke-linecap="round"/>
+            <circle cx="10" cy="3" r="1.5" fill="#60B4FF"/>
+            <circle cx="17" cy="10" r="1.5" fill="#60B4FF"/>
+            <circle cx="3" cy="10" r="1.5" fill="#60B4FF"/>
+          </svg>
+        </div>
+        <div class="proto-feat__title">Provider-agnostic</div>
+        <div class="proto-feat__desc">Community-maintained registry of 20+ providers. <code style="font-size:11px;background:rgba(255,255,255,.08);padding:1px 5px;border-radius:3px;color:#60B4FF">custom:my-llm</code> namespace for anything else.</div>
+      </div>
+      <div class="proto-feat reveal">
+        <div class="proto-feat__icon" style="background:rgba(52,199,89,.15)">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M4 10h12M13 7l3 3-3 3" stroke="#63DA83" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="2" y="4" width="6" height="12" rx="2" stroke="#63DA83" stroke-width="1.3"/>
+          </svg>
+        </div>
+        <div class="proto-feat__title">One-line SDK</div>
+        <div class="proto-feat__desc">Wrap any provider call. Zero behaviour change. Telemetry flows. Governance enforced. Audit trail written. Done in 3 lines.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- ── Deployment ─────────────────────────────────── -->
 <section id="deployment" aria-labelledby="deploy-heading" style="background:var(--gray-1)">
   <div class="container">
@@ -1231,7 +1585,7 @@
     <div class="footer__inner">
       <div class="footer__brand">
         <img src="logo.svg" width="24" height="24" alt="HIVE"/>
-        HIVE · The Global AI Consumption Network · هيف · April 2026
+        HIVE · The Global AI Consumption Network · April 2026
       </div>
       <nav class="footer__links" aria-label="Footer links">
         <a href="PLAN.md">Plan</a>

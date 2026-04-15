@@ -63,11 +63,21 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Stage landing site files
+        run: |
+          mkdir -p _site
+          # Only the landing page assets — docs stay in the repo but off Pages
+          cp index.html _site/
+          cp logo.svg _site/
+          cp banner.svg _site/
+          cp .nojekyll _site/
+          echo "Staged files:"
+          ls -la _site/
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Deploy the entire repo root (index.html, SVGs, docs, etc.)
-          path: .
+          path: _site
 
   # ── Deploy (main branch only) ──────────────────────────────────────────────
   deploy:

@@ -64,6 +64,58 @@ Personal ChatGPT. Expensed API keys. Rogue Mistral deployments. IT is flying bli
 
 ---
 
+## HATP — The Open Wire Protocol
+
+> **HATP (Hive AI Telemetry Protocol)** is to AI consumption what OpenTelemetry is to infrastructure observability. One canonical event schema. Any provider. Governance baked into every packet. MIT-licensed open standard — governed by HIVE.
+
+```mermaid
+graph LR
+    subgraph PROVIDERS ["Any AI Provider"]
+        P1["OpenAI"]
+        P2["Anthropic"]
+        P3["Gemini · Mistral · ..."]
+        P4["custom:your-llm"]
+    end
+
+    subgraph HATP_LAYER ["HATP Protocol Layer"]
+        direction TB
+        L5["Layer 5 · Governance — consent · residency · retention"]
+        L4["Layer 4 · Identity — signed events · org attestation"]
+        L3["Layer 3 · Registry — provider namespace · model fingerprints"]
+        L2["Layer 2 · Transport — HTTPS/2 · batch flush · msgpack"]
+        L1["Layer 1 · Schema — HATPEvent · canonical JSON · semver"]
+    end
+
+    subgraph NETWORK ["HIVE Network"]
+        SC["Scout\nReference impl"]
+        ND["Node Hub\nOn-prem ingest"]
+        HV["Hive\nConstellation"]
+    end
+
+    PROVIDERS -->|"@hatp/sdk wrap()"| HATP_LAYER
+    HATP_LAYER --> NETWORK
+
+    style HATP_LAYER fill:#F0EEFF,stroke:#5856D6,stroke-width:2px,color:#1D1D1F
+    style PROVIDERS fill:#F5F5F7,stroke:#86868B,color:#1D1D1F
+    style NETWORK fill:#E8F4FF,stroke:#007AFF,color:#1D1D1F
+```
+
+**Key design principle:** `pii_asserted: false` and `content_asserted: false` are protocol-enforced constants. They cannot be set to true. Compliance is structural.
+
+```typescript
+// The HATP GovernanceBlock — required on every event, no exceptions
+governance: {
+  consent_basis:   'org_policy',
+  data_residency:  'AE',           // ISO 3166-1 · enforced at Node Hub
+  retention_days:  90,
+  regulation_tags: ['UAE_AI_LAW', 'GDPR'],
+  pii_asserted:    false,          // always false — schema enforced
+  content_asserted: false,         // always false — schema enforced
+}
+```
+
+---
+
 ## The Solution — Scout → Node → Hive
 
 ```mermaid
@@ -468,6 +520,7 @@ docker-compose -f node-compose.yml up -d
 | Document | What it covers |
 |----------|---------------|
 | [**PLAN.md**](./PLAN.md) | North star · Full strategy · Build sequence · Risk matrix |
+| [**Protocol — HATP**](./docs/protocol.md) | Open wire standard · HATPEvent schema · Governance layer · SDK |
 | [Architecture](./docs/architecture.md) | Scout → Node → Hive system design · Mermaid diagrams |
 | [Data Model](./docs/data-model.md) | Telemetry covenant · DB schema · "never collect" manifest |
 | [Identity](./docs/identity.md) | CIAM · TokenPrint · Agent economy · Social layer |
