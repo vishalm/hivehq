@@ -497,6 +497,43 @@ In Arabic: **خلية** (Khaliya) — it sounds powerful.
 
 <br/>
 
-*Built in UAE · April 2026 · هيف*
+*Built in UAE · April 2026*
+
+<sub>
+HIVE &nbsp;·&nbsp;
+هايف &nbsp;·&nbsp;
+הייב &nbsp;·&nbsp;
+ہائیو &nbsp;·&nbsp;
+هایو &nbsp;·&nbsp;
+हाइव &nbsp;·&nbsp;
+ਹਾਈਵ &nbsp;·&nbsp;
+হাইভ &nbsp;·&nbsp;
+ஹைவ் &nbsp;·&nbsp;
+హైవ్ &nbsp;·&nbsp;
+හයිව් &nbsp;·&nbsp;
+ဟိုင်ဗ် &nbsp;·&nbsp;
+ហ៊ីវ &nbsp;·&nbsp;
+ไฮฟ์ &nbsp;·&nbsp;
+蜂巢 &nbsp;·&nbsp;
+ハイブ &nbsp;·&nbsp;
+하이브 &nbsp;·&nbsp;
+ჰაივი &nbsp;·&nbsp;
+Հայվ &nbsp;·&nbsp;
+Χάιβ &nbsp;·&nbsp;
+Хайв &nbsp;·&nbsp;
+Хайв &nbsp;·&nbsp;
+ሃይቭ &nbsp;·&nbsp;
+ཧའི་ཝ &nbsp;·&nbsp;
+Colmena &nbsp;·&nbsp;
+Ruche &nbsp;·&nbsp;
+Colmeia &nbsp;·&nbsp;
+Alveare &nbsp;·&nbsp;
+Kovan &nbsp;·&nbsp;
+Mzinga &nbsp;·&nbsp;
+Tổ Ong &nbsp;·&nbsp;
+Sarang &nbsp;·&nbsp;
+Ul &nbsp;·&nbsp;
+Ul&#225;n
+</sub>
 
 </div>

@@ -139,4 +139,6 @@ interface HiveTelemetryEvent {
 
 ---
 
-*HIVE — The Global AI Consumption Network · هيف · April 2026*
+*HIVE — The Global AI Consumption Network · April 2026*
+
+هايف · הייב · ہائیو · هایو · हाइव · ਹਾਈਵ · হাইভ · ஹைவ் · హైవ్ · හයිව් · ဟိုင်ဗ် · ហ៊ីវ · ไฮฟ์ · 蜂巢 · ハイブ · 하이브 · ჰაივი · Հայվ · Χάιβ · Хайв · ሃይቭ · ཧའི་ཝ · Colmena · Ruche · Colmeia · Alveare · Kovan · Mzinga · Tổ Ong · Sarang · Ul
