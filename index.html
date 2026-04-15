@@ -645,21 +645,228 @@
     .footer__links a{font-size:13px;color:var(--gray-4);transition:color .15s}
     .footer__links a:hover{color:var(--gray-6)}
 
+    /* ── Why Now ─────────────────────────────────── */
+    .why-now{background:var(--white)}
+    .manifesto{max-width:760px;margin:0 auto 56px;text-align:center}
+    .manifesto__headline{
+      font-size:clamp(26px,3.2vw,42px);font-weight:800;
+      letter-spacing:-.04em;line-height:1.15;color:var(--gray-6);margin-bottom:20px;
+    }
+    .manifesto__headline em{color:var(--blue);font-style:normal}
+    .manifesto__body{font-size:17px;line-height:1.65;color:var(--gray-5);max-width:620px;margin:0 auto}
+    .urgency-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    .urgency-card{
+      background:var(--gray-1);border-radius:var(--radius-md);padding:28px 24px;
+      border:1px solid var(--gray-2);transition:box-shadow .2s,transform .2s;
+    }
+    .urgency-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+    .urgency-card__year{
+      font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+      color:var(--gray-4);margin-bottom:10px;font-family:var(--font-mono);
+    }
+    .urgency-card__num{
+      font-size:clamp(28px,3vw,40px);font-weight:800;letter-spacing:-.04em;
+      display:block;margin-bottom:4px;
+    }
+    .urgency-card__num--blue{color:var(--blue)}
+    .urgency-card__num--red{color:var(--red)}
+    .urgency-card__num--orange{color:var(--orange)}
+    .urgency-card__num--indigo{color:var(--indigo)}
+    .urgency-card__label{font-size:15px;font-weight:600;color:var(--gray-6);margin-bottom:6px}
+    .urgency-card__desc{font-size:13px;color:var(--gray-5);line-height:1.55}
+
+    /* ── Trust Architecture ──────────────────────── */
+    .trust-arch{background:var(--gray-1)}
+    .trust-chain{
+      display:grid;grid-template-columns:1fr 64px 1fr 64px 1fr;
+      gap:0;align-items:start;margin-top:56px;
+    }
+    .trust-card{
+      background:var(--white);border-radius:var(--radius-md);
+      padding:28px;border:1px solid var(--gray-2);box-shadow:var(--shadow-sm);
+    }
+    .trust-card__layer{
+      font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+      margin-bottom:6px;font-family:var(--font-mono);
+    }
+    .trust-card__name{font-size:19px;font-weight:700;color:var(--gray-6);margin-bottom:12px;letter-spacing:-.02em}
+    .trust-card__mech{
+      font-family:var(--font-mono);font-size:11.5px;
+      background:var(--gray-1);border-radius:6px;padding:10px 12px;
+      color:var(--gray-6);margin-bottom:14px;line-height:1.6;
+    }
+    .trust-card__facts{list-style:none;display:flex;flex-direction:column;gap:7px}
+    .trust-card__facts li{
+      font-size:13px;color:var(--gray-5);line-height:1.4;
+      display:flex;gap:8px;align-items:flex-start;
+    }
+    .trust-arrow{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      padding-top:60px;
+    }
+    .trust-arrow__track{
+      width:2px;height:40px;background:var(--gray-2);position:relative;
+      transform:rotate(-90deg) scaleX(2);
+    }
+    .trust-arrow__label{
+      font-size:10px;color:var(--gray-4);text-align:center;margin-top:8px;
+      letter-spacing:.04em;font-family:var(--font-mono);line-height:1.4;
+    }
+
+    /* ── Compliance ──────────────────────────────── */
+    .compliance-section{background:var(--white)}
+    .compliance-grid{
+      display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:56px;
+    }
+    .compliance-card{
+      border-radius:var(--radius-md);padding:22px 18px;
+      border:1px solid var(--gray-2);background:var(--white);
+      transition:box-shadow .2s,transform .2s;
+    }
+    .compliance-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+    .compliance-card__flag{
+      font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+      padding:3px 8px;border-radius:100px;margin-bottom:12px;display:inline-block;
+    }
+    .compliance-card__name{font-size:15px;font-weight:700;color:var(--gray-6);margin-bottom:3px;letter-spacing:-.02em}
+    .compliance-card__scope{font-size:11px;color:var(--gray-4);margin-bottom:12px}
+    .compliance-card__mechanism{font-size:12.5px;color:var(--gray-5);line-height:1.55;margin-bottom:12px}
+    .compliance-card__status{
+      font-size:11px;font-weight:600;padding:3px 8px;border-radius:100px;
+      display:inline-block;
+    }
+    .status--designed{background:var(--blue-tint);color:var(--blue)}
+    .status--arch{background:var(--green-tint);color:#1D7A3F}
+
+    /* ── Resilience Numbers ──────────────────────── */
+    .resilience-section{background:var(--blue-tint);border-top:1px solid var(--gray-2);border-bottom:1px solid var(--gray-2)}
+    .resil-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:48px}
+    .resil-stat{
+      text-align:center;padding:28px 16px;
+      border-right:1px solid rgba(0,122,255,.15);
+    }
+    .resil-stat:last-child{border-right:none}
+    .resil-stat__num{
+      font-size:clamp(28px,3vw,46px);font-weight:800;letter-spacing:-.04em;
+      color:var(--blue);display:block;margin-bottom:6px;line-height:1;
+    }
+    .resil-stat__label{font-size:14px;font-weight:600;color:var(--gray-6);margin-bottom:5px}
+    .resil-stat__desc{font-size:12px;color:var(--gray-5);line-height:1.5}
+
+    /* ── Integrity ───────────────────────────────── */
+    .integrity-section{background:var(--gray-1)}
+    .integrity-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}
+    .integrity-card{
+      background:var(--white);border-radius:var(--radius-md);
+      padding:28px;border:1px solid var(--gray-2);
+      transition:box-shadow .2s;
+    }
+    .integrity-card:hover{box-shadow:var(--shadow-md)}
+    .integrity-card__def{
+      font-size:10px;font-weight:700;color:var(--gray-4);
+      letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;
+      font-family:var(--font-mono);
+    }
+    .integrity-card__title{font-size:17px;font-weight:700;color:var(--gray-6);margin-bottom:10px;letter-spacing:-.02em}
+    .integrity-card__desc{font-size:13.5px;color:var(--gray-5);line-height:1.6;margin-bottom:14px}
+    .integrity-card__detail{
+      font-size:11.5px;font-family:var(--font-mono);
+      background:var(--gray-1);border-radius:6px;padding:10px 12px;
+      color:var(--blue);line-height:1.55;
+    }
+
+    /* ── Observability ───────────────────────────── */
+    .observability-section{background:var(--white)}
+    .obs-split{display:grid;grid-template-columns:1.15fr 1fr;gap:48px;align-items:start}
+    .obs-terminal{
+      background:#1D1D1F;border-radius:var(--radius-md);
+      overflow:hidden;box-shadow:var(--shadow-lg);
+    }
+    .obs-terminal__topbar{
+      height:36px;background:rgba(255,255,255,.06);
+      display:flex;align-items:center;padding:0 16px;gap:6px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .obs-terminal__dot{width:9px;height:9px;border-radius:50%}
+    .obs-terminal__label{margin-left:8px;font-size:11px;color:rgba(255,255,255,.3);font-family:var(--font-mono);letter-spacing:.05em}
+    .obs-terminal__body{padding:20px 24px;font-family:var(--font-mono);font-size:12px;line-height:1.75;color:rgba(255,255,255,.6)}
+    .obs-terminal .t-green{color:#63DA83}
+    .obs-terminal .t-blue{color:#60B4FF}
+    .obs-terminal .t-orange{color:#FF9A5C}
+    .obs-terminal .t-gray{color:rgba(255,255,255,.25)}
+    .obs-terminal .t-white{color:rgba(255,255,255,.9)}
+    .obs-cards{display:flex;flex-direction:column;gap:14px}
+    .obs-card{
+      background:var(--white);border:1px solid var(--gray-2);border-radius:var(--radius-md);
+      padding:20px 22px;
+    }
+    .obs-card__title{font-size:14px;font-weight:700;color:var(--gray-6);margin-bottom:10px;letter-spacing:-.01em}
+    .obs-slos{display:flex;flex-direction:column;gap:6px}
+    .slo-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .slo-label{font-size:12.5px;color:var(--gray-5)}
+    .slo-value{font-size:12.5px;font-weight:600;color:var(--indigo);font-family:var(--font-mono)}
+
+    /* ── Footer full ─────────────────────────────── */
+    .footer-full{
+      background:var(--gray-1);border-top:1px solid var(--gray-2);
+      padding:64px 0 40px;
+    }
+    .footer-full__grid{
+      display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr;gap:48px;
+      margin-bottom:48px;
+    }
+    .footer-full__brand{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+    .footer-full__brand-name{font-size:18px;font-weight:700;color:var(--gray-6);letter-spacing:-.02em}
+    .footer-full__tagline{font-size:14px;color:var(--gray-5);line-height:1.65;max-width:260px;margin-bottom:24px}
+    .footer-full__social{display:flex;gap:12px}
+    .footer-full__social a{
+      width:34px;height:34px;border-radius:8px;background:var(--gray-2);
+      display:flex;align-items:center;justify-content:center;
+      transition:background .15s;color:var(--gray-5);
+    }
+    .footer-full__social a:hover{background:var(--gray-3);color:var(--gray-6)}
+    .footer-full__col-title{
+      font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+      color:var(--gray-4);margin-bottom:14px;
+    }
+    .footer-full__links{list-style:none;display:flex;flex-direction:column;gap:9px}
+    .footer-full__links a{font-size:13px;color:var(--gray-5);transition:color .15s;line-height:1}
+    .footer-full__links a:hover{color:var(--gray-6)}
+    .footer-full__bottom{
+      padding-top:24px;border-top:1px solid var(--gray-2);
+      display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;
+    }
+    .footer-full__copy{font-size:13px;color:var(--gray-4);line-height:1.6}
+    .footer-full__langs{font-size:11px;color:var(--gray-3);line-height:1.7;max-width:580px;text-align:right}
+
     /* ── Responsive ──────────────────────────────── */
     @media(max-width:900px){
-      .hero__inner,.covenant-split,.identity-split,.uae-split{grid-template-columns:1fr;gap:40px}
-      .pain-grid,.deploy-grid{grid-template-columns:1fr 1fr}
+      .hero__inner,.covenant-split,.identity-split,.uae-split,.obs-split{grid-template-columns:1fr;gap:40px}
+      .pain-grid,.deploy-grid,.integrity-grid{grid-template-columns:1fr 1fr}
       .stats-bar__inner{grid-template-columns:repeat(2,1fr)}
       .flow-diagram{flex-direction:column;padding:28px}
       .flow-arrow{transform:rotate(90deg)}
       .flow-features{grid-template-columns:1fr}
       .nav__links{display:none}
+      .urgency-grid{grid-template-columns:repeat(2,1fr)}
+      .trust-chain{grid-template-columns:1fr;gap:0}
+      .trust-arrow{padding-top:0;padding:8px 0;flex-direction:row;justify-content:flex-start;gap:12px}
+      .trust-arrow__track{transform:none;width:32px;height:2px}
+      .compliance-grid{grid-template-columns:repeat(2,1fr)}
+      .resil-grid{grid-template-columns:repeat(2,1fr);gap:0}
+      .resil-stat{border-right:none;border-bottom:1px solid rgba(0,122,255,.15)}
+      .resil-stat:last-child{border-bottom:none}
+      .footer-full__grid{grid-template-columns:1fr 1fr;gap:32px}
     }
     @media(max-width:600px){
-      .pain-grid,.deploy-grid{grid-template-columns:1fr}
+      .pain-grid,.deploy-grid,.integrity-grid{grid-template-columns:1fr}
       .stats-bar__inner{grid-template-columns:1fr 1fr}
       .hero__title{font-size:40px}
       .cta-form{flex-direction:column}
+      .urgency-grid{grid-template-columns:1fr}
+      .compliance-grid{grid-template-columns:1fr}
+      .resil-grid{grid-template-columns:1fr 1fr}
+      .footer-full__grid{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -674,11 +881,12 @@
         HIVE
       </a>
       <ul class="nav__links" role="list">
+        <li><a href="#why-now">Why now</a></li>
         <li><a href="#solution">How it works</a></li>
         <li><a href="#protocol">Protocol</a></li>
         <li><a href="#deployment">Deploy</a></li>
         <li><a href="#identity">Identity</a></li>
-        <li><a href="docs/architecture.md">Docs</a></li>
+        <li><a href="#resilience">Resilience</a></li>
         <li><a href="https://github.com/vishalm/hivehq">GitHub</a></li>
       </ul>
       <div class="nav__cta">
@@ -842,6 +1050,57 @@
     </div>
   </div>
 </div>
+
+<!-- ── Why Now ────────────────────────────────────── -->
+<section id="why-now" class="why-now" aria-labelledby="why-heading">
+  <div class="container">
+    <div class="section-header section-header--center">
+      <div class="section-eyebrow"><span class="tag tag--blue">The Moment</span></div>
+      <h2 class="section-title" id="why-heading">The compliance cliff<br/>is here. <em style="color:var(--blue);font-style:normal">Now.</em></h2>
+      <p class="section-sub">Three forces converged in 2025: regulators got teeth, AI spend became CFO-visible, and shadow AI exploded. Every week without visibility is a liability — financial, regulatory, and reputational.</p>
+    </div>
+
+    <div class="urgency-grid" role="list">
+
+      <article class="urgency-card" role="listitem">
+        <div class="urgency-card__year">EU AI Act · 2025–2026</div>
+        <span class="urgency-card__num urgency-card__num--blue">Aug 2026</span>
+        <div class="urgency-card__label">Full compliance deadline</div>
+        <p class="urgency-card__desc">High-risk AI systems must carry complete audit trails of every call, every model, every department. "We didn't know" is not a defence.</p>
+      </article>
+
+      <article class="urgency-card" role="listitem">
+        <div class="urgency-card__year">Global AI spend · 2026</div>
+        <span class="urgency-card__num urgency-card__num--indigo">$300B+</span>
+        <div class="urgency-card__label">Enterprise AI budget</div>
+        <p class="urgency-card__desc">Most of this is invisible to the CFO. Scattered across personal credit cards, shadow subscriptions, and direct API calls. Zero consolidated view.</p>
+      </article>
+
+      <article class="urgency-card" role="listitem">
+        <div class="urgency-card__year">Shadow AI · research 2025</div>
+        <span class="urgency-card__num urgency-card__num--orange">65%</span>
+        <div class="urgency-card__label">Employees using unsanctioned AI</div>
+        <p class="urgency-card__desc">Two-thirds of knowledge workers use AI tools IT didn't provision. Data leaves the org on every prompt. IT is flying blind on the biggest security surface of the decade.</p>
+      </article>
+
+      <article class="urgency-card" role="listitem">
+        <div class="urgency-card__year">UAE AI Law · 2026</div>
+        <span class="urgency-card__num urgency-card__num--red">12 mo</span>
+        <div class="urgency-card__label">Minimum audit trail required</div>
+        <p class="urgency-card__desc">UAE entities advising on government decisions using AI must retain a 12-month immutable log. HIVE's GovernanceBlock enforces this at the wire level — not the policy level.</p>
+      </article>
+
+    </div>
+
+    <div style="margin-top:40px;background:var(--gray-1);border-radius:var(--radius-md);padding:28px 32px;border:1px solid var(--gray-2);display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap">
+      <div>
+        <p style="font-size:17px;font-weight:700;color:var(--gray-6);margin-bottom:6px;letter-spacing:-.02em">The window to get ahead is 12 months.</p>
+        <p style="font-size:14px;color:var(--gray-5);max-width:560px;line-height:1.6">Orgs that instrument their AI stack now will have clean audit trails by the time regulators come knocking. Orgs that wait will spend Q1 2027 in a panic reconstruction exercise — if they can reconstruct at all.</p>
+      </div>
+      <a href="#waitlist" class="btn btn--primary" style="white-space:nowrap">Get ahead now</a>
+    </div>
+  </div>
+</section>
 
 <!-- ── Pain points ────────────────────────────────── -->
 <section aria-labelledby="pain-heading" style="background:var(--gray-1)">
@@ -1070,6 +1329,158 @@
           </li>
         </ul>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Trust Architecture ─────────────────────────── -->
+<section id="trust" class="trust-arch" aria-labelledby="trust-heading">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow"><span class="tag tag--indigo">Security</span></div>
+      <h2 class="section-title" id="trust-heading">A trust chain with<br/>zero shortcuts.</h2>
+      <p class="section-sub">Scout earns trust from Node. Node earns trust from Hive. Every hop is cryptographically verified. No shared secrets. No implicit trust.</p>
+    </div>
+
+    <div class="trust-chain" role="list">
+
+      <div class="trust-card" role="listitem">
+        <div class="trust-card__layer" style="color:var(--gray-4)">Layer 0 · Scout</div>
+        <div class="trust-card__name">Your machines</div>
+        <div class="trust-card__mech">master_secret → HMAC-SHA256 → scout_id<br/>ed25519 key pair · OS keychain only</div>
+        <ul class="trust-card__facts">
+          <li>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><path d="M7 1L2 3.5v4.5c0 3.3 2.1 6.4 5 7.5 2.9-1.1 5-4.2 5-7.5V3.5L7 1z" stroke="var(--blue)" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            <span>scout_id derived monthly via HMAC — never the same twice</span>
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><path d="M7 1L2 3.5v4.5c0 3.3 2.1 6.4 5 7.5 2.9-1.1 5-4.2 5-7.5V3.5L7 1z" stroke="var(--blue)" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            <span>master_secret in OS keychain — never transmitted, never logged</span>
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><path d="M7 1L2 3.5v4.5c0 3.3 2.1 6.4 5 7.5 2.9-1.1 5-4.2 5-7.5V3.5L7 1z" stroke="var(--blue)" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            <span>Events signed with ed25519 — Node verifies every packet</span>
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><path d="M7 1L2 3.5v4.5c0 3.3 2.1 6.4 5 7.5 2.9-1.1 5-4.2 5-7.5V3.5L7 1z" stroke="var(--blue)" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            <span>SQLite local buffer — 50MB, 7-day TTL, survives crashes</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="trust-arrow" aria-hidden="true">
+        <div class="trust-arrow__track"></div>
+        <div class="trust-arrow__label">mTLS<br/>+<br/>JWT</div>
+      </div>
+
+      <div class="trust-card" role="listitem">
+        <div class="trust-card__layer" style="color:var(--blue)">Layer 1 · Node Hub</div>
+        <div class="trust-card__name">Your org (on-prem)</div>
+        <div class="trust-card__mech">POST /api/v1/hatp/ingest<br/>X-HATP-Version: 0.1 · GovernanceBlock: required</div>
+        <ul class="trust-card__facts">
+          <li>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><rect x="1" y="3" width="12" height="8" rx="2" stroke="var(--green)" stroke-width="1.2"/><path d="M4 7l2 2 4-4" stroke="var(--green)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Verifies Scout ed25519 signature on every ingest request</span>
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><rect x="1" y="3" width="12" height="8" rx="2" stroke="var(--green)" stroke-width="1.2"/><path d="M4 7l2 2 4-4" stroke="var(--green)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Rejects any event missing GovernanceBlock — protocol-level</span>
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><rect x="1" y="3" width="12" height="8" rx="2" stroke="var(--green)" stroke-width="1.2"/><path d="M4 7l2 2 4-4" stroke="var(--green)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Redis Bull queue — AOF persistence, at-most-once loss</span>
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><rect x="1" y="3" width="12" height="8" rx="2" stroke="var(--green)" stroke-width="1.2"/><path d="M4 7l2 2 4-4" stroke="var(--green)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>TimescaleDB — hypertable partitioned by timestamp, auto-compress</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="trust-arrow" aria-hidden="true">
+        <div class="trust-arrow__track"></div>
+        <div class="trust-arrow__label">JWT<br/>+<br/>RLS</div>
+      </div>
+
+      <div class="trust-card" role="listitem">
+        <div class="trust-card__layer" style="color:var(--indigo)">Layer 2 · Hive</div>
+        <div class="trust-card__name">Global constellation</div>
+        <div class="trust-card__mech">Supabase · Row-Level Security · node_id scoped<br/>Anonymised aggregates only — no raw events</div>
+        <ul class="trust-card__facts">
+          <li>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><path d="M7 1C3.68 1 1 3.68 1 7s2.68 6 6 6 6-2.68 6-6-2.68-6-6-6z" stroke="var(--indigo)" stroke-width="1.2"/><path d="M1 7h12M7 1c-1.66 1.5-2.67 3.6-2.67 6S5.34 11.5 7 13M7 1c1.66 1.5 2.67 3.6 2.67 6S8.66 11.5 7 13" stroke="var(--indigo)" stroke-width=".9"/></svg>
+            <span>RLS policy: every query scoped to the authenticated node_id</span>
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><path d="M7 1C3.68 1 1 3.68 1 7s2.68 6 6 6 6-2.68 6-6-2.68-6-6-6z" stroke="var(--indigo)" stroke-width="1.2"/><path d="M1 7h12M7 1c-1.66 1.5-2.67 3.6-2.67 6S5.34 11.5 7 13M7 1c1.66 1.5 2.67 3.6 2.67 6S8.66 11.5 7 13" stroke="var(--indigo)" stroke-width=".9"/></svg>
+            <span>Scout never speaks directly to Hive — all traffic via Node</span>
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><path d="M7 1C3.68 1 1 3.68 1 7s2.68 6 6 6 6-2.68 6-6-2.68-6-6-6z" stroke="var(--indigo)" stroke-width="1.2"/><path d="M1 7h12M7 1c-1.66 1.5-2.67 3.6-2.67 6S5.34 11.5 7 13M7 1c1.66 1.5 2.67 3.6 2.67 6S8.66 11.5 7 13" stroke="var(--indigo)" stroke-width=".9"/></svg>
+            <span>Hive stores aggregates only — raw events never leave your Node</span>
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><path d="M7 1C3.68 1 1 3.68 1 7s2.68 6 6 6 6-2.68 6-6-2.68-6-6-6z" stroke="var(--indigo)" stroke-width="1.2"/><path d="M1 7h12M7 1c-1.66 1.5-2.67 3.6-2.67 6S5.34 11.5 7 13M7 1c1.66 1.5 2.67 3.6 2.67 6S8.66 11.5 7 13" stroke="var(--indigo)" stroke-width=".9"/></svg>
+            <span>Node Hub works fully offline — zero Hive dependency for operations</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Compliance Coverage ─────────────────────────── -->
+<section id="compliance" class="compliance-section" aria-labelledby="compliance-heading">
+  <div class="container">
+    <div class="section-header section-header--center">
+      <div class="section-eyebrow"><span class="tag tag--green">Compliance</span></div>
+      <h2 class="section-title" id="compliance-heading">Five regulators.<br/>One telemetry layer.</h2>
+      <p class="section-sub">HIVE's GovernanceBlock is not a checkbox field — it is the mechanism. Compliance is enforced at the wire level before data touches your database.</p>
+    </div>
+
+    <div class="compliance-grid" role="list">
+
+      <article class="compliance-card" role="listitem">
+        <span class="compliance-card__flag" style="background:#E8F4FF;color:var(--blue)">EU · GDPR</span>
+        <div class="compliance-card__name">GDPR</div>
+        <div class="compliance-card__scope">All EU/EEA data subjects</div>
+        <p class="compliance-card__mechanism">Art. 17 erasure via deletion API — HIVE targets 72h vs. 30-day allowance. Art. 20 portability via JSON/CSV export. Art. 25 privacy-by-design: content-free schema enforced in code.</p>
+        <span class="compliance-card__status status--designed">Designed</span>
+      </article>
+
+      <article class="compliance-card" role="listitem">
+        <span class="compliance-card__flag" style="background:#FFF4E5;color:var(--orange)">UAE · PDPL</span>
+        <div class="compliance-card__name">UAE PDPL</div>
+        <div class="compliance-card__scope">UAE data subjects</div>
+        <p class="compliance-card__mechanism">Art. 24 erasure mapped to the same deletion API as GDPR. 5-year audit log retention (immutable). erasure_audit_log table write-once by Postgres policy.</p>
+        <span class="compliance-card__status status--designed">Designed</span>
+      </article>
+
+      <article class="compliance-card" role="listitem">
+        <span class="compliance-card__flag" style="background:#F0EEFF;color:var(--indigo)">UAE · AI Law</span>
+        <div class="compliance-card__name">UAE AI Law</div>
+        <div class="compliance-card__scope">Government AI decisions</div>
+        <p class="compliance-card__mechanism">12-month minimum retention enforced by GovernanceBlock.regulation_tags: ['UAE_AI_LAW']. Node Hub rejects any event declaring shorter retention when this tag is present.</p>
+        <span class="compliance-card__status status--arch">Architecture</span>
+      </article>
+
+      <article class="compliance-card" role="listitem">
+        <span class="compliance-card__flag" style="background:var(--green-tint);color:#1D7A3F">US · SOC 2</span>
+        <div class="compliance-card__name">SOC 2 Type II</div>
+        <div class="compliance-card__scope">Enterprise customers</div>
+        <p class="compliance-card__mechanism">Continuous audit trail in TimescaleDB hypertable. Immutable erasure_audit_log. 12-month event retention default for tagged orgs. Control evidence exportable for auditors.</p>
+        <span class="compliance-card__status status--designed">Designed</span>
+      </article>
+
+      <article class="compliance-card" role="listitem">
+        <span class="compliance-card__flag" style="background:#E8F4FF;color:var(--blue)">EU · AI Act</span>
+        <div class="compliance-card__name">EU AI Act</div>
+        <div class="compliance-card__scope">High-risk AI systems</div>
+        <p class="compliance-card__mechanism">HATPEvent provides model identity, provider, endpoint, department, timestamp — the exact audit trail required for high-risk system logs. GovernanceBlock declares regulation_tags per event.</p>
+        <span class="compliance-card__status status--arch">Architecture</span>
+      </article>
+
     </div>
   </div>
 </section>
@@ -1322,6 +1733,112 @@
   </div>
 </section>
 
+<!-- ── Resilience Numbers ──────────────────────────── -->
+<div id="resilience" class="resilience-section" aria-label="Resilience statistics">
+  <div class="container">
+    <div style="text-align:center;padding-top:56px;padding-bottom:0">
+      <div class="section-eyebrow" style="margin-bottom:12px"><span class="tag tag--blue">Resilience</span></div>
+      <h2 class="section-title" style="margin-bottom:12px">Built to never lose<br/>a data point.</h2>
+      <p class="section-sub" style="margin:0 auto">Five numbers that define what "telemetry-grade reliability" means. Not aspirational SLOs — mechanical guarantees from the architecture.</p>
+    </div>
+    <div class="resil-grid" role="list">
+
+      <div class="resil-stat" role="listitem">
+        <span class="resil-stat__num">99.9%</span>
+        <div class="resil-stat__label">Node Hub SLO</div>
+        <div class="resil-stat__desc">8.7 hours annual downtime budget. Active-passive HA with PostgreSQL WAL streaming and Redis replication.</div>
+      </div>
+
+      <div class="resil-stat" role="listitem">
+        <span class="resil-stat__num">10,000</span>
+        <div class="resil-stat__label">Scout offline buffer</div>
+        <div class="resil-stat__desc">Events stored in SQLite before any are dropped. 50MB cap. Oldest-first eviction when full.</div>
+      </div>
+
+      <div class="resil-stat" role="listitem">
+        <span class="resil-stat__num">7 days</span>
+        <div class="resil-stat__label">Offline survival</div>
+        <div class="resil-stat__desc">Scout buffers locally for up to 7 days. Network outage under 7 days: zero data loss, automatic recovery on reconnect.</div>
+      </div>
+
+      <div class="resil-stat" role="listitem">
+        <span class="resil-stat__num">72 hrs</span>
+        <div class="resil-stat__label">Erasure SLA</div>
+        <div class="resil-stat__desc">GDPR allows 30 days. HIVE targets 72 hours for Node Hub deletion after a confirmed erasure request.</div>
+      </div>
+
+      <div class="resil-stat" role="listitem">
+        <span class="resil-stat__num">&lt; 2 min</span>
+        <div class="resil-stat__label">RTO after crash</div>
+        <div class="resil-stat__desc">Node Hub process crash → Redis AOF replay → back online. Zero RPO with AOF + at-most-1-second of queue state at risk.</div>
+      </div>
+
+    </div>
+    <div style="padding-bottom:56px"></div>
+  </div>
+</div>
+
+<!-- ── Integrity ───────────────────────────────────── -->
+<section id="integrity" class="integrity-section" aria-labelledby="integrity-heading">
+  <div class="container">
+    <div class="section-header section-header--center">
+      <div class="section-eyebrow"><span class="tag tag--indigo">Integrity</span></div>
+      <h2 class="section-title" id="integrity-heading">TokenPrint scores<br/>nobody can game.</h2>
+      <p class="section-sub">Five independent defence layers protect the leaderboard. Passing one is easy. Passing all five simultaneously, for months, while generating realistic billing patterns — is not.</p>
+    </div>
+
+    <div class="integrity-grid" role="list">
+
+      <article class="integrity-card" role="listitem">
+        <div class="integrity-card__def">Defence 01</div>
+        <div class="integrity-card__title">Velocity anomaly detection</div>
+        <p class="integrity-card__desc">Token rate compared against personal 30-day rolling average. Three-tier response: flag, suspend score update, escalate to integrity review.</p>
+        <div class="integrity-card__detail">Tier 1 · flag:    &gt; 20× avg rate<br/>Tier 2 · suspend: &gt; 50× avg rate<br/>Tier 3 · review:  billing mismatch</div>
+      </article>
+
+      <article class="integrity-card" role="listitem">
+        <div class="integrity-card__def">Defence 02</div>
+        <div class="integrity-card__title">Billing cross-check</div>
+        <p class="integrity-card__desc">Optional: orgs can share provider billing API read-access. HIVE cross-references reported token usage against actual invoice line items. Discrepancy triggers investigation.</p>
+        <div class="integrity-card__detail">Reported: 10B tokens / month<br/>Invoiced: 2B tokens / month<br/>Result:   score suspended</div>
+      </article>
+
+      <article class="integrity-card" role="listitem">
+        <div class="integrity-card__def">Defence 03</div>
+        <div class="integrity-card__title">Sybil resistance</div>
+        <p class="integrity-card__desc">One Scout per hardware fingerprint. Maximum 3 scouts per person (personal + 2 professional). Org attestation required to earn the professional badge. Unattested scouts score in personal bucket only.</p>
+        <div class="integrity-card__detail">Max scouts / person: 3<br/>Professional badge: org-attested only<br/>Hardware binding: TPM / Secure Enclave</div>
+      </article>
+
+      <article class="integrity-card" role="listitem">
+        <div class="integrity-card__def">Defence 04</div>
+        <div class="integrity-card__title">Session bounding</div>
+        <p class="integrity-card__desc">Long-running AI agents (coding assistants, overnight pipelines) are bounded to 10,000 events or 24 hours before generating a new session hash. Prevents agent-dilution attacks where one agent inflates a single user's score.</p>
+        <div class="integrity-card__detail">Max session: 10,000 events<br/>Max duration: 24 hours<br/>Idle timeout: 1 hour</div>
+      </article>
+
+      <article class="integrity-card" role="listitem">
+        <div class="integrity-card__def">Defence 05</div>
+        <div class="integrity-card__title">Leaderboard eligibility gates</div>
+        <p class="integrity-card__desc">Public leaderboard requires: minimum 30 days of continuous data, at least 3 distinct models used, org-attested scout, and no active integrity flags. Score is earned — not bought.</p>
+        <div class="integrity-card__detail">Min active days: 30<br/>Min distinct models: 3<br/>Integrity flags: zero tolerance</div>
+      </article>
+
+      <article class="integrity-card" role="listitem" style="background:var(--blue-tint);border-color:rgba(0,122,255,.2)">
+        <div class="integrity-card__def" style="color:var(--blue)">Result</div>
+        <div class="integrity-card__title">A score employers trust</div>
+        <p class="integrity-card__desc">TokenPrint is the first AI credential that is machine-verified, not self-reported. Employers can verify at <code style="font-size:12px;background:rgba(0,122,255,.1);padding:1px 5px;border-radius:3px;color:var(--blue)">hive.io/verify/0x…</code> in a single API call.</p>
+        <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+          <span class="tag tag--blue" style="font-size:11px">Node-attested</span>
+          <span class="tag tag--blue" style="font-size:11px">Tamper-evident</span>
+          <span class="tag tag--blue" style="font-size:11px">Portable</span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
 <!-- ── Identity ───────────────────────────────────── -->
 <section id="identity" class="identity" aria-labelledby="identity-heading">
   <div class="container">
@@ -1451,6 +1968,120 @@
   </div>
 </section>
 
+<!-- ── Observability ───────────────────────────────── -->
+<section id="observability" class="observability-section" aria-labelledby="obs-heading">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow"><span class="tag tag--green">Observability</span></div>
+      <h2 class="section-title" id="obs-heading">HIVE watches itself<br/>so you don't have to.</h2>
+      <p class="section-sub">Every component ships with Prometheus metrics, structured JSON logs, and pre-built Grafana dashboards. SLOs are defined — not aspirational.</p>
+    </div>
+
+    <div class="obs-split">
+
+      <!-- Left: terminal card showing health endpoints + key metrics -->
+      <div class="obs-terminal" aria-label="Node Hub health endpoints">
+        <div class="obs-terminal__topbar">
+          <div class="obs-terminal__dot" style="background:#FF5F57"></div>
+          <div class="obs-terminal__dot" style="background:#FEBC2E"></div>
+          <div class="obs-terminal__dot" style="background:#28C840"></div>
+          <div class="obs-terminal__label">Node Hub · health + metrics</div>
+        </div>
+        <div class="obs-terminal__body">
+<span class="t-gray"># Liveness — returns 200 if process alive</span>
+<span class="t-green">GET</span> <span class="t-white">/healthz</span>
+<span class="t-orange">→</span> <span class="t-blue">{ "status": "ok", "uptime_s": 847200 }</span>
+
+<span class="t-gray"># Readiness — checks DB + Redis before serving</span>
+<span class="t-green">GET</span> <span class="t-white">/ready</span>
+<span class="t-orange">→</span> <span class="t-blue">{ "db": "ok", "redis": "ok", "queue_depth": 142 }</span>
+
+<span class="t-gray"># Prometheus metrics scrape endpoint</span>
+<span class="t-green">GET</span> <span class="t-white">/metrics</span>
+<span class="t-orange">→</span> hatp_events_ingested_total{provider="openai"} <span class="t-blue">48291</span>
+   hatp_ingest_latency_ms{q="p99"} <span class="t-blue">187</span>
+   hatp_queue_depth_current <span class="t-blue">142</span>
+   hatp_scout_active_count <span class="t-blue">94</span>
+   hatp_hive_sync_lag_seconds <span class="t-blue">18</span>
+
+<span class="t-gray"># Admin full status (auth required)</span>
+<span class="t-green">GET</span> <span class="t-white">/admin/status</span>
+<span class="t-orange">→</span> <span class="t-blue">{ "node_id": "ae-gov-01", "mode": "federated",</span>
+     <span class="t-blue">"db_size_gb": 4.2, "disk_pct": 62,</span>
+     <span class="t-blue">"hive_sync": "ok", "last_sync_at": "..." }</span>
+        </div>
+      </div>
+
+      <!-- Right: SLO cards -->
+      <div class="obs-cards">
+
+        <div class="obs-card">
+          <div class="obs-card__title">Ingest pipeline SLOs</div>
+          <div class="obs-slos">
+            <div class="slo-row">
+              <span class="slo-label">Ingest latency p99</span>
+              <span class="slo-value">&lt; 200 ms</span>
+            </div>
+            <div class="slo-row">
+              <span class="slo-label">Ingest latency p999</span>
+              <span class="slo-value">&lt; 500 ms</span>
+            </div>
+            <div class="slo-row">
+              <span class="slo-label">Event acceptance rate</span>
+              <span class="slo-value">&gt; 99.5%</span>
+            </div>
+            <div class="slo-row">
+              <span class="slo-label">Queue depth alert</span>
+              <span class="slo-value">&gt; 5,000</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="obs-card">
+          <div class="obs-card__title">Scout fleet SLOs</div>
+          <div class="obs-slos">
+            <div class="slo-row">
+              <span class="slo-label">Health check response</span>
+              <span class="slo-value">&lt; 50 ms</span>
+            </div>
+            <div class="slo-row">
+              <span class="slo-label">Flush success rate</span>
+              <span class="slo-value">&gt; 99.9%</span>
+            </div>
+            <div class="slo-row">
+              <span class="slo-label">Stale Scout alert</span>
+              <span class="slo-value">&gt; 24 hr</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="obs-card">
+          <div class="obs-card__title">4 Grafana dashboards, pre-built</div>
+          <div class="obs-slos">
+            <div class="slo-row">
+              <span class="slo-label">Scout Fleet Health</span>
+              <span class="slo-value" style="color:var(--green)">Live</span>
+            </div>
+            <div class="slo-row">
+              <span class="slo-label">Node Hub Operations</span>
+              <span class="slo-value" style="color:var(--green)">Live</span>
+            </div>
+            <div class="slo-row">
+              <span class="slo-label">Hive Constellation</span>
+              <span class="slo-value" style="color:var(--green)">Live</span>
+            </div>
+            <div class="slo-row">
+              <span class="slo-label">Security Audit Trail</span>
+              <span class="slo-value" style="color:var(--green)">Live</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ── UAE ────────────────────────────────────────── -->
 <section class="uae" aria-labelledby="uae-heading">
   <div class="container">
@@ -1573,26 +2204,90 @@
         </svg>
         Star on GitHub
       </a>
-      <a href="PLAN.md" class="btn btn--ghost">Read the plan</a>
-      <a href="docs/architecture.md" class="btn btn--ghost">Architecture docs</a>
+      <a href="https://github.com/vishalm/hivehq/blob/main/PLAN.md" class="btn btn--ghost">Read the plan</a>
+      <a href="https://github.com/vishalm/hivehq/blob/main/docs/architecture.md" class="btn btn--ghost">Architecture docs</a>
     </div>
   </div>
 </section>
 
-<!-- ── Footer ─────────────────────────────────────── -->
-<footer class="footer">
+<!-- ── Footer full ─────────────────────────────────── -->
+<footer class="footer-full">
   <div class="container">
-    <div class="footer__inner">
-      <div class="footer__brand">
-        <img src="logo.svg" width="24" height="24" alt="HIVE"/>
-        HIVE · The Global AI Consumption Network · April 2026
+    <div class="footer-full__grid">
+
+      <!-- Brand column -->
+      <div>
+        <div class="footer-full__brand">
+          <img src="logo.svg" width="32" height="32" alt="HIVE"/>
+          <span class="footer-full__brand-name">HIVE</span>
+        </div>
+        <p class="footer-full__tagline">The Global AI Consumption Network. Scout every call. Node every org. Hive the planet.</p>
+        <div class="footer-full__social">
+          <a href="https://github.com/vishalm/hivehq" aria-label="GitHub">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path d="M8 .5C3.86.5.5 3.86.5 8c0 3.32 2.15 6.14 5.13 7.13.37.07.5-.16.5-.36v-1.27c-2.1.46-2.54-.88-2.54-.88-.35-.88-.85-1.11-.85-1.11-.69-.47.05-.46.05-.46.77.05 1.17.79 1.17.79.68 1.17 1.78.83 2.22.64.07-.5.27-.83.48-1.02-1.67-.19-3.43-.83-3.43-3.71 0-.82.29-1.49.77-2.01-.08-.19-.33-.96.07-1.99 0 0 .63-.2 2.06.77A7.17 7.17 0 018 4.05a7.17 7.17 0 011.88.25c1.43-.97 2.06-.77 2.06-.77.4 1.03.15 1.8.07 1.99.48.52.77 1.19.77 2.01 0 2.89-1.76 3.52-3.44 3.71.27.23.51.69.51 1.39v2.06c0 .2.13.44.51.36A7.51 7.51 0 0015.5 8C15.5 3.86 12.14.5 8 .5z"/>
+            </svg>
+          </a>
+        </div>
       </div>
-      <nav class="footer__links" aria-label="Footer links">
-        <a href="PLAN.md">Plan</a>
-        <a href="docs/architecture.md">Architecture</a>
-        <a href="docs/business-model.md">Business</a>
-        <a href="https://github.com/vishalm/hivehq">GitHub</a>
-      </nav>
+
+      <!-- Core docs -->
+      <div>
+        <div class="footer-full__col-title">Core</div>
+        <ul class="footer-full__links">
+          <li><a href="https://github.com/vishalm/hivehq/blob/main/PLAN.md">North Star Plan</a></li>
+          <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/architecture.md">Architecture</a></li>
+          <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/data-model.md">Data Model</a></li>
+          <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/identity.md">Identity</a></li>
+          <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/business-model.md">Business Model</a></li>
+          <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/deployment.md">Deployment</a></li>
+          <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/build-sequence.md">Build Sequence</a></li>
+        </ul>
+      </div>
+
+      <!-- Protocol docs -->
+      <div>
+        <div class="footer-full__col-title">Protocol</div>
+        <ul class="footer-full__links">
+          <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/protocol.md">HATP Specification</a></li>
+          <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/protocol-versioning.md">Version Negotiation</a></li>
+          <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/telemetry-edge-cases.md">Telemetry Edge Cases</a></li>
+        </ul>
+        <div class="footer-full__col-title" style="margin-top:24px">Non-Functional</div>
+        <ul class="footer-full__links">
+          <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/security.md">Security</a></li>
+          <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/key-lifecycle.md">Key Lifecycle</a></li>
+          <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/integrity.md">Integrity</a></li>
+          <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/observability.md">Observability</a></li>
+          <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/data-lifecycle.md">Data Lifecycle</a></li>
+          <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/resilience.md">Resilience</a></li>
+        </ul>
+      </div>
+
+      <!-- Links -->
+      <div>
+        <div class="footer-full__col-title">Resources</div>
+        <ul class="footer-full__links">
+          <li><a href="https://github.com/vishalm/hivehq">GitHub</a></li>
+          <li><a href="#waitlist">Early access</a></li>
+          <li><a href="#protocol">HATP Protocol</a></li>
+          <li><a href="#compliance">Compliance</a></li>
+          <li><a href="#trust">Trust model</a></li>
+          <li><a href="#resilience">Resilience</a></li>
+          <li><a href="#observability">Observability</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer-full__bottom">
+      <div class="footer-full__copy">
+        HIVE · The Global AI Consumption Network · April 2026<br/>
+        <span style="font-size:12px;color:var(--gray-3)">HATP Protocol · MIT License · Open standard</span>
+      </div>
+      <div class="footer-full__langs">
+        هايف · הייב · ہائیو · هایو · हाइव · ਹਾਈਵ · হাইভ · ஹைவ் · హైవ్ · හයිව් · ᩋ᩠ᨿ᩠ᩅ · ហ៊ីវ · ไฮฟ์ · 蜂巢 · ハイブ · 하이브 · ჰაივი · Χάιβ · Хайв · Colmena · Ruche · Kovan
+      </div>
     </div>
   </div>
 </footer>
@@ -1720,12 +2415,18 @@ function handleSubmit(e){
         obs.unobserve(e.target);
       }
     });
-  }, {threshold: 0.12});
+  }, {threshold: 0.10});
 
-  document.querySelectorAll('.pain-card,.deploy-card,.flow-feature,.flow-diagram').forEach(el => {
+  const sel = [
+    '.pain-card','.deploy-card','.flow-feature','.flow-diagram',
+    '.reveal','.urgency-card','.trust-card','.compliance-card',
+    '.integrity-card','.obs-card','.resil-stat',
+  ].join(',');
+
+  document.querySelectorAll(sel).forEach((el, i) => {
     el.style.opacity = '0';
-    el.style.transform = 'translateY(24px)';
-    el.style.transition = 'opacity .5s ease, transform .5s ease';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = `opacity .5s ease ${(i % 4) * 60}ms, transform .5s ease ${(i % 4) * 60}ms`;
     obs.observe(el);
   });
 })();
