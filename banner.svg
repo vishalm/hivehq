@@ -1,0 +1,177 @@
+<svg viewBox="0 0 1200 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="HIVE — The Global AI Consumption Network">
+  <defs>
+    <linearGradient id="heroBg" x1="0" y1="0" x2="1200" y2="360" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="50%"  stop-color="#F5F5F7"/>
+      <stop offset="100%" stop-color="#F0F0F5"/>
+    </linearGradient>
+    <linearGradient id="scG" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#6E6E73"/>
+      <stop offset="100%" stop-color="#98989D"/>
+    </linearGradient>
+    <linearGradient id="ndG" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0071E3"/>
+      <stop offset="100%" stop-color="#007AFF"/>
+    </linearGradient>
+    <linearGradient id="hvG" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4A47C6"/>
+      <stop offset="100%" stop-color="#6E6CF4"/>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="80" y1="0" x2="600" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#1D1D1F"/>
+      <stop offset="60%"  stop-color="#2D2D3F"/>
+      <stop offset="100%" stop-color="#4A47C6"/>
+    </linearGradient>
+    <filter id="hexGlow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="blur"/>
+      <feFlood flood-color="#5856D6" flood-opacity="0.3" result="col"/>
+      <feComposite in="col" in2="blur" operator="in" result="shadow"/>
+      <feComposite in="SourceGraphic" in2="shadow" operator="over"/>
+    </filter>
+    <filter id="blueglow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur"/>
+      <feFlood flood-color="#007AFF" flood-opacity="0.35" result="col"/>
+      <feComposite in="col" in2="blur" operator="in" result="shadow"/>
+      <feComposite in="SourceGraphic" in2="shadow" operator="over"/>
+    </filter>
+    <filter id="cardShadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="8" flood-color="#1D1D1F" flood-opacity="0.08"/>
+    </filter>
+    <filter id="textShadow">
+      <feDropShadow dx="0" dy="0" stdDeviation="0" flood-color="transparent" flood-opacity="0"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="360" fill="url(#heroBg)"/>
+
+  <!-- Subtle hex grid background pattern (decorative) -->
+  <g opacity="0.06" stroke="#007AFF" stroke-width="0.8" fill="none">
+    <!-- Row 1 -->
+    <polygon points="60,20 80,32 80,56 60,68 40,56 40,32"/>
+    <polygon points="100,20 120,32 120,56 100,68 80,56 80,32"/>
+    <polygon points="140,20 160,32 160,56 140,68 120,56 120,32"/>
+    <polygon points="60,68 80,80 80,104 60,116 40,104 40,80"/>
+    <polygon points="100,68 120,80 120,104 100,116 80,104 80,80"/>
+    <polygon points="140,68 160,80 160,104 140,116 120,104 120,80"/>
+    <polygon points="60,116 80,128 80,152 60,164 40,152 40,128"/>
+    <polygon points="100,116 120,128 120,152 100,164 80,152 80,128"/>
+    <polygon points="60,164 80,176 80,200 60,212 40,200 40,176"/>
+    <polygon points="100,164 120,176 120,200 100,212 80,200 80,176"/>
+    <polygon points="60,212 80,224 80,248 60,260 40,248 40,224"/>
+    <polygon points="100,212 120,224 120,248 100,260 80,248 80,224"/>
+    <polygon points="60,260 80,272 80,296 60,308 40,296 40,272"/>
+    <polygon points="100,260 120,272 120,296 100,308 80,296 80,272"/>
+    <polygon points="60,308 80,320 80,344 60,356 40,344 40,320"/>
+    <polygon points="100,308 120,320 120,344 100,356 80,344 80,320"/>
+    <!-- Right side sparse pattern -->
+    <polygon points="1060,20 1080,32 1080,56 1060,68 1040,56 1040,32"/>
+    <polygon points="1100,20 1120,32 1120,56 1100,68 1080,56 1080,32"/>
+    <polygon points="1140,20 1160,32 1160,56 1140,68 1120,56 1120,32"/>
+    <polygon points="1060,68 1080,80 1080,104 1060,116 1040,104 1040,80"/>
+    <polygon points="1100,68 1120,80 1120,104 1100,116 1080,104 1080,80"/>
+    <polygon points="1060,116 1080,128 1080,152 1060,164 1040,152 1040,128"/>
+    <polygon points="1100,116 1120,128 1120,152 1100,164 1080,152 1080,128"/>
+    <polygon points="1060,164 1080,176 1080,200 1060,212 1040,200 1040,176"/>
+    <polygon points="1100,164 1120,176 1120,200 1100,212 1080,200 1080,176"/>
+    <polygon points="1060,212 1080,224 1080,248 1060,260 1040,248 1040,224"/>
+    <polygon points="1100,212 1120,224 1120,248 1100,260 1080,248 1080,224"/>
+    <polygon points="1060,260 1080,272 1080,296 1060,308 1040,296 1040,272"/>
+    <polygon points="1100,260 1120,272 1120,296 1100,308 1080,296 1080,272"/>
+    <polygon points="1060,308 1080,320 1080,344 1060,356 1040,344 1040,320"/>
+    <polygon points="1100,308 1120,320 1120,344 1100,356 1080,344 1080,320"/>
+  </g>
+
+  <!-- ── LARGE LOGO (right side, decorative scale) ── -->
+  <g transform="translate(860, 60) scale(2.4)" filter="url(#cardShadow)">
+    <!-- Scout -->
+    <polygon points="77.5,87 100,100 100,126 77.5,139 55,126 55,100" fill="url(#scG)" opacity="0.88"/>
+    <!-- Node -->
+    <polygon points="122.5,87 145,100 145,126 122.5,139 100,126 100,100" fill="url(#ndG)" opacity="0.92" filter="url(#blueglow)"/>
+    <!-- Hive -->
+    <polygon points="100,48 122.5,61 122.5,87 100,100 77.5,87 77.5,61" fill="url(#hvG)" filter="url(#hexGlow)"/>
+    <!-- Dividers -->
+    <line x1="100" y1="100" x2="100" y2="126" stroke="white" stroke-width="1" opacity="0.6"/>
+    <line x1="100" y1="100" x2="77.5" y2="87"  stroke="white" stroke-width="1" opacity="0.6"/>
+    <line x1="100" y1="100" x2="122.5" y2="87" stroke="white" stroke-width="1" opacity="0.6"/>
+    <!-- Borders -->
+    <polygon points="77.5,87 100,100 100,126 77.5,139 55,126 55,100"  fill="none" stroke="white" stroke-width="0.8" opacity="0.3"/>
+    <polygon points="122.5,87 145,100 145,126 122.5,139 100,126 100,100" fill="none" stroke="white" stroke-width="0.8" opacity="0.3"/>
+    <polygon points="100,48 122.5,61 122.5,87 100,100 77.5,87 77.5,61" fill="none" stroke="white" stroke-width="0.8" opacity="0.35"/>
+    <!-- Nodes -->
+    <circle cx="100" cy="100" r="5" fill="white" opacity="0.97"/>
+    <circle cx="100" cy="48"  r="3.5" fill="white" opacity="0.9"/>
+    <circle cx="55"  cy="113" r="2.5" fill="white" opacity="0.55"/>
+    <circle cx="145" cy="113" r="2.5" fill="white" opacity="0.55"/>
+  </g>
+
+  <!-- ── MAIN TEXT (left-center) ── -->
+
+  <!-- Eyebrow tag -->
+  <rect x="80" y="62" width="240" height="28" rx="14" fill="#007AFF" opacity="0.10"/>
+  <rect x="80" y="62" width="240" height="28" rx="14" fill="none" stroke="#007AFF" stroke-width="0.8" opacity="0.5"/>
+  <text x="200" y="81" text-anchor="middle" font-family="-apple-system, 'SF Pro Text', Helvetica, sans-serif"
+        font-size="11.5" font-weight="600" fill="#007AFF" letter-spacing="1.8">
+    THE GLOBAL AI CONSUMPTION NETWORK
+  </text>
+
+  <!-- HIVE wordmark -->
+  <text x="80" y="178" font-family="-apple-system, 'SF Pro Display', Helvetica, sans-serif"
+        font-size="96" font-weight="800" fill="url(#textGrad)"
+        letter-spacing="-3">
+    HIVE
+  </text>
+
+  <!-- Tagline -->
+  <text x="82" y="216" font-family="-apple-system, 'SF Pro Text', Helvetica, sans-serif"
+        font-size="17" fill="#6E6E73" letter-spacing="0.3">
+    Scout · Node · Constellation
+  </text>
+
+  <!-- Three badges -->
+  <!-- Badge 1 -->
+  <rect x="82"  y="248" width="148" height="32" rx="10" fill="#007AFF" fill-opacity="0.07" stroke="#007AFF" stroke-opacity="0.25" stroke-width="1"/>
+  <text x="156" y="269" text-anchor="middle" font-family="-apple-system, 'SF Pro Text', Helvetica, sans-serif" font-size="12" fill="#0071E3" font-weight="500">
+    Any model · Any tool
+  </text>
+  <!-- Badge 2 -->
+  <rect x="242" y="248" width="150" height="32" rx="10" fill="#34C759" fill-opacity="0.07" stroke="#34C759" stroke-opacity="0.30" stroke-width="1"/>
+  <text x="317" y="269" text-anchor="middle" font-family="-apple-system, 'SF Pro Text', Helvetica, sans-serif" font-size="12" fill="#248A3D" font-weight="500">
+    Zero-knowledge vault
+  </text>
+  <!-- Badge 3 -->
+  <rect x="404" y="248" width="148" height="32" rx="10" fill="#5856D6" fill-opacity="0.07" stroke="#5856D6" stroke-opacity="0.25" stroke-width="1"/>
+  <text x="478" y="269" text-anchor="middle" font-family="-apple-system, 'SF Pro Text', Helvetica, sans-serif" font-size="12" fill="#4A47C6" font-weight="500">
+    Global leaderboard
+  </text>
+
+  <!-- Bottom separator line -->
+  <line x1="80" y1="355" x2="1120" y2="355" stroke="#1D1D1F" stroke-width="0.5" opacity="0.08"/>
+
+  <!-- Flow arrows: Scout → Node → Hive (bottom of banner) -->
+  <g opacity="0.85" font-family="-apple-system, 'SF Pro Text', Helvetica, sans-serif" font-size="12">
+    <rect x="82"  y="312" width="72" height="26" rx="8" fill="#F5F5F7" stroke="#C7C7CC" stroke-width="0.8"/>
+    <text x="118" y="329" text-anchor="middle" fill="#6E6E73" font-weight="500">Scout</text>
+
+    <!-- Arrow SVG chevron -->
+    <line x1="162" y1="325" x2="180" y2="325" stroke="#C7C7CC" stroke-width="1.5"/>
+    <polyline points="175,321 180,325 175,329" fill="none" stroke="#C7C7CC" stroke-width="1.5" stroke-linejoin="round"/>
+
+    <rect x="188" y="312" width="72" height="26" rx="8" fill="#EBF4FF" stroke="#007AFF" stroke-width="0.8" stroke-opacity="0.4"/>
+    <text x="224" y="329" text-anchor="middle" fill="#007AFF" font-weight="500">Node</text>
+
+    <!-- Arrow SVG chevron -->
+    <line x1="268" y1="325" x2="286" y2="325" stroke="#C7C7CC" stroke-width="1.5"/>
+    <polyline points="281,321 286,325 281,329" fill="none" stroke="#C7C7CC" stroke-width="1.5" stroke-linejoin="round"/>
+
+    <rect x="294" y="312" width="72" height="26" rx="8" fill="#EEEEFF" stroke="#5856D6" stroke-width="0.8" stroke-opacity="0.4"/>
+    <text x="330" y="329" text-anchor="middle" fill="#5856D6" font-weight="500">Hive</text>
+  </g>
+
+  <!-- Subtle radial glow behind logo (light version) -->
+  <radialGradient id="logoGlow" cx="1050" cy="220" r="200" gradientUnits="userSpaceOnUse">
+    <stop offset="0%"   stop-color="#5856D6" stop-opacity="0.06"/>
+    <stop offset="100%" stop-color="#5856D6" stop-opacity="0"/>
+  </radialGradient>
+  <rect x="850" y="0" width="350" height="360" fill="url(#logoGlow)"/>
+</svg>
