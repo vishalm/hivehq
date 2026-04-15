@@ -806,6 +806,70 @@
     .slo-label{font-size:12.5px;color:var(--gray-5)}
     .slo-value{font-size:12.5px;font-weight:600;color:var(--indigo);font-family:var(--font-mono)}
 
+    /* ── Data Intelligence ───────────────────────── */
+    .intelligence{background:var(--gray-1)}
+    .query-bar{
+      background:var(--white);border-radius:var(--radius-lg);
+      border:1px solid var(--gray-2);box-shadow:var(--shadow-md);
+      padding:18px 24px;max-width:680px;margin:0 auto 56px;
+      display:flex;align-items:center;gap:14px;
+    }
+    .query-bar__icon{
+      width:34px;height:34px;border-radius:10px;background:var(--indigo-tint);
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .query-bar__text{flex:1;font-size:15px;color:var(--gray-6);font-family:var(--font)}
+    .query-cursor{
+      display:inline-block;width:2px;height:17px;background:var(--indigo);
+      vertical-align:middle;margin-left:1px;
+      animation:blink 1s step-end infinite;
+    }
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+    .query-bar__badge{
+      font-size:11px;font-weight:600;padding:4px 10px;border-radius:100px;
+      background:var(--indigo-tint);color:var(--indigo);white-space:nowrap;flex-shrink:0;
+    }
+    .graph-types-table{
+      width:100%;border-collapse:collapse;background:var(--white);
+      border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-sm);
+      font-size:13px;margin-bottom:56px;
+    }
+    .graph-types-table th{
+      background:var(--gray-1);padding:10px 16px;text-align:left;
+      font-size:11px;font-weight:600;color:var(--gray-4);
+      text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--gray-2);
+    }
+    .graph-types-table td{padding:12px 16px;border-bottom:1px solid var(--gray-1);vertical-align:top}
+    .graph-types-table tr:last-child td{border-bottom:none}
+    .graph-types-table tr:hover td{background:#FAFAFA}
+    .gtag{
+      display:inline-block;font-size:10px;font-weight:700;
+      padding:2px 7px;border-radius:4px;text-transform:uppercase;letter-spacing:.05em;
+    }
+    .gtag--chord{background:#F0EEFF;color:var(--indigo)}
+    .gtag--3d{background:var(--blue-tint);color:var(--blue)}
+    .gtag--force{background:#FFE8E8;color:var(--red)}
+    .gtag--heat{background:var(--green-tint);color:#1D7A3F}
+    .gtag--anomaly{background:#FFF4E5;color:var(--orange)}
+    .gtag--tree{background:var(--gray-1);color:var(--gray-5)}
+    .gtag--parallel{background:#F0EEFF;color:var(--indigo)}
+    .gtag--sankey{background:var(--blue-tint);color:var(--blue)}
+    .viz-row{display:flex;flex-direction:column;gap:20px;margin-bottom:20px}
+    .viz-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+    .viz-card{
+      background:var(--white);border-radius:var(--radius-lg);
+      border:1px solid var(--gray-2);overflow:hidden;box-shadow:var(--shadow-sm);
+    }
+    .viz-card__hd{padding:18px 22px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:14px}
+    .viz-card__title{font-size:14px;font-weight:700;color:var(--gray-6);margin-bottom:3px;letter-spacing:-.01em}
+    .viz-card__sub{font-size:12px;color:var(--gray-4);line-height:1.4}
+    .viz-card__badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:100px;background:var(--indigo-tint);color:var(--indigo);white-space:nowrap;flex-shrink:0}
+    .viz-canvas{display:block;width:100%}
+    .viz-legend{padding:0 22px 16px;display:flex;flex-wrap:wrap;gap:10px}
+    .viz-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--gray-5)}
+    .viz-legend-dot{width:8px;height:8px;border-radius:50%}
+    @media(max-width:900px){.viz-grid-2{grid-template-columns:1fr}}
+
     /* ── Footer full ─────────────────────────────── */
     .footer-full{
       background:var(--gray-1);border-top:1px solid var(--gray-2);
@@ -2082,6 +2146,226 @@
   </div>
 </section>
 
+<!-- ── Data Intelligence ───────────────────────────── -->
+<section id="intelligence" class="intelligence" aria-labelledby="intel-heading">
+  <div class="container">
+    <div class="section-header section-header--center">
+      <div class="section-eyebrow"><span class="tag tag--indigo">Data Intelligence</span></div>
+      <h2 class="section-title" id="intel-heading">Talk to your data.<br/>Define your value.</h2>
+      <p class="section-sub">HIVE telemetry is not a log file. It is a queryable intelligence layer. Surface clustering, anomaly patterns, flows, and behavioral fingerprints your spreadsheet will never show you.</p>
+    </div>
+
+    <!-- NL query bar with typewriter -->
+    <div class="query-bar" aria-label="Natural language query interface">
+      <div class="query-bar__icon">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <circle cx="9" cy="9" r="7.5" stroke="var(--indigo)" stroke-width="1.4"/>
+          <path d="M5 9h8M9 5v8" stroke="var(--indigo)" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="query-bar__text" id="queryText">
+        <span id="queryContent"></span><span class="query-cursor" aria-hidden="true"></span>
+      </div>
+      <span class="query-bar__badge">HIVE Intelligence</span>
+    </div>
+
+    <!-- Graph types table -->
+    <table class="graph-types-table" aria-label="Visualization types in HIVE">
+      <thead>
+        <tr>
+          <th>Graph</th>
+          <th>Data dimensions</th>
+          <th>Value surfaced</th>
+          <th>Insight type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="gtag gtag--chord">Chord</span><br/><strong style="font-size:13px">Model — Dept Flow</strong></td>
+          <td style="color:var(--gray-5)">6 models × 6 departments × token volume</td>
+          <td style="color:var(--gray-6)">Which teams drive which model costs. Legal leans Claude, Engineering diversifies.</td>
+          <td style="color:var(--indigo);font-size:12px;font-weight:600">Flow · Dependency</td>
+        </tr>
+        <tr>
+          <td><span class="gtag gtag--3d">3D Scatter</span><br/><strong style="font-size:13px">Dept Clustering</strong></td>
+          <td style="color:var(--gray-5)">Volume × Cost/token × Model diversity</td>
+          <td style="color:var(--gray-6)">Cluster departments by AI behavior. Find outliers, power users, and efficiency leaders in one view.</td>
+          <td style="color:var(--blue);font-size:12px;font-weight:600">Clustering · Outlier</td>
+        </tr>
+        <tr>
+          <td><span class="gtag gtag--force">Force Network</span><br/><strong style="font-size:13px">AI Ecosystem Map</strong></td>
+          <td style="color:var(--gray-5)">Tools × Departments × Edge weight</td>
+          <td style="color:var(--gray-6)">Full org AI topology. Approved tools, shadow AI nodes floating at the edges, usage gravity.</td>
+          <td style="color:var(--red);font-size:12px;font-weight:600">Topology · Shadow AI</td>
+        </tr>
+        <tr>
+          <td><span class="gtag gtag--heat">Activity Heatmap</span><br/><strong style="font-size:13px">Hour × Weekday</strong></td>
+          <td style="color:var(--gray-5)">24 hours × 7 days × intensity</td>
+          <td style="color:var(--gray-6)">Peak load windows, dead zones, after-hours anomalies. Reveals shift patterns invisible in daily totals.</td>
+          <td style="color:#1D7A3F;font-size:12px;font-weight:600">Pattern · Temporal</td>
+        </tr>
+        <tr>
+          <td><span class="gtag gtag--anomaly">Anomaly Timeline</span><br/><strong style="font-size:13px">3-sigma bands</strong></td>
+          <td style="color:var(--gray-5)">Daily token rate × rolling mean × std dev</td>
+          <td style="color:var(--gray-6)">Catch spend spikes before the invoice arrives. Three flagged anomalies with labeled context.</td>
+          <td style="color:var(--orange);font-size:12px;font-weight:600">Anomaly · Alert</td>
+        </tr>
+        <tr>
+          <td><span class="gtag gtag--tree">Treemap</span><br/><strong style="font-size:13px">Budget Hierarchy</strong></td>
+          <td style="color:var(--gray-5)">Dept → Model → Token volume nested</td>
+          <td style="color:var(--gray-6)">Relative budget allocation at a glance. Eng × GPT-4o = 38M tokens — largest single cell.</td>
+          <td style="color:var(--gray-5);font-size:12px;font-weight:600">Hierarchy · Proportion</td>
+        </tr>
+        <tr>
+          <td><span class="gtag gtag--parallel">Parallel Coords</span><br/><strong style="font-size:13px">5-Dim Comparison</strong></td>
+          <td style="color:var(--gray-5)">Volume · Cost · Diversity · Latency · Sessions</td>
+          <td style="color:var(--gray-6)">Multi-dimensional department comparison. Find the gold-standard team across 5 axes simultaneously.</td>
+          <td style="color:var(--indigo);font-size:12px;font-weight:600">Multi-dim · Benchmark</td>
+        </tr>
+        <tr>
+          <td><span class="gtag gtag--sankey">Sankey</span><br/><strong style="font-size:13px">Budget Flow</strong></td>
+          <td style="color:var(--gray-5)">Budget → Dept → Model → Cost pipeline</td>
+          <td style="color:var(--gray-6)">Complete money trail. Every dollar traced from org budget through department through to model invoice.</td>
+          <td style="color:var(--blue);font-size:12px;font-weight:600">Flow · Budget</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ── Chord diagram (full width) ── -->
+    <div class="viz-row">
+      <div class="viz-card">
+        <div class="viz-card__hd">
+          <div>
+            <div class="viz-card__title">Model — Department Token Flow</div>
+            <div class="viz-card__sub">Chord diagram · 210M tokens/month · 6 models × 6 departments · ribbon width = token volume</div>
+          </div>
+          <span class="viz-card__badge">Chord</span>
+        </div>
+        <canvas class="viz-canvas" id="chordCanvas" height="500" aria-label="Chord diagram showing token flow between models and departments"></canvas>
+        <div class="viz-legend" aria-label="Model legend">
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#007AFF"></span>GPT-4o</span>
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#5856D6"></span>Claude 3.5</span>
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#34C759"></span>Gemini 1.5</span>
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#FF9500"></span>Llama 3</span>
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#FF3B30"></span>Mistral</span>
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#AF52DE"></span>Gemini Flash</span>
+          <span class="viz-legend-item" style="margin-left:8px;color:var(--gray-4)">· · ·</span>
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#60B4FF"></span>Engineering</span>
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#A5A3FF"></span>Product</span>
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#63DA83"></span>Legal</span>
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#FF9A5C"></span>Finance</span>
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#FF6B6B"></span>Design</span>
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#C8B4FF"></span>Operations</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Row 2: 3D Scatter + Force Network ── -->
+    <div class="viz-grid-2">
+
+      <div class="viz-card">
+        <div class="viz-card__hd">
+          <div>
+            <div class="viz-card__title">Department Clustering · 3D Behavior Space</div>
+            <div class="viz-card__sub">X: Token Volume · Y: Cost/Token · Z: Model Diversity · auto-rotating</div>
+          </div>
+          <span class="viz-card__badge">3D Scatter</span>
+        </div>
+        <canvas class="viz-canvas" id="scatter3d" height="360" aria-label="3D scatter plot showing department clusters"></canvas>
+        <div class="viz-legend">
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#007AFF"></span>Engineering</span>
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#5856D6"></span>Product</span>
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#FF9500"></span>Legal</span>
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#34C759"></span>Finance</span>
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#FF3B30"></span>Design</span>
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#AF52DE"></span>Operations</span>
+        </div>
+      </div>
+
+      <div class="viz-card">
+        <div class="viz-card__hd">
+          <div>
+            <div class="viz-card__title">Org AI Ecosystem · Force Network</div>
+            <div class="viz-card__sub">Approved tools (blue) · Shadow AI detected (red) · edge weight = usage volume</div>
+          </div>
+          <span class="viz-card__badge">Force</span>
+        </div>
+        <canvas class="viz-canvas" id="forceNet" height="360" aria-label="Force network showing AI tool topology including shadow AI"></canvas>
+        <div class="viz-legend">
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#007AFF"></span>Approved</span>
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#FF3B30"></span>Shadow AI</span>
+          <span class="viz-legend-item"><span class="viz-legend-dot" style="background:#E8E8ED;border:1px solid #D2D2D7"></span>Department</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Row 3: Activity Heatmap + Anomaly Timeline ── -->
+    <div class="viz-grid-2">
+
+      <div class="viz-card">
+        <div class="viz-card__hd">
+          <div>
+            <div class="viz-card__title">Usage Activity · Hour × Weekday</div>
+            <div class="viz-card__sub">Heatmap · 24 hours × 7 days · blue intensity = token rate · last 12 weeks</div>
+          </div>
+          <span class="viz-card__badge">Heatmap</span>
+        </div>
+        <canvas class="viz-canvas" id="heatmapChart" height="260" aria-label="Activity heatmap by hour and day of week"></canvas>
+      </div>
+
+      <div class="viz-card">
+        <div class="viz-card__hd">
+          <div>
+            <div class="viz-card__title">Token Rate · Anomaly Detection</div>
+            <div class="viz-card__sub">60-day daily usage · 1-sigma and 2-sigma bands · 3 spikes auto-flagged</div>
+          </div>
+          <span class="viz-card__badge">Anomaly</span>
+        </div>
+        <canvas class="viz-canvas" id="anomalyChart" height="260" aria-label="Anomaly timeline with confidence bands"></canvas>
+      </div>
+
+    </div>
+
+    <!-- ── Row 4: Treemap + Parallel Coordinates ── -->
+    <div class="viz-grid-2">
+
+      <div class="viz-card">
+        <div class="viz-card__hd">
+          <div>
+            <div class="viz-card__title">Token Budget · Treemap</div>
+            <div class="viz-card__sub">Dept → Model → volume · area = tokens · Eng × GPT-4o is largest cell (38M)</div>
+          </div>
+          <span class="viz-card__badge">Treemap</span>
+        </div>
+        <canvas class="viz-canvas" id="treemapChart" height="340" aria-label="Treemap of token budget by department and model"></canvas>
+      </div>
+
+      <div class="viz-card">
+        <div class="viz-card__hd">
+          <div>
+            <div class="viz-card__title">Multi-Dim Comparison · Parallel Coordinates</div>
+            <div class="viz-card__sub">5 axes · Volume · Cost/Token · Models · Latency · Sessions · one line per dept</div>
+          </div>
+          <span class="viz-card__badge">Parallel</span>
+        </div>
+        <canvas class="viz-canvas" id="parallelCoords" height="340" aria-label="Parallel coordinates comparing departments across 5 dimensions"></canvas>
+      </div>
+
+    </div>
+
+    <!-- Value callout -->
+    <div style="margin-top:8px;background:var(--white);border-radius:var(--radius-md);padding:28px 32px;border:1px solid var(--gray-2);display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap">
+      <div>
+        <p style="font-size:16px;font-weight:700;color:var(--gray-6);margin-bottom:6px;letter-spacing:-.02em">Every chart is queryable in natural language.</p>
+        <p style="font-size:13.5px;color:var(--gray-5);max-width:560px;line-height:1.6">"Which team has the lowest cost per token?" — HIVE runs the query and returns the parallel coordinates view. "Show me shadow AI by department" — HIVE filters the force network. Define what value means to you. HIVE surfaces it.</p>
+      </div>
+      <a href="#waitlist" class="btn btn--primary" style="white-space:nowrap">Get early access</a>
+    </div>
+
+  </div>
+</section>
+
 <!-- ── UAE ────────────────────────────────────────── -->
 <section class="uae" aria-labelledby="uae-heading">
   <div class="container">
@@ -2429,6 +2713,671 @@ function handleSubmit(e){
     el.style.transition = `opacity .5s ease ${(i % 4) * 60}ms, transform .5s ease ${(i % 4) * 60}ms`;
     obs.observe(el);
   });
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   HV — shared synthetic data namespace
+═══════════════════════════════════════════════════════════ */
+const HV = (function(){
+  const MODELS = ['GPT-4o','Claude 3.5','Gemini 1.5','Llama 3','Mistral','Gemini Flash'];
+  const DEPTS  = ['Engineering','Product','Legal','Finance','Design','Operations'];
+  /* MATRIX[dept][model] = M tokens/month */
+  const MATRIX = [
+    [38,22, 8,12, 4, 6],  /* Engineering  90M */
+    [15, 6,12, 3, 2, 8],  /* Product      46M */
+    [ 8,18, 2, 0, 1, 0],  /* Legal        29M */
+    [ 5, 3, 4, 1, 2, 2],  /* Finance      17M */
+    [ 4, 2, 3, 1, 1, 4],  /* Design       15M */
+    [ 2, 1, 2, 4, 3, 1],  /* Operations   13M */
+  ];
+  const MODEL_COLORS = ['#007AFF','#5856D6','#34C759','#FF9500','#FF3B30','#AF52DE'];
+  const DEPT_COLORS  = ['#60B4FF','#A5A3FF','#63DA83','#FF9A5C','#FF6B6B','#C8B4FF'];
+  const MODEL_TOTALS = MODELS.map((_,j)=> MATRIX.reduce((s,r)=>s+r[j],0));
+  const DEPT_TOTALS  = MATRIX.map(r=>r.reduce((a,b)=>a+b,0));
+  const GRAND_TOTAL  = DEPT_TOTALS.reduce((a,b)=>a+b,0); /* 210 */
+  return {MODELS,DEPTS,MATRIX,MODEL_COLORS,DEPT_COLORS,MODEL_TOTALS,DEPT_TOTALS,GRAND_TOTAL};
+})();
+
+/* shared dpr-aware resize helper */
+function hvResize(canvas, ctx, h){
+  const dpr = window.devicePixelRatio||1;
+  const w   = canvas.offsetWidth||600;
+  const hh  = h||canvas.offsetHeight||400;
+  canvas.width  = w*dpr; canvas.height = hh*dpr;
+  canvas.style.width = w+'px'; canvas.style.height = hh+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {W:w, H:hh};
+}
+
+/* cross-browser rounded rect */
+function rrect(ctx,x,y,w,h,r){
+  r = Math.min(r, w/2, h/2);
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+}
+
+function hexToRgba(hex,a){
+  const n=parseInt(hex.slice(1),16);
+  return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   1. Query-bar typewriter
+═══════════════════════════════════════════════════════════ */
+(function(){
+  const el = document.getElementById('queryContent');
+  if(!el) return;
+  const QS = [
+    'Which department has the highest cost per token?',
+    'Show shadow AI usage by department this month',
+    'Who crossed the 3-sigma anomaly threshold on Day 34?',
+    'Compare Engineering vs Legal model diversity',
+    'What is our TokenPrint score vs industry benchmark?',
+    'Forecast next quarter spend at current growth rate',
+    'Which team drives the most Gemini Flash traffic?',
+  ];
+  let qi=0,ci=0,del=false,pf=0;
+  function tick(){
+    if(pf>0){pf--;setTimeout(tick,60);return;}
+    const q=QS[qi];
+    if(!del){ci++;el.textContent=q.slice(0,ci);if(ci>=q.length){pf=28;del=true;}}
+    else{ci--;el.textContent=q.slice(0,ci);if(ci<=0){del=false;qi=(qi+1)%QS.length;pf=8;}}
+    setTimeout(tick,del?26:50);
+  }
+  tick();
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   2. Chord diagram — Model / Dept token flow
+═══════════════════════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('chordCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W,H,cx,cy,OR,IR,prog=0,raf=null;
+  const {MODELS,DEPTS,MATRIX,MODEL_COLORS,DEPT_COLORS,MODEL_TOTALS,DEPT_TOTALS,GRAND_TOTAL} = HV;
+  const NM=MODELS.length, ND=DEPTS.length;
+  const GAP=0.028;
+
+  function arcs(){
+    const MS = Math.PI - GAP*(NM+1);
+    const DS = Math.PI - GAP*(ND+1);
+    const ma=[], da=[];
+    let ang = -Math.PI/2 + GAP;
+    for(let m=0;m<NM;m++){
+      const sp = (MODEL_TOTALS[m]/GRAND_TOTAL)*MS;
+      const sub=[]; let sa=ang;
+      for(let d=0;d<ND;d++){
+        const ss=(MODEL_TOTALS[m]?MATRIX[d][m]/MODEL_TOTALS[m]:0)*sp;
+        sub.push({s:sa,e:sa+ss}); sa+=ss;
+      }
+      ma.push({s:ang,e:ang+sp,sub}); ang+=sp+GAP;
+    }
+    ang = Math.PI/2 + GAP;
+    for(let d=0;d<ND;d++){
+      const sp = (DEPT_TOTALS[d]/GRAND_TOTAL)*DS;
+      const sub=[]; let sa=ang;
+      for(let m=0;m<NM;m++){
+        const ss=(DEPT_TOTALS[d]?MATRIX[d][m]/DEPT_TOTALS[d]:0)*sp;
+        sub.push({s:sa,e:sa+ss}); sa+=ss;
+      }
+      da.push({s:ang,e:ang+sp,sub}); ang+=sp+GAP;
+    }
+    return {ma,da};
+  }
+
+  function ribbon(a1s,a1e,a2s,a2e,col,alpha){
+    if(Math.abs(a1e-a1s)<0.002||Math.abs(a2e-a2s)<0.002) return;
+    ctx.beginPath();
+    ctx.moveTo(cx+IR*Math.cos(a1s), cy+IR*Math.sin(a1s));
+    ctx.arc(cx,cy,IR,a1s,a1e);
+    ctx.bezierCurveTo(cx,cy,cx,cy, cx+IR*Math.cos(a2e),cy+IR*Math.sin(a2e));
+    ctx.arc(cx,cy,IR,a2e,a2s,true);
+    ctx.bezierCurveTo(cx,cy,cx,cy, cx+IR*Math.cos(a1s),cy+IR*Math.sin(a1s));
+    ctx.closePath();
+    ctx.fillStyle = hexToRgba(col, alpha*prog);
+    ctx.fill();
+  }
+
+  function drawLabel(angle, text, bold){
+    const lr = OR+32;
+    const lx = cx+lr*Math.cos(angle);
+    const ly = cy+lr*Math.sin(angle);
+    ctx.save();
+    ctx.globalAlpha = prog;
+    ctx.font = (bold?'bold ':'')+'10.5px -apple-system,sans-serif';
+    ctx.textAlign = (Math.cos(angle)>0.1)?'left':(Math.cos(angle)<-0.1)?'right':'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#1D1D1F';
+    ctx.fillText(text, lx, ly);
+    ctx.restore();
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    prog = Math.min(1, prog+0.022);
+    const {ma,da} = arcs();
+    /* ribbons */
+    for(let m=0;m<NM;m++){
+      for(let d=0;d<ND;d++){
+        if(!MATRIX[d][m]) continue;
+        ribbon(ma[m].sub[d].s,ma[m].sub[d].e, da[d].sub[m].s,da[d].sub[m].e, MODEL_COLORS[m], 0.22);
+      }
+    }
+    /* arcs */
+    for(let m=0;m<NM;m++){
+      ctx.beginPath(); ctx.arc(cx,cy,OR,ma[m].s,ma[m].e); ctx.arc(cx,cy,IR,ma[m].e,ma[m].s,true); ctx.closePath();
+      ctx.fillStyle = hexToRgba(MODEL_COLORS[m],0.88*prog); ctx.fill();
+    }
+    for(let d=0;d<ND;d++){
+      ctx.beginPath(); ctx.arc(cx,cy,OR,da[d].s,da[d].e); ctx.arc(cx,cy,IR,da[d].e,da[d].s,true); ctx.closePath();
+      ctx.fillStyle = hexToRgba(DEPT_COLORS[d],0.88*prog); ctx.fill();
+    }
+    /* labels */
+    for(let m=0;m<NM;m++) drawLabel((ma[m].s+ma[m].e)/2, MODELS[m], true);
+    for(let d=0;d<ND;d++) drawLabel((da[d].s+da[d].e)/2, DEPTS[d], false);
+    /* center */
+    ctx.save(); ctx.globalAlpha=prog*0.55; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.font='bold 15px -apple-system,sans-serif'; ctx.fillStyle='#6E6E73';
+    ctx.fillText('210M', cx, cy-9);
+    ctx.font='10px -apple-system,sans-serif'; ctx.fillText('tokens / month', cx, cy+9);
+    ctx.restore();
+    if(prog<1) raf=requestAnimationFrame(draw);
+  }
+
+  function resize(){
+    const dim = hvResize(canvas,ctx,500);
+    W=dim.W; H=dim.H; cx=W/2; cy=H/2;
+    OR=Math.min(W,H)*0.36; IR=OR*0.68;
+  }
+
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){prog=0;resize();draw();io.unobserve(canvas);} });
+  },{threshold:0.25});
+  io.observe(canvas);
+  new ResizeObserver(()=>{resize();prog=0;draw();}).observe(canvas.parentElement);
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   3. 3D Scatter — Department clustering (auto-rotating)
+═══════════════════════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('scatter3d');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W,H,cx,cy,ang=0,raf=null;
+  const {DEPTS,DEPT_TOTALS,MATRIX,DEPT_COLORS} = HV;
+
+  /* synthetic 3-axis data per dept */
+  const COST = [4.2,2.8,3.8,2.2,2.9,1.9]; /* avg cents/1k tokens */
+  function entropy(row){
+    const t=row.reduce((a,b)=>a+b,0); if(!t) return 0;
+    return row.reduce((e,v)=>{ const p=v/t; return e+(p>0?-p*Math.log2(p):0); },0)/Math.log2(row.length);
+  }
+  const rawPts = DEPTS.map((lbl,d)=>({
+    lbl, color:DEPT_COLORS[d],
+    rx: DEPT_TOTALS[d],
+    ry: COST[d],
+    rz: entropy(MATRIX[d])*100,
+  }));
+  function norm(arr){ const mn=Math.min(...arr),mx=Math.max(...arr),r=mx-mn||1; return arr.map(v=>(v-mn)/r*2-1); }
+  const NX=norm(rawPts.map(p=>p.rx));
+  const NY=norm(rawPts.map(p=>p.ry));
+  const NZ=norm(rawPts.map(p=>p.rz));
+  const PTS=rawPts.map((p,i)=>({...p,nx:NX[i],ny:NY[i],nz:NZ[i]}));
+
+  function proj(nx,ny,nz,a){
+    const ca=Math.cos(a),sa=Math.sin(a);
+    const rx=nx*ca+nz*sa, rz=-nx*sa+nz*ca;
+    const sc=Math.min(W,H)*0.33;
+    return {sx:cx+rx*sc, sy:cy-ny*sc*0.68+rz*sc*0.22, depth:rz};
+  }
+
+  const AXES=[
+    {v:[1,0,0],lbl:'Volume',col:'#007AFF'},
+    {v:[0,1,0],lbl:'Cost',col:'#5856D6'},
+    {v:[0,0,1],lbl:'Diversity',col:'#34C759'},
+  ];
+
+  function draw(){
+    ctx.clearRect(0,0,W,H); ang+=0.007;
+    /* axes */
+    AXES.forEach(ax=>{
+      const o=proj(0,0,0,ang), t=proj(ax.v[0]*1.15,ax.v[1]*1.15,ax.v[2]*1.15,ang);
+      ctx.beginPath(); ctx.moveTo(o.sx,o.sy); ctx.lineTo(t.sx,t.sy);
+      ctx.strokeStyle=ax.col; ctx.lineWidth=1.4; ctx.setLineDash([5,3]); ctx.stroke(); ctx.setLineDash([]);
+      ctx.font='bold 9.5px -apple-system,sans-serif'; ctx.textAlign='center'; ctx.fillStyle=ax.col;
+      ctx.fillText(ax.lbl,t.sx,t.sy-9);
+    });
+    /* points — painter sort */
+    const sorted=PTS.map((p,i)=>({...p,...proj(p.nx,p.ny,p.nz,ang)})).sort((a,b)=>a.depth-b.depth);
+    sorted.forEach(p=>{
+      const r=12+(p.rx/Math.max(...rawPts.map(q=>q.rx)))*8;
+      const g=ctx.createRadialGradient(p.sx-2,p.sy-3,1,p.sx,p.sy,r+6);
+      g.addColorStop(0,p.color+'BB'); g.addColorStop(1,p.color+'00');
+      ctx.beginPath(); ctx.arc(p.sx,p.sy,r+6,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
+      ctx.beginPath(); ctx.arc(p.sx,p.sy,r,0,Math.PI*2); ctx.fillStyle=p.color; ctx.fill();
+      ctx.beginPath(); ctx.arc(p.sx-r*.28,p.sy-r*.32,r*.36,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,0.32)'; ctx.fill();
+      ctx.font='bold 9.5px -apple-system,sans-serif'; ctx.textAlign='center';
+      ctx.fillStyle='#1D1D1F'; ctx.textBaseline='top';
+      ctx.fillText(p.lbl,p.sx,p.sy+r+6);
+      ctx.font='8.5px -apple-system,sans-serif'; ctx.fillStyle='#86868B';
+      ctx.fillText(p.rx+'M',p.sx,p.sy+r+17);
+    });
+    raf=requestAnimationFrame(draw);
+  }
+
+  function resize(){
+    const d=hvResize(canvas,ctx,360); W=d.W; H=d.H; cx=W/2; cy=H/2+18;
+  }
+
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting&&!raf){resize();draw();io.unobserve(canvas);} });
+  },{threshold:0.25});
+  io.observe(canvas);
+  new ResizeObserver(()=>resize()).observe(canvas.parentElement);
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   4. Force Network — AI ecosystem (spring physics)
+═══════════════════════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('forceNet');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W,H,raf=null,ticks=0;
+  const {DEPTS,DEPT_COLORS,MODEL_COLORS,MODELS,MATRIX} = HV;
+
+  const nodes=[];
+  /* dept nodes */
+  DEPTS.forEach((d,i)=>nodes.push({id:'d'+i,lbl:d,type:'dept',col:DEPT_COLORS[i],x:0,y:0,vx:0,vy:0}));
+  /* approved models */
+  MODELS.forEach((m,i)=>nodes.push({id:'m'+i,lbl:m,type:'model',col:MODEL_COLORS[i],x:0,y:0,vx:0,vy:0}));
+  /* shadow AI */
+  [{lbl:'ChatGPT\nPersonal'},{lbl:'Groq Free'},{lbl:'Perplexity'}].forEach((s,i)=>{
+    nodes.push({id:'s'+i,lbl:s.lbl,type:'shadow',col:'#FF3B30',x:0,y:0,vx:0,vy:0});
+  });
+
+  const edges=[];
+  DEPTS.forEach((_,d)=> MODELS.forEach((_,m)=>{ if(MATRIX[d][m]>=3) edges.push({s:'d'+d,t:'m'+m,w:MATRIX[d][m],sh:false}); }));
+  edges.push({s:'d0',t:'s0',w:2,sh:true},{s:'d1',t:'s2',w:2,sh:true},{s:'d4',t:'s1',w:2,sh:true});
+
+  function byId(id){return nodes.find(n=>n.id===id);}
+
+  function init(){
+    DEPTS.forEach((_,i)=>{const n=nodes[i]; n.x=W*.22+(Math.random()-.5)*24; n.y=H*.18+i*(H*.62/DEPTS.length)+(Math.random()-.5)*12;});
+    MODELS.forEach((_,i)=>{const n=nodes[DEPTS.length+i]; const a=(i/MODELS.length)*Math.PI*2; n.x=W*.58+Math.cos(a)*80; n.y=H*.5+Math.sin(a)*80;});
+    [{x:.88,y:.2},{x:.88,y:.5},{x:.88,y:.78}].forEach((p,i)=>{const n=nodes[DEPTS.length+MODELS.length+i]; n.x=W*p.x+(Math.random()-.5)*20; n.y=H*p.y+(Math.random()-.5)*18;});
+    ticks=0;
+  }
+
+  function step(){
+    nodes.forEach(n=>{n.fx=0;n.fy=0;});
+    for(let i=0;i<nodes.length;i++) for(let j=i+1;j<nodes.length;j++){
+      const a=nodes[i],b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,dist=Math.sqrt(dx*dx+dy*dy)||1;
+      const f=1100/(dist*dist); a.fx+=f*dx/dist; a.fy+=f*dy/dist; b.fx-=f*dx/dist; b.fy-=f*dy/dist;
+    }
+    edges.forEach(e=>{
+      const s=byId(e.s),t=byId(e.t); if(!s||!t) return;
+      const dx=t.x-s.x,dy=t.y-s.y,dist=Math.sqrt(dx*dx+dy*dy)||1;
+      const ideal=e.sh?150:110, f=(dist-ideal)*0.042;
+      s.fx+=f*dx/dist; s.fy+=f*dy/dist; t.fx-=f*dx/dist; t.fy-=f*dy/dist;
+    });
+    nodes.forEach(n=>{
+      n.fx+=(W/2-n.x)*0.012; n.fy+=(H/2-n.y)*0.009;
+      n.vx=(n.vx+n.fx*0.28)*0.80; n.vy=(n.vy+n.fy*0.28)*0.80;
+      n.x=Math.max(22,Math.min(W-22,n.x+n.vx));
+      n.y=Math.max(18,Math.min(H-18,n.y+n.vy));
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    step(); if(ticks<200) ticks++;
+    /* edges */
+    edges.forEach(e=>{
+      const s=byId(e.s),t=byId(e.t); if(!s||!t) return;
+      ctx.beginPath(); ctx.moveTo(s.x,s.y); ctx.lineTo(t.x,t.y);
+      ctx.strokeStyle=e.sh?'rgba(255,59,48,0.28)':'rgba(0,122,255,0.14)';
+      ctx.lineWidth=e.sh?1:Math.max(1,e.w/10);
+      ctx.setLineDash(e.sh?[4,4]:[]);ctx.stroke();ctx.setLineDash([]);
+    });
+    /* nodes */
+    nodes.forEach(n=>{
+      if(n.type==='dept'){
+        const bw=64,bh=20;
+        rrect(ctx,n.x-bw/2,n.y-bh/2,bw,bh,5);
+        ctx.fillStyle='rgba(244,244,249,0.96)'; ctx.fill();
+        ctx.strokeStyle=n.col; ctx.lineWidth=1.5; ctx.stroke();
+        ctx.font='bold 8.5px -apple-system,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillStyle='#1D1D1F';
+        ctx.fillText(n.lbl,n.x,n.y);
+      } else if(n.type==='model'){
+        const r=16;
+        const gd=ctx.createRadialGradient(n.x,n.y,2,n.x,n.y,r+6);
+        gd.addColorStop(0,n.col+'44'); gd.addColorStop(1,n.col+'00');
+        ctx.beginPath(); ctx.arc(n.x,n.y,r+6,0,Math.PI*2); ctx.fillStyle=gd; ctx.fill();
+        ctx.beginPath(); ctx.arc(n.x,n.y,r,0,Math.PI*2); ctx.fillStyle=n.col; ctx.fill();
+        ctx.font='bold 8px -apple-system,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillStyle='#fff';
+        const sl=n.lbl.split(' ')[0]; ctx.fillText(sl.slice(0,7),n.x,n.y);
+      } else {
+        const r=11;
+        ctx.beginPath(); ctx.arc(n.x,n.y,r,0,Math.PI*2);
+        ctx.fillStyle='rgba(255,59,48,0.10)'; ctx.fill();
+        ctx.strokeStyle='#FF3B30'; ctx.lineWidth=1.4; ctx.setLineDash([3,2]); ctx.stroke(); ctx.setLineDash([]);
+        ctx.font='bold 7.5px -apple-system,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillStyle='#FF3B30';
+        ctx.fillText(n.lbl.replace('\n',' ').slice(0,9),n.x,n.y);
+      }
+    });
+    raf=requestAnimationFrame(draw);
+  }
+
+  function resize(){
+    const d=hvResize(canvas,ctx,360); W=d.W; H=d.H; init();
+  }
+
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting&&!raf){resize();draw();io.unobserve(canvas);} });
+  },{threshold:0.25});
+  io.observe(canvas);
+  new ResizeObserver(()=>{if(raf){cancelAnimationFrame(raf);raf=null;}resize();draw();}).observe(canvas.parentElement);
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   5. Activity Heatmap — 24h × 7-day intensity
+═══════════════════════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('heatmapChart');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W,H;
+  const HR=24, DY=7;
+  const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+  /* synthetic grid */
+  const grid=[];
+  for(let h=0;h<HR;h++){
+    const row=[];
+    for(let d=0;d<DY;d++){
+      const we=d>=5?.12:1; const biz=h>=9&&h<=18?1:.18;
+      const lunch=h>=12&&h<=14?1.25:1; const morn=h>=9&&h<=11?1.18:1;
+      let v=(.08+Math.sin(h+d)*.04+Math.random()*.28)*we*biz*lunch*morn;
+      row.push(Math.max(0,Math.min(1,v)));
+    }
+    grid.push(row);
+  }
+  /* normalize */
+  const mx=Math.max(...grid.flat()); grid.forEach(r=>r.forEach((v,i,a)=>a[i]=v/mx));
+
+  function cellColor(t){
+    if(t<.08) return `rgba(245,245,247,.3)`;
+    if(t<.35){ const p=(t-.08)/.27; return `rgba(${Math.round(220-p*110)},${Math.round(228-p*88)},${Math.round(248)},0.88)`; }
+    if(t<.65){ const p=(t-.35)/.30; return `rgba(${Math.round(110-p*68)},${Math.round(140-p*68)},${Math.round(255)},0.9)`; }
+    const p=(t-.65)/.35; return `rgba(${Math.round(42-p*20)},${Math.round(72-p*32)},${Math.round(255-p*60)},1)`;
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const pL=44,pT=16,pR=14,pB=32;
+    const gW=W-pL-pR, gH=H-pT-pB;
+    const cW=gW/DY, cH=gH/HR;
+    for(let h=0;h<HR;h++) for(let d=0;d<DY;d++){
+      ctx.fillStyle=cellColor(grid[h][d]);
+      ctx.fillRect(pL+d*cW+.5, pT+h*cH+.5, cW-1, cH-1);
+    }
+    /* axes */
+    ctx.font='9.5px -apple-system,sans-serif'; ctx.fillStyle='#86868B';
+    ctx.textAlign='center'; ctx.textBaseline='top';
+    DAYS.forEach((d,i)=>ctx.fillText(d,pL+i*cW+cW/2,H-pB+6));
+    ctx.textAlign='right'; ctx.textBaseline='middle';
+    [0,3,6,9,12,15,18,21].forEach(h=>ctx.fillText(h+'h',pL-4,pT+h*cH+cH/2));
+    /* mini legend */
+    const lx=W-pR-72,ly=H-pB+8;
+    const lg=ctx.createLinearGradient(lx,0,lx+72,0);
+    lg.addColorStop(0,cellColor(0)); lg.addColorStop(.5,cellColor(.5)); lg.addColorStop(1,cellColor(1));
+    ctx.fillStyle=lg; ctx.fillRect(lx,ly,72,6);
+    ctx.textAlign='left'; ctx.textBaseline='top'; ctx.font='8px -apple-system,sans-serif';
+    ctx.fillStyle='#86868B'; ctx.fillText('Low',lx,ly+8); ctx.textAlign='right'; ctx.fillText('Peak',lx+72,ly+8);
+  }
+
+  function resize(){ const d=hvResize(canvas,ctx,260); W=d.W; H=d.H; }
+
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){resize();draw();io.unobserve(canvas);} });
+  },{threshold:0.25});
+  io.observe(canvas);
+  new ResizeObserver(()=>{resize();draw();}).observe(canvas.parentElement);
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   6. Anomaly Timeline — 60-day with sigma bands + spikes
+═══════════════════════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('anomalyChart');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W,H;
+  const N=60, BASE=20;
+
+  /* deterministic pseudo-random */
+  let seed=137;
+  function rand(){ seed=(seed*1664525+1013904223)&0xFFFFFFFF; return ((seed>>>0)/0xFFFFFFFF); }
+  const raw=Array.from({length:N},()=>BASE+(rand()-.5)*14);
+  raw[11]=68; raw[33]=72; raw[50]=55;
+
+  const W7=7;
+  const means=raw.map((_,i)=>{ const sl=raw.slice(Math.max(0,i-W7),i); return sl.length?sl.reduce((a,b)=>a+b,0)/sl.length:BASE; });
+  const stds=raw.map((_,i)=>{ const sl=raw.slice(Math.max(0,i-W7),i); if(sl.length<2) return 6; const m=sl.reduce((a,b)=>a+b)/sl.length; return Math.sqrt(sl.reduce((v,x)=>v+(x-m)**2,0)/sl.length)+4; });
+  const SPIKES=[{d:11,lbl:'Hackathon'},{d:33,lbl:'Product launch'},{d:50,lbl:'Spend surge'}];
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const pL=46,pT=22,pR=18,pB=36;
+    const gW=W-pL-pR, gH=H-pT-pB;
+    const maxV=Math.max(...raw)*1.15;
+    const toX=i=>pL+(i/(N-1))*gW;
+    const toY=v=>pT+gH-Math.max(0,(v/maxV))*gH;
+
+    function polyPath(ys, forward){ ctx.beginPath(); ys.forEach((y,i)=>{ i===0?ctx.moveTo(toX(i),toY(y)):ctx.lineTo(toX(i),toY(y)); }); if(!forward){for(let i=N-1;i>=0;i--)ctx.lineTo(toX(i),toY(Math.max(0,ys[i])));ctx.closePath();} }
+
+    /* 2-sigma fill */
+    ctx.beginPath();
+    for(let i=0;i<N;i++) i===0?ctx.moveTo(toX(i),toY(means[i]+stds[i]*2)):ctx.lineTo(toX(i),toY(means[i]+stds[i]*2));
+    for(let i=N-1;i>=0;i--) ctx.lineTo(toX(i),toY(Math.max(0,means[i]-stds[i]*2)));
+    ctx.closePath(); ctx.fillStyle='rgba(0,122,255,0.055)'; ctx.fill();
+
+    /* 1-sigma fill */
+    ctx.beginPath();
+    for(let i=0;i<N;i++) i===0?ctx.moveTo(toX(i),toY(means[i]+stds[i])):ctx.lineTo(toX(i),toY(means[i]+stds[i]));
+    for(let i=N-1;i>=0;i--) ctx.lineTo(toX(i),toY(Math.max(0,means[i]-stds[i])));
+    ctx.closePath(); ctx.fillStyle='rgba(0,122,255,0.10)'; ctx.fill();
+
+    /* mean line */
+    ctx.beginPath(); means.forEach((m,i)=>i===0?ctx.moveTo(toX(i),toY(m)):ctx.lineTo(toX(i),toY(m)));
+    ctx.strokeStyle='rgba(0,122,255,0.45)'; ctx.lineWidth=1.2; ctx.setLineDash([5,4]); ctx.stroke(); ctx.setLineDash([]);
+
+    /* area under data */
+    ctx.beginPath(); raw.forEach((v,i)=>i===0?ctx.moveTo(toX(i),toY(v)):ctx.lineTo(toX(i),toY(v)));
+    ctx.lineTo(toX(N-1),toY(0)); ctx.lineTo(toX(0),toY(0)); ctx.closePath();
+    const ag=ctx.createLinearGradient(0,pT,0,pT+gH); ag.addColorStop(0,'rgba(0,122,255,0.18)'); ag.addColorStop(1,'rgba(0,122,255,0)');
+    ctx.fillStyle=ag; ctx.fill();
+
+    /* data line */
+    ctx.beginPath(); raw.forEach((v,i)=>i===0?ctx.moveTo(toX(i),toY(v)):ctx.lineTo(toX(i),toY(v)));
+    ctx.strokeStyle='#007AFF'; ctx.lineWidth=1.8; ctx.stroke();
+
+    /* spikes */
+    SPIKES.forEach(sp=>{
+      const x=toX(sp.d), y=toY(raw[sp.d]);
+      ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.fillStyle='#FF3B30'; ctx.fill();
+      ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x,y-8); ctx.lineTo(x,y-30);
+      ctx.strokeStyle='rgba(255,59,48,0.35)'; ctx.lineWidth=1; ctx.stroke();
+      ctx.font='bold 8.5px -apple-system,sans-serif'; ctx.textAlign='center'; ctx.fillStyle='#FF3B30';
+      ctx.fillText(sp.lbl,x,y-38); ctx.font='8px -apple-system,sans-serif'; ctx.fillStyle='#86868B';
+      ctx.fillText(raw[sp.d].toFixed(0)+'M',x,y-28);
+    });
+
+    /* y labels */
+    ctx.textAlign='right'; ctx.textBaseline='middle'; ctx.font='9.5px -apple-system,sans-serif'; ctx.fillStyle='#86868B';
+    [0,20,40,60,80].filter(v=>v<=maxV).forEach(v=>{
+      ctx.fillText(v+'M',pL-5,toY(v));
+      ctx.beginPath(); ctx.moveTo(pL,toY(v)); ctx.lineTo(pL+gW,toY(v));
+      ctx.strokeStyle='rgba(0,0,0,0.05)'; ctx.lineWidth=1; ctx.stroke();
+    });
+    /* x labels */
+    ctx.textAlign='center'; ctx.textBaseline='top'; ctx.fillStyle='#86868B';
+    [0,14,29,44,59].forEach(i=>ctx.fillText('Day '+(i+1),toX(i),pT+gH+6));
+    /* legend */
+    ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.font='8.5px -apple-system,sans-serif';
+    const ley=pT+8;
+    ctx.fillStyle='rgba(0,122,255,0.45)'; ctx.fillRect(pL,ley-1,16,2); ctx.setLineDash([5,4]); ctx.setLineDash([]);
+    ctx.fillStyle='#86868B'; ctx.fillText('Rolling mean',pL+20,ley);
+    ctx.fillStyle='rgba(0,122,255,0.10)'; ctx.fillRect(pL+100,ley-5,12,10);
+    ctx.fillStyle='#86868B'; ctx.fillText('1-sigma',pL+116,ley);
+    ctx.beginPath(); ctx.arc(pL+178,ley,4,0,Math.PI*2); ctx.fillStyle='#FF3B30'; ctx.fill();
+    ctx.fillStyle='#86868B'; ctx.fillText('Anomaly',pL+186,ley);
+  }
+
+  function resize(){ const d=hvResize(canvas,ctx,260); W=d.W; H=d.H; }
+
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){resize();draw();io.unobserve(canvas);} });
+  },{threshold:0.25});
+  io.observe(canvas);
+  new ResizeObserver(()=>{resize();draw();}).observe(canvas.parentElement);
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   7. Treemap — Dept → Model token budget hierarchy
+═══════════════════════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('treemapChart');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W,H;
+  const {MODELS,DEPTS,MATRIX,MODEL_COLORS,DEPT_COLORS,DEPT_TOTALS,GRAND_TOTAL} = HV;
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const pad=2;
+    /* top-level: dept columns by width proportion */
+    let cx=pad;
+    DEPTS.forEach((dept,d)=>{
+      const dw=(DEPT_TOTALS[d]/GRAND_TOTAL)*(W-pad*2);
+      const dTotal=DEPT_TOTALS[d];
+      /* within column: model rows by height proportion */
+      let cy=pad;
+      /* sort models by volume desc so biggest cell is at top */
+      const mOrder=[...MODELS.keys()].filter(m=>MATRIX[d][m]>0).sort((a,b)=>MATRIX[d][b]-MATRIX[d][a]);
+      mOrder.forEach(m=>{
+        const val=MATRIX[d][m];
+        const ih=(val/dTotal)*(H-pad*2);
+        if(ih<1||dw<1){cy+=ih;return;}
+        const x=cx+pad*.5, y=cy+pad*.5, bw=dw-pad, bh=ih-pad;
+        if(bw>0&&bh>0){
+          ctx.fillStyle=MODEL_COLORS[m];
+          ctx.globalAlpha=0.70+Math.min(.28, val/GRAND_TOTAL*6);
+          ctx.fillRect(x,y,bw,bh);
+          ctx.globalAlpha=1;
+          ctx.strokeStyle=DEPT_COLORS[d]; ctx.lineWidth=.6; ctx.strokeRect(x,y,bw,bh);
+          if(bw>30&&bh>18){
+            ctx.font=(bh>30?'bold 11px':'bold 8.5px')+' -apple-system,sans-serif';
+            ctx.textAlign='left'; ctx.textBaseline='top'; ctx.fillStyle='rgba(255,255,255,0.92)';
+            ctx.fillText(val+'M',x+4,y+3);
+            if(bh>30){ ctx.font='8px -apple-system,sans-serif'; ctx.fillText(MODELS[m].split(' ')[0],x+4,y+16); }
+          }
+        }
+        cy+=ih;
+      });
+      /* dept label at bottom */
+      ctx.save(); ctx.font='bold 9.5px -apple-system,sans-serif';
+      ctx.textAlign='center'; ctx.textBaseline='bottom';
+      ctx.fillStyle=DEPT_COLORS[d]; ctx.globalAlpha=0.96;
+      ctx.fillText(dept,cx+dw/2,H-pad-1); ctx.restore();
+      cx+=dw;
+    });
+  }
+
+  function resize(){ const d=hvResize(canvas,ctx,340); W=d.W; H=d.H; }
+
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){resize();draw();io.unobserve(canvas);} });
+  },{threshold:0.25});
+  io.observe(canvas);
+  new ResizeObserver(()=>{resize();draw();}).observe(canvas.parentElement);
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   8. Parallel Coordinates — 5-axis dept comparison
+═══════════════════════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('parallelCoords');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W,H;
+  const {DEPTS,DEPT_COLORS} = HV;
+
+  const AXES=[
+    {lbl:'Token Volume', unit:'M', vals:[90,46,29,17,15,13]},
+    {lbl:'Cost/Token',   unit:'c', vals:[4.2,2.8,3.8,2.2,2.9,1.9]},
+    {lbl:'Model Count',  unit:'',  vals:[6,5,4,4,5,5]},
+    {lbl:'Avg Latency',  unit:'ms',vals:[280,310,195,240,270,220]},
+    {lbl:'Daily Sess.',  unit:'k', vals:[8.4,4.2,1.9,1.1,1.4,1.0]},
+  ];
+  const NA=AXES.length;
+  function norm(arr){ const mn=Math.min(...arr),mx=Math.max(...arr),r=mx-mn||1; return arr.map(v=>(v-mn)/r); }
+  const normed=AXES.map(ax=>norm(ax.vals));
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const pL=18,pR=24,pT=44,pB=22;
+    const gW=W-pL-pR, gH=H-pT-pB;
+    const aX=AXES.map((_,i)=>pL+(i/(NA-1))*gW);
+
+    /* axis lines */
+    AXES.forEach((ax,i)=>{
+      ctx.beginPath(); ctx.moveTo(aX[i],pT); ctx.lineTo(aX[i],pT+gH);
+      ctx.strokeStyle='rgba(0,0,0,0.10)'; ctx.lineWidth=1.5; ctx.stroke();
+      /* label */
+      ctx.font='bold 9.5px -apple-system,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='bottom'; ctx.fillStyle='#1D1D1F';
+      ctx.fillText(ax.lbl,aX[i],pT-12);
+      /* min/max ticks */
+      ctx.font='8px -apple-system,sans-serif'; ctx.fillStyle='#86868B';
+      const mn=Math.min(...ax.vals), mx=Math.max(...ax.vals);
+      ctx.textBaseline='top'; ctx.fillText(mx+ax.unit,aX[i],pT);
+      ctx.textBaseline='bottom'; ctx.fillText(mn+ax.unit,aX[i],pT+gH+2);
+    });
+
+    /* dept lines */
+    DEPTS.forEach((dept,d)=>{
+      const pts=AXES.map((_,i)=>({x:aX[i], y:pT+gH-normed[i][d]*gH}));
+      ctx.beginPath(); ctx.moveTo(pts[0].x,pts[0].y);
+      for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x,pts[i].y);
+      ctx.strokeStyle=DEPT_COLORS[d]; ctx.lineWidth=2.2; ctx.globalAlpha=0.80; ctx.stroke(); ctx.globalAlpha=1;
+      /* dots */
+      pts.forEach(p=>{
+        ctx.beginPath(); ctx.arc(p.x,p.y,4,0,Math.PI*2);
+        ctx.fillStyle=DEPT_COLORS[d]; ctx.fill(); ctx.strokeStyle='#fff'; ctx.lineWidth=1.2; ctx.stroke();
+      });
+      /* dept label at last axis */
+      ctx.font='bold 9px -apple-system,sans-serif'; ctx.textAlign='left'; ctx.textBaseline='middle';
+      ctx.fillStyle=DEPT_COLORS[d]; ctx.fillText(dept,pts[NA-1].x+7,pts[NA-1].y);
+    });
+  }
+
+  function resize(){ const d=hvResize(canvas,ctx,340); W=d.W; H=d.H; }
+
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){resize();draw();io.unobserve(canvas);} });
+  },{threshold:0.25});
+  io.observe(canvas);
+  new ResizeObserver(()=>{resize();draw();}).observe(canvas.parentElement);
 })();
 </script>
 </body>
