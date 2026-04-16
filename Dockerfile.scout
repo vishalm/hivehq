@@ -1,0 +1,46 @@
+# ── HIVE Scout — Connector agent container ────────────────────────────────────
+# Runs Scout with fetch-level connectors for Ollama, OpenAI, Anthropic, etc.
+# Use as a sidecar for AI workloads — captures all token telemetry automatically.
+#
+# Packages: shared → vault → connector-sdk → connectors → scout
+
+FROM node:22-alpine
+WORKDIR /app
+
+# ── Install ALL workspace dependencies ──────────────────────────────────────
+COPY package.json package-lock.json* tsconfig.base.json ./
+COPY packages/shared/package.json packages/shared/
+COPY packages/vault/package.json packages/vault/
+COPY packages/connector-sdk/package.json packages/connector-sdk/
+COPY packages/scout/package.json packages/scout/
+COPY connectors/openai/package.json connectors/openai/
+COPY connectors/anthropic/package.json connectors/anthropic/
+COPY connectors/ollama/package.json connectors/ollama/
+COPY connectors/mistral/package.json connectors/mistral/
+COPY connectors/google/package.json connectors/google/
+COPY connectors/bedrock/package.json connectors/bedrock/
+COPY connectors/azure-openai/package.json connectors/azure-openai/
+RUN npm install --workspaces --include-workspace-root 2>/dev/null || npm install
+
+# ── Copy source & compile TypeScript ────────────────────────────────────────
+COPY packages/shared/src packages/shared/src
+COPY packages/shared/tsconfig.json packages/shared/
+COPY packages/vault/src packages/vault/src
+COPY packages/vault/tsconfig.json packages/vault/
+COPY packages/connector-sdk/src packages/connector-sdk/src
+COPY packages/connector-sdk/tsconfig.json packages/connector-sdk/
+COPY connectors/ connectors/
+COPY packages/scout/src packages/scout/src
+COPY packages/scout/tsconfig.json packages/scout/
+
+RUN npx tsc -p packages/shared/tsconfig.json && \
+    npx tsc -p packages/vault/tsconfig.json && \
+    npx tsc -p packages/connector-sdk/tsconfig.json && \
+    npx tsc -p connectors/openai/tsconfig.json && \
+    npx tsc -p connectors/anthropic/tsconfig.json && \
+    npx tsc -p connectors/ollama/tsconfig.json && \
+    npx tsc -p packages/scout/tsconfig.json
+
+ENV NODE_ENV=production
+USER node
+CMD ["node", "packages/scout/dist/cli.js", "start"]

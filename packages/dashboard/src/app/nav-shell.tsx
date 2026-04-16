@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import ChatWidget from './chat-widget'
+import { NotificationBell } from './notifications'
 
 /* ── HIVE Logo — Hexagonal honeycomb mark ─────────────────────────────── */
 function HiveLogo({ size = 28 }: { size?: number }) {
@@ -164,6 +165,7 @@ export default function NavShell({ children }: { children: React.ReactNode }) {
               </a>
             ))}
           </nav>
+          <NotificationBell />
           <span className="tag" aria-label="Version">pre-alpha · Phase 2</span>
         </div>
       </header>

@@ -816,6 +816,11 @@ code {
   to { opacity: 1; transform: scale(1); }
 }
 
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(360px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 /* Skeleton loading shimmer */
 .skeleton {
   background: linear-gradient(

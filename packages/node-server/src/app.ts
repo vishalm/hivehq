@@ -70,6 +70,20 @@ export function buildApp(deps: AppDeps): AppContext {
   })
 
   app.use(express.json({ limit: '2mb' }))
+  app.use((err: Error, _req: Request, res: Response, next: NextFunction) => {
+    if (err instanceof SyntaxError && 'body' in err) {
+      recordError('json_parse_error')
+      res.status(400).json({
+        accepted: 0,
+        rejected: 0,
+        errors: [{ code: 'MALFORMED_JSON', field: 'body' }],
+        batch_id: '',
+        ingested_at: Date.now(),
+      } satisfies TTPIngestResponse)
+      return
+    }
+    next(err)
+  })
   app.use(pinoHttp({ logger }))
 
   // ── Health check — governance blocker B3 ──────────────────────────────────

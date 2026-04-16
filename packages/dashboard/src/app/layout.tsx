@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import NavShell from './nav-shell'
+import { NotificationProvider } from './notifications'
 
 export const metadata: Metadata = {
   title: 'HIVE — The Global AI Consumption Network',
@@ -14,7 +15,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
       <body suppressHydrationWarning>
-        <NavShell>{children}</NavShell>
+        <NotificationProvider>
+          <NavShell>{children}</NavShell>
+        </NotificationProvider>
       </body>
     </html>
   )

@@ -163,6 +163,95 @@ async function loadLLMConfig(): Promise<{ provider: string; config: LLMProviderC
   }
 }
 
+// ── Telemetry emission ────────────────────────────────────────────────────
+
+async function emitChatTelemetry(opts: {
+  provider: string
+  model: string
+  endpoint: string
+  requestBytes: number
+  responseBytes: number
+  latencyMs: number
+  statusCode: number
+}) {
+  try {
+    const sessionHash = crypto.randomUUID().replace(/-/g, '').slice(0, 16)
+    const now = Date.now()
+    const events = [
+      {
+        TTP_version: '0.1',
+        event_id: crypto.randomUUID(),
+        schema_hash: 'sha256:dashboard-chat',
+        timestamp: now - opts.latencyMs,
+        observed_at: now,
+        emitter_id: 'dashboard-chat',
+        emitter_type: 'widget',
+        session_hash: sessionHash,
+        provider: opts.provider,
+        endpoint: opts.endpoint,
+        model_hint: opts.model,
+        direction: 'request',
+        payload_bytes: opts.requestBytes,
+        status_code: 0,
+        estimated_tokens: Math.max(1, Math.round(opts.requestBytes / 4)),
+        deployment: 'node',
+        node_region: 'AE',
+        governance: {
+          pii_asserted: false,
+          content_asserted: false,
+          regulation_tags: [],
+          data_residency: 'AE',
+          retention_days: 90,
+        },
+        use_case_tag: 'chat',
+      },
+      {
+        TTP_version: '0.1',
+        event_id: crypto.randomUUID(),
+        schema_hash: 'sha256:dashboard-chat',
+        timestamp: now,
+        observed_at: now + 1,
+        emitter_id: 'dashboard-chat',
+        emitter_type: 'widget',
+        session_hash: sessionHash,
+        provider: opts.provider,
+        endpoint: opts.endpoint,
+        model_hint: opts.model,
+        direction: 'response',
+        payload_bytes: opts.responseBytes,
+        latency_ms: opts.latencyMs,
+        status_code: opts.statusCode,
+        estimated_tokens: Math.max(1, Math.round((opts.requestBytes + opts.responseBytes) / 4)),
+        deployment: 'node',
+        node_region: 'AE',
+        governance: {
+          pii_asserted: false,
+          content_asserted: false,
+          regulation_tags: [],
+          data_residency: 'AE',
+          retention_days: 90,
+        },
+        use_case_tag: 'chat',
+      },
+    ]
+
+    await fetch(`${NODE_URL}/api/v1/ttp/ingest`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer hive-dev-token-2026',
+      },
+      body: JSON.stringify({
+        batch_id: crypto.randomUUID(),
+        sent_at: now,
+        events,
+      }),
+    })
+  } catch {
+    // Telemetry is best-effort, never block the user
+  }
+}
+
 // ── Chat with LLM ──────────────────────────────────────────────────────
 
 async function chatWithLLM(messages: { role: string; content: string }[]): Promise<string> {
@@ -315,6 +404,8 @@ export default function ChatWidget() {
     setInput('')
 
     try {
+      const chatStart = Date.now()
+
       // Fetch fresh grounded context
       const context = await fetchHiveContext()
 
@@ -337,7 +428,26 @@ export default function ChatWidget() {
         { role: 'user', content: text },
       ]
 
+      const requestBody = JSON.stringify(chatMessages)
+      const requestBytes = new Blob([requestBody]).size
+
       const reply = await chatWithLLM(chatMessages)
+
+      const chatEnd = Date.now()
+      const chatLatency = chatEnd - chatStart
+      const responseBytes = new Blob([reply]).size
+
+      // Emit TTP telemetry for this chat interaction
+      const { provider: activeProvider, config: activeConfig } = await loadLLMConfig()
+      void emitChatTelemetry({
+        provider: activeProvider,
+        model: activeConfig.model,
+        endpoint: activeProvider === 'ollama' ? '/api/chat' : '/chat/completions',
+        requestBytes,
+        responseBytes,
+        latencyMs: chatLatency,
+        statusCode: 200,
+      })
 
       const assistantMsg: Message = {
         id: crypto.randomUUID(),

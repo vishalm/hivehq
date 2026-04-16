@@ -4,12 +4,20 @@
 # Quick start:
 #   docker compose --env-file .env.docker up --build -d
 #
+# Profiles:
+#   docker compose --profile cpu  --env-file .env.docker up --build -d  (CPU Ollama)
+#   docker compose --profile gpu  --env-file .env.docker up --build -d  (GPU Ollama)
+#   docker compose --profile docs --env-file .env.docker up --build -d  (Include docs)
+#
 # Services:
-#   - node-server : TTP ingestion & storage (port 3000)
-#   - dashboard   : Next.js HIVE Dashboard  (port 3001)
-#   - postgres    : TimescaleDB for events  (port 5432)
-#   - redis       : Queue & caching         (port 6379)
-#   - ollama      : Local LLM runtime       (port 11434)
+#   - node-server    : TTP ingestion & storage       (port 3000)
+#   - dashboard      : Next.js HIVE Dashboard        (port 3001)
+#   - docs           : Docusaurus Documentation      (port 3002)
+#   - postgres       : TimescaleDB for events        (port 5432)
+#   - redis          : Queue & caching               (port 6379)
+#   - ollama-proxy   : Transparent telemetry proxy   (port 11434, 11435)
+#   - ollama / cpu   : Local LLM runtime             (internal only)
+#   - scout          : Connector agent               (profile: scout)
 # ──────────────────────────────────────────────────────────────────────────────
 
 x-common: &common
@@ -105,8 +113,10 @@ services:
   ollama:
     image: ollama/ollama:latest
     <<: *common
-    ports:
-      - "11434:11434"
+    networks:
+      hive:
+        aliases:
+          - ollama-internal
     volumes:
       - ./.hive/data/ollama:/root/.ollama
     deploy:
@@ -128,8 +138,10 @@ services:
   ollama-cpu:
     image: ollama/ollama:latest
     <<: *common
-    ports:
-      - "11434:11434"
+    networks:
+      hive:
+        aliases:
+          - ollama-internal
     volumes:
       - ./.hive/data/ollama:/root/.ollama
     profiles:
@@ -139,6 +151,69 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  # ── Ollama Proxy — transparent reverse proxy capturing TTP telemetry ──────
+  # Sits between all clients and Ollama. Maps host:11434 → proxy → Ollama.
+  # This means `ollama chat`, `curl localhost:11434`, and dashboard chat are all captured.
+  ollama-proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile.proxy
+    <<: *common
+    ports:
+      - "11434:11435"
+      - "11435:11435"
+    environment:
+      OLLAMA_PROXY_PORT: "11435"
+      OLLAMA_TARGET: "http://ollama-internal:11434"
+      NODE_URL: "http://node-server:3000"
+      NODE_INGEST_TOKEN: ${NODE_INGEST_TOKEN:-hive-dev-token-2026}
+      HIVE_DEPT_TAG: ${HIVE_DEPT_TAG:-}
+      HIVE_PROJECT_TAG: ${HIVE_PROJECT_TAG:-}
+    depends_on:
+      node-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:11435/ || exit 0"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Documentation — Docusaurus site ──────────────────────────────────────
+  docs:
+    build:
+      context: .
+      dockerfile: Dockerfile.docs
+    <<: *common
+    ports:
+      - "3002:3002"
+    profiles:
+      - docs
+
+  # ── Scout Agent — connector container for remote monitoring ──────────────
+  # Runs Scout with fetch-level connectors. Point HIVE_OLLAMA_HOST to the
+  # proxy and it auto-captures all traffic from any Node.js app in this container.
+  # Operators can use this as a sidecar for their AI workloads.
+  scout:
+    build:
+      context: .
+      dockerfile: Dockerfile.scout
+    <<: *common
+    environment:
+      HIVE_DEPLOYMENT: node
+      TTP_ENDPOINT: http://node-server:3000/api/v1/ttp/ingest
+      TTP_TOKEN: ${NODE_INGEST_TOKEN:-hive-dev-token-2026}
+      HIVE_CONNECTORS: ${HIVE_CONNECTORS:-ollama,openai,anthropic}
+      HIVE_OLLAMA_HOST: ollama-internal:11434
+      HIVE_DATA_RESIDENCY: ${HIVE_DATA_RESIDENCY:-AE}
+      HIVE_RETENTION_DAYS: ${HIVE_RETENTION_DAYS:-90}
+      HIVE_REGULATION_TAGS: ${HIVE_REGULATION_TAGS:-}
+      HIVE_FLUSH_INTERVAL_MS: ${HIVE_FLUSH_INTERVAL_MS:-60000}
+    depends_on:
+      node-server:
+        condition: service_healthy
+    profiles:
+      - scout
 
 # Persistent data lives on disk at .hive/data/{postgres,redis,ollama}
 # No Docker-managed volumes — survives `docker compose down` and is visible to git.
