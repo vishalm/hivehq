@@ -1,0 +1,28 @@
+{
+  "id": "connectors/custom",
+  "title": "Building a Custom Connector",
+  "description": "Create a HIVE connector for any AI provider",
+  "source": "@site/docs/connectors/custom.md",
+  "sourceDirName": "connectors",
+  "slug": "/connectors/custom",
+  "permalink": "/connectors/custom",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "sidebar_position": 5,
+    "title": "Building a Custom Connector",
+    "description": "Create a HIVE connector for any AI provider"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Anthropic Connector",
+    "permalink": "/connectors/anthropic"
+  },
+  "next": {
+    "title": "Dashboard Overview",
+    "permalink": "/dashboard/overview"
+  }
+}

@@ -31,7 +31,7 @@ const PROVIDERS: LLMProvider[] = [
     description: 'Run models locally. No API key needed. Privacy-first.',
     category: 'local',
     defaultEndpoint: 'http://localhost:11434',
-    defaultModel: 'gemma4:latest',
+    defaultModel: 'llama3.2:3b',
     requiresKey: false,
   },
   {

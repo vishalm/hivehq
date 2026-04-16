@@ -1,0 +1,28 @@
+{
+  "id": "dashboard/notifications",
+  "title": "Notifications & Alerts",
+  "description": "Configure notifications for anomalies, errors, and compliance alerts",
+  "source": "@site/docs/dashboard/notifications.md",
+  "sourceDirName": "dashboard",
+  "slug": "/dashboard/notifications",
+  "permalink": "/dashboard/notifications",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "sidebar_position": 3,
+    "title": "Notifications & Alerts",
+    "description": "Configure notifications for anomalies, errors, and compliance alerts"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Intelligence & Anomalies",
+    "permalink": "/dashboard/intelligence"
+  },
+  "next": {
+    "title": "HIVE Chat Widget",
+    "permalink": "/dashboard/chat-widget"
+  }
+}

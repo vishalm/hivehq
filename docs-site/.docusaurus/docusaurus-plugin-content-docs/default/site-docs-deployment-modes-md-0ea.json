@@ -1,0 +1,28 @@
+{
+  "id": "deployment/modes",
+  "title": "Deployment Modes",
+  "description": "Solo, Node, Federated, Open - choose your deployment model",
+  "source": "@site/docs/deployment/modes.md",
+  "sourceDirName": "deployment",
+  "slug": "/deployment/modes",
+  "permalink": "/deployment/modes",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1,
+    "title": "Deployment Modes",
+    "description": "Solo, Node, Federated, Open - choose your deployment model"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Config API",
+    "permalink": "/api/config"
+  },
+  "next": {
+    "title": "Docker Compose Reference",
+    "permalink": "/deployment/docker-compose"
+  }
+}

@@ -138,6 +138,11 @@ const navItems = [
 export default function NavShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
 
+  /* Landing page and auth pages render their own chrome */
+  if (pathname === '/landing' || pathname === '/login' || pathname === '/signup') {
+    return <>{children}</>
+  }
+
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/'
     return pathname.startsWith(href)
@@ -166,7 +171,7 @@ export default function NavShell({ children }: { children: React.ReactNode }) {
             ))}
           </nav>
           <NotificationBell />
-          <span className="tag" aria-label="Version">pre-alpha · Phase 2</span>
+          <span className="tag" aria-label="Version">pre-alpha · Phase 3</span>
         </div>
       </header>
       <main className="container" role="main" style={{ paddingBottom: 80 }}>

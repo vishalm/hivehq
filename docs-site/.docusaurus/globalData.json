@@ -1,0 +1,157 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "path": "/",
+      "versions": [
+        {
+          "name": "current",
+          "label": "Next",
+          "isLast": true,
+          "path": "/",
+          "mainDocId": "intro",
+          "docs": [
+            {
+              "id": "api/config",
+              "path": "/api/config",
+              "sidebar": "docs"
+            },
+            {
+              "id": "api/events",
+              "path": "/api/events",
+              "sidebar": "docs"
+            },
+            {
+              "id": "api/ingest",
+              "path": "/api/ingest",
+              "sidebar": "docs"
+            },
+            {
+              "id": "api/intelligence",
+              "path": "/api/intelligence",
+              "sidebar": "docs"
+            },
+            {
+              "id": "architecture/data-model",
+              "path": "/architecture/data-model",
+              "sidebar": "docs"
+            },
+            {
+              "id": "architecture/governance",
+              "path": "/architecture/governance",
+              "sidebar": "docs"
+            },
+            {
+              "id": "architecture/overview",
+              "path": "/architecture/overview",
+              "sidebar": "docs"
+            },
+            {
+              "id": "architecture/ttp-protocol",
+              "path": "/architecture/ttp-protocol",
+              "sidebar": "docs"
+            },
+            {
+              "id": "connectors/anthropic",
+              "path": "/connectors/anthropic",
+              "sidebar": "docs"
+            },
+            {
+              "id": "connectors/custom",
+              "path": "/connectors/custom",
+              "sidebar": "docs"
+            },
+            {
+              "id": "connectors/ollama",
+              "path": "/connectors/ollama",
+              "sidebar": "docs"
+            },
+            {
+              "id": "connectors/openai",
+              "path": "/connectors/openai",
+              "sidebar": "docs"
+            },
+            {
+              "id": "connectors/overview",
+              "path": "/connectors/overview",
+              "sidebar": "docs"
+            },
+            {
+              "id": "contributing",
+              "path": "/contributing",
+              "sidebar": "docs"
+            },
+            {
+              "id": "dashboard/chat-widget",
+              "path": "/dashboard/chat-widget",
+              "sidebar": "docs"
+            },
+            {
+              "id": "dashboard/intelligence",
+              "path": "/dashboard/intelligence",
+              "sidebar": "docs"
+            },
+            {
+              "id": "dashboard/notifications",
+              "path": "/dashboard/notifications",
+              "sidebar": "docs"
+            },
+            {
+              "id": "dashboard/overview",
+              "path": "/dashboard/overview",
+              "sidebar": "docs"
+            },
+            {
+              "id": "deployment/docker-compose",
+              "path": "/deployment/docker-compose",
+              "sidebar": "docs"
+            },
+            {
+              "id": "deployment/modes",
+              "path": "/deployment/modes",
+              "sidebar": "docs"
+            },
+            {
+              "id": "deployment/production",
+              "path": "/deployment/production",
+              "sidebar": "docs"
+            },
+            {
+              "id": "getting-started/configuration",
+              "path": "/getting-started/configuration",
+              "sidebar": "docs"
+            },
+            {
+              "id": "getting-started/docker",
+              "path": "/getting-started/docker",
+              "sidebar": "docs"
+            },
+            {
+              "id": "getting-started/quickstart",
+              "path": "/getting-started/quickstart",
+              "sidebar": "docs"
+            },
+            {
+              "id": "intro",
+              "path": "/intro",
+              "sidebar": "docs"
+            },
+            {
+              "id": "roadmap/authentication",
+              "path": "/roadmap/authentication"
+            }
+          ],
+          "draftIds": [],
+          "sidebars": {
+            "docs": {
+              "link": {
+                "path": "/intro",
+                "label": "intro"
+              }
+            }
+          }
+        }
+      ],
+      "breadcrumbs": true
+    }
+  }
+}

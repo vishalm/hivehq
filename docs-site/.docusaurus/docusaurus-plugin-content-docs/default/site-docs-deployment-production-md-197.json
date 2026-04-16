@@ -1,0 +1,28 @@
+{
+  "id": "deployment/production",
+  "title": "Production Deployment",
+  "description": "Production checklist, TLS, secrets, monitoring, and scaling",
+  "source": "@site/docs/deployment/production.md",
+  "sourceDirName": "deployment",
+  "slug": "/deployment/production",
+  "permalink": "/deployment/production",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "sidebar_position": 3,
+    "title": "Production Deployment",
+    "description": "Production checklist, TLS, secrets, monitoring, and scaling"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Docker Compose Reference",
+    "permalink": "/deployment/docker-compose"
+  },
+  "next": {
+    "title": "Contributing",
+    "permalink": "/contributing"
+  }
+}

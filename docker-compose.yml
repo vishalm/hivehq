@@ -118,7 +118,7 @@ services:
         aliases:
           - ollama-internal
     volumes:
-      - ./.hive/data/ollama:/root/.ollama
+      - ollama-models:/root/.ollama
     deploy:
       resources:
         reservations:
@@ -126,6 +126,9 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
+    depends_on:
+      ollama-pull:
+        condition: service_completed_successfully
     profiles:
       - gpu
     healthcheck:
@@ -143,7 +146,10 @@ services:
         aliases:
           - ollama-internal
     volumes:
-      - ./.hive/data/ollama:/root/.ollama
+      - ollama-models:/root/.ollama
+    depends_on:
+      ollama-pull:
+        condition: service_completed_successfully
     profiles:
       - cpu
     healthcheck:
@@ -151,6 +157,40 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  # ── Ollama Model Puller — auto-pulls default model on first run ─────────
+  # Runs once, pulls llama3.2:3b into the shared volume, then exits.
+  # Subsequent starts skip if model already exists.
+  ollama-pull:
+    image: ollama/ollama:latest
+    <<: *common
+    restart: "no"
+    volumes:
+      - ollama-models:/root/.ollama
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "Starting Ollama server for model pull..."
+        ollama serve &
+        SERVER_PID=$$!
+        # Wait for server to be ready
+        for i in $$(seq 1 30); do
+          wget -qO- http://127.0.0.1:11434/api/tags >/dev/null 2>&1 && break
+          sleep 1
+        done
+        MODEL="${OLLAMA_DEFAULT_MODEL:-llama3.2:3b}"
+        echo "Checking model: $$MODEL"
+        if ollama list | grep -q "$${MODEL%%:*}"; then
+          echo "Model $$MODEL already present — skipping pull."
+        else
+          echo "Pulling $$MODEL ..."
+          ollama pull "$$MODEL"
+          echo "Pull complete."
+        fi
+        kill $$SERVER_PID 2>/dev/null
+    profiles:
+      - cpu
+      - gpu
 
   # ── Ollama Proxy — transparent reverse proxy capturing TTP telemetry ──────
   # Sits between all clients and Ollama. Maps host:11434 → proxy → Ollama.
@@ -215,8 +255,12 @@ services:
     profiles:
       - scout
 
-# Persistent data lives on disk at .hive/data/{postgres,redis,ollama}
-# No Docker-managed volumes — survives `docker compose down` and is visible to git.
+# Persistent data: postgres & redis on disk at .hive/data/, Ollama models in a Docker volume.
+# Named volume survives `docker compose down`. Use `docker volume rm hiveHQ_ollama-models` to purge.
+
+volumes:
+  ollama-models:
+    name: hive-ollama-models
 
 networks:
   hive:

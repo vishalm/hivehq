@@ -16,6 +16,9 @@ RUN npx tsc -p packages/shared/tsconfig.json
 # Copy proxy script
 COPY scripts/ollama-proxy.mjs ./proxy.mjs
 
+# Ensure node user can read everything
+RUN chmod -R a+r /app && chmod a+x /app
+
 USER node
 EXPOSE 11435
 CMD ["node", "proxy.mjs"]

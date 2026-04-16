@@ -1,0 +1,28 @@
+{
+  "id": "architecture/governance",
+  "title": "Governance & Compliance",
+  "description": "Zero Content Principle, GovernanceBlock, regulation tags, data residency, and retention",
+  "source": "@site/docs/architecture/governance.md",
+  "sourceDirName": "architecture",
+  "slug": "/architecture/governance",
+  "permalink": "/architecture/governance",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "sidebar_position": 3,
+    "title": "Governance & Compliance",
+    "description": "Zero Content Principle, GovernanceBlock, regulation tags, data residency, and retention"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "TTP Protocol Specification",
+    "permalink": "/architecture/ttp-protocol"
+  },
+  "next": {
+    "title": "Data Model & TimescaleDB",
+    "permalink": "/architecture/data-model"
+  }
+}

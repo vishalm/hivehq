@@ -1,0 +1,28 @@
+{
+  "id": "connectors/overview",
+  "title": "Connectors Overview",
+  "description": "How connectors work, ProviderHook interface, fetch wrapping, and supported providers",
+  "source": "@site/docs/connectors/overview.md",
+  "sourceDirName": "connectors",
+  "slug": "/connectors/overview",
+  "permalink": "/connectors/overview",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1,
+    "title": "Connectors Overview",
+    "description": "How connectors work, ProviderHook interface, fetch wrapping, and supported providers"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Data Model & TimescaleDB",
+    "permalink": "/architecture/data-model"
+  },
+  "next": {
+    "title": "Ollama Connector",
+    "permalink": "/connectors/ollama"
+  }
+}

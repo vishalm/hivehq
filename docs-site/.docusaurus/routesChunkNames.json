@@ -1,0 +1,119 @@
+{
+  "/-c40": {
+    "__comp": "5e95c892",
+    "__context": {
+      "plugin": "aba21aa0"
+    }
+  },
+  "/-83a": {
+    "__comp": "a7bd4aaa",
+    "__props": "22dd74f7"
+  },
+  "/-422": {
+    "__comp": "a94703ab"
+  },
+  "/api/config-495": {
+    "__comp": "17896441",
+    "content": "c41413dd"
+  },
+  "/api/events-d95": {
+    "__comp": "17896441",
+    "content": "d47f630f"
+  },
+  "/api/ingest-d3d": {
+    "__comp": "17896441",
+    "content": "e29a2678"
+  },
+  "/api/intelligence-0fe": {
+    "__comp": "17896441",
+    "content": "bda73af6"
+  },
+  "/architecture/data-model-4cf": {
+    "__comp": "17896441",
+    "content": "46cd13bd"
+  },
+  "/architecture/governance-80a": {
+    "__comp": "17896441",
+    "content": "450548c0"
+  },
+  "/architecture/overview-f3c": {
+    "__comp": "17896441",
+    "content": "0b1ac180"
+  },
+  "/architecture/ttp-protocol-ad7": {
+    "__comp": "17896441",
+    "content": "8941d9ad"
+  },
+  "/connectors/anthropic-d4a": {
+    "__comp": "17896441",
+    "content": "9dd0daf3"
+  },
+  "/connectors/custom-a7d": {
+    "__comp": "17896441",
+    "content": "f8030d93"
+  },
+  "/connectors/ollama-185": {
+    "__comp": "17896441",
+    "content": "19ed5714"
+  },
+  "/connectors/openai-2a8": {
+    "__comp": "17896441",
+    "content": "39943579"
+  },
+  "/connectors/overview-d94": {
+    "__comp": "17896441",
+    "content": "8b7f5654"
+  },
+  "/contributing-159": {
+    "__comp": "17896441",
+    "content": "4d54d076"
+  },
+  "/dashboard/chat-widget-e7a": {
+    "__comp": "17896441",
+    "content": "3451c8ab"
+  },
+  "/dashboard/intelligence-8de": {
+    "__comp": "17896441",
+    "content": "fe2495ef"
+  },
+  "/dashboard/notifications-dd6": {
+    "__comp": "17896441",
+    "content": "dbc7ee78"
+  },
+  "/dashboard/overview-d62": {
+    "__comp": "17896441",
+    "content": "5b4d7c18"
+  },
+  "/deployment/docker-compose-015": {
+    "__comp": "17896441",
+    "content": "67f05f96"
+  },
+  "/deployment/modes-54f": {
+    "__comp": "17896441",
+    "content": "0ea4cdb2"
+  },
+  "/deployment/production-ecc": {
+    "__comp": "17896441",
+    "content": "1973956f"
+  },
+  "/getting-started/configuration-641": {
+    "__comp": "17896441",
+    "content": "009f1e98"
+  },
+  "/getting-started/docker-8ac": {
+    "__comp": "17896441",
+    "content": "74c14969"
+  },
+  "/getting-started/quickstart-c60": {
+    "__comp": "17896441",
+    "content": "fbd7a87c"
+  },
+  "/intro-32d": {
+    "__comp": "17896441",
+    "content": "0e384e19"
+  },
+  "/roadmap/authentication-1c2": {
+    "__comp": "17896441",
+    "content": "1ad57dca"
+  }
+}

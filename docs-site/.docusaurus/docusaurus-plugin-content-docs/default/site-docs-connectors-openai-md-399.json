@@ -1,0 +1,28 @@
+{
+  "id": "connectors/openai",
+  "title": "OpenAI Connector",
+  "description": "Track OpenAI API usage with token counts and cost",
+  "source": "@site/docs/connectors/openai.md",
+  "sourceDirName": "connectors",
+  "slug": "/connectors/openai",
+  "permalink": "/connectors/openai",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "sidebar_position": 2,
+    "title": "OpenAI Connector",
+    "description": "Track OpenAI API usage with token counts and cost"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Ollama Connector",
+    "permalink": "/connectors/ollama"
+  },
+  "next": {
+    "title": "Anthropic Connector",
+    "permalink": "/connectors/anthropic"
+  }
+}

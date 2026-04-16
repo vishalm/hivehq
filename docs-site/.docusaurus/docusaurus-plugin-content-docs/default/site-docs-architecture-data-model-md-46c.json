@@ -1,0 +1,28 @@
+{
+  "id": "architecture/data-model",
+  "title": "Data Model & TimescaleDB",
+  "description": "Hypertables, aggregations, event lifecycle, and Prometheus metrics",
+  "source": "@site/docs/architecture/data-model.md",
+  "sourceDirName": "architecture",
+  "slug": "/architecture/data-model",
+  "permalink": "/architecture/data-model",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "sidebar_position": 4,
+    "title": "Data Model & TimescaleDB",
+    "description": "Hypertables, aggregations, event lifecycle, and Prometheus metrics"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Governance & Compliance",
+    "permalink": "/architecture/governance"
+  },
+  "next": {
+    "title": "Connectors Overview",
+    "permalink": "/connectors/overview"
+  }
+}

@@ -42,5 +42,9 @@ RUN npx tsc -p packages/shared/tsconfig.json && \
     npx tsc -p packages/scout/tsconfig.json
 
 ENV NODE_ENV=production
+
+# Ensure node user can read all compiled output
+RUN chmod -R a+r /app
+
 USER node
 CMD ["node", "packages/scout/dist/cli.js", "start"]

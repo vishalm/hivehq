@@ -1,0 +1,28 @@
+{
+  "id": "connectors/anthropic",
+  "title": "Anthropic Connector",
+  "description": "Track Anthropic Claude API usage with token counts",
+  "source": "@site/docs/connectors/anthropic.md",
+  "sourceDirName": "connectors",
+  "slug": "/connectors/anthropic",
+  "permalink": "/connectors/anthropic",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "sidebar_position": 4,
+    "title": "Anthropic Connector",
+    "description": "Track Anthropic Claude API usage with token counts"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "OpenAI Connector",
+    "permalink": "/connectors/openai"
+  },
+  "next": {
+    "title": "Building a Custom Connector",
+    "permalink": "/connectors/custom"
+  }
+}

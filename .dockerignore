@@ -22,6 +22,7 @@ out/
 .env
 .env.*
 !.env.example
+!.env.docker
 *.pem
 *.key
 *.cert
@@ -47,11 +48,13 @@ coverage/
 **/*.spec.ts
 *.timestamp-*.mjs
 
-# ── Documentation (not needed in image) ─────────────────────────────────────
+# ── Documentation (not needed in most images) ──────────────────────────────
 docs/
 raw-docs/
 *.md
 !packages/*/README.md
+!docs-site/**/*.md
+!docs-site/**/*.mdx
 
 # ── CI/CD ───────────────────────────────────────────────────────────────────
 .github/
@@ -84,6 +87,7 @@ tmp/
 temp/
 *.tgz
 scripts/
+!scripts/ollama-proxy.mjs
 banner.svg
 logo.svg
 index.html

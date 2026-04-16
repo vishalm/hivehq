@@ -148,7 +148,7 @@ interface LLMProviderConfig {
 }
 
 async function loadLLMConfig(): Promise<{ provider: string; config: LLMProviderConfig }> {
-  const defaults = { provider: 'ollama', config: { endpoint: 'http://localhost:11434', apiKey: '', model: 'gemma4:latest' } }
+  const defaults = { provider: 'ollama', config: { endpoint: 'http://localhost:11434', apiKey: '', model: 'llama3.2:3b' } }
   try {
     const res = await fetch(`${NODE_URL}/api/v1/config`, { signal: AbortSignal.timeout(3000) })
     if (!res.ok) return defaults

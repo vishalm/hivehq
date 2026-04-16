@@ -1,0 +1,28 @@
+{
+  "id": "connectors/ollama",
+  "title": "Ollama Connector",
+  "description": "Tracking local LLM inference with Ollama and HIVE",
+  "source": "@site/docs/connectors/ollama.md",
+  "sourceDirName": "connectors",
+  "slug": "/connectors/ollama",
+  "permalink": "/connectors/ollama",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "sidebar_position": 3,
+    "title": "Ollama Connector",
+    "description": "Tracking local LLM inference with Ollama and HIVE"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Connectors Overview",
+    "permalink": "/connectors/overview"
+  },
+  "next": {
+    "title": "OpenAI Connector",
+    "permalink": "/connectors/openai"
+  }
+}

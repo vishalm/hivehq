@@ -1,0 +1,28 @@
+{
+  "id": "api/intelligence",
+  "title": "Intelligence API",
+  "description": "Cost modeling, anomalies, forecasting, clustering",
+  "source": "@site/docs/api/intelligence.md",
+  "sourceDirName": "api",
+  "slug": "/api/intelligence",
+  "permalink": "/api/intelligence",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "sidebar_position": 3,
+    "title": "Intelligence API",
+    "description": "Cost modeling, anomalies, forecasting, clustering"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Events API",
+    "permalink": "/api/events"
+  },
+  "next": {
+    "title": "Config API",
+    "permalink": "/api/config"
+  }
+}

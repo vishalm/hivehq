@@ -1,0 +1,28 @@
+{
+  "id": "dashboard/intelligence",
+  "title": "Intelligence & Anomalies",
+  "description": "Cost modeling, anomaly detection, forecasting, and behavioral clustering",
+  "source": "@site/docs/dashboard/intelligence.md",
+  "sourceDirName": "dashboard",
+  "slug": "/dashboard/intelligence",
+  "permalink": "/dashboard/intelligence",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "sidebar_position": 2,
+    "title": "Intelligence & Anomalies",
+    "description": "Cost modeling, anomaly detection, forecasting, and behavioral clustering"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Dashboard Overview",
+    "permalink": "/dashboard/overview"
+  },
+  "next": {
+    "title": "Notifications & Alerts",
+    "permalink": "/dashboard/notifications"
+  }
+}

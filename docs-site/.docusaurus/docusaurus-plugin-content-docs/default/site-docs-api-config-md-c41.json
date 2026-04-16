@@ -1,0 +1,28 @@
+{
+  "id": "api/config",
+  "title": "Config API",
+  "description": "Manage HIVE configuration",
+  "source": "@site/docs/api/config.md",
+  "sourceDirName": "api",
+  "slug": "/api/config",
+  "permalink": "/api/config",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "sidebar_position": 4,
+    "title": "Config API",
+    "description": "Manage HIVE configuration"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Intelligence API",
+    "permalink": "/api/intelligence"
+  },
+  "next": {
+    "title": "Deployment Modes",
+    "permalink": "/deployment/modes"
+  }
+}

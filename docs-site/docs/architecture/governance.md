@@ -225,7 +225,7 @@ Node runs a purge job daily at 02:00 UTC:
 ```
 Purge Timeline:
 ├─ 02:00 UTC: Job starts
-├─ Query: events where purge_at <= now()
+├─ Query: events where purge_at is before now()
 ├─ Soft delete: mark deleted=true
 ├─ Log: audit table records purge event
 └─ 02:30 UTC: Job completes
@@ -368,7 +368,7 @@ curl http://localhost:3001/api/v1/compliance/hipaa
 
 - Regulation tag: `gdpr` ✓
 - Data residency: EU (e.g., `eu-west-1`) ✓
-- Retention: <= 1 year (typically 90 days) ✓
+- Retention: 1 year or less (typically 90 days) ✓
 - Right-to-erasure: Support deletion endpoint ✓
 - Data minimization: No content, only metadata ✓
 - Consent: Documented in Setup UI ✓
