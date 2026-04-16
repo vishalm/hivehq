@@ -1,10 +1,10 @@
 /**
  * HiveConnectorEvent — the minimal event emitted by a connector before
- * Scout enrichment. Connectors produce this; Scouts upgrade it to HATPEvent.
+ * Scout enrichment. Connectors produce this; Scouts upgrade it to TTPEvent.
  */
 
 import { z } from 'zod'
-import { DirectionSchema } from './hatp.js'
+import { DirectionSchema } from './ttp.js'
 import { AIProviderSchema } from './providers.js'
 import { SignedBatchEnvelopeSchema } from './signatures-schema.js'
 
@@ -28,7 +28,7 @@ export type HiveConnectorEvent = z.infer<typeof HiveConnectorEventSchema>
 /**
  * Batch envelope used by Scout → Node transport.
  */
-export const HATPBatchSchema = z
+export const TTPBatchSchema = z
   .object({
     batch_id: z.string().uuid(),
     sent_at: z.number().int().nonnegative(),
@@ -37,9 +37,9 @@ export const HATPBatchSchema = z
   })
   .strict()
 
-export type HATPBatch = z.infer<typeof HATPBatchSchema>
+export type TTPBatch = z.infer<typeof TTPBatchSchema>
 
-export const HATPIngestResponseSchema = z
+export const TTPIngestResponseSchema = z
   .object({
     accepted: z.number().int().nonnegative(),
     rejected: z.number().int().nonnegative(),
@@ -56,4 +56,4 @@ export const HATPIngestResponseSchema = z
   })
   .strict()
 
-export type HATPIngestResponse = z.infer<typeof HATPIngestResponseSchema>
+export type TTPIngestResponse = z.infer<typeof TTPIngestResponseSchema>

@@ -1,7 +1,7 @@
 /**
- * HATP GovernanceBlock — the compliance layer.
+ * TTP GovernanceBlock — the compliance layer.
  *
- * Every HATPEvent carries a GovernanceBlock. This is not optional.
+ * Every TTPEvent carries a GovernanceBlock. This is not optional.
  * `pii_asserted: false` and `content_asserted: false` are protocol-enforced
  * constants — they cannot be set to true. Compliance is structural.
  */

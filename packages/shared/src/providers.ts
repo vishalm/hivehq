@@ -1,5 +1,5 @@
 /**
- * HATP Provider Registry — canonical provider identifiers.
+ * TTP Provider Registry — canonical provider identifiers.
  *
  * Tier 1 (core) providers are HIVE-maintained. Tier 2 (verified community)
  * are accepted via PR to the registry repo. Tier 3 (`custom:${string}`)

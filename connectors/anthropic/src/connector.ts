@@ -1,5 +1,5 @@
 import {
-  type HATPCollector,
+  type TTPCollector,
   type ProviderHook,
   type WrapOptions,
   measureBody,
@@ -11,7 +11,7 @@ import {
 } from '@hive/shared'
 
 export interface AnthropicConnectorOptions {
-  collector: HATPCollector
+  collector: TTPCollector
   defaultModelHint?: string
 }
 

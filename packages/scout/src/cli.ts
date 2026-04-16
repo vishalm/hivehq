@@ -1,74 +1,92 @@
 #!/usr/bin/env node
 /**
- * Scout CLI — minimal launcher for the Phase 1 macOS menubar build path.
+ * HIVE Scout CLI — intercepts LLM traffic and ships TTP events.
  *
  * Usage:
- *   scout start           # install global fetch wrapper and idle
- *   scout status          # print identity fingerprint and deployment mode
- *   scout events [--tail] # print local events (solo mode)
+ *   scout start              — start Scout (intercept fetch globally)
+ *   scout status             — show identity + config
+ *   scout events [--limit N] — dump recent local events (solo mode)
+ *
+ * Environment:
+ *   TTP_ENDPOINT             — Node Hub URL (omit for solo mode)
+ *   TTP_TOKEN                — ingest bearer token
+ *   HIVE_DEPLOYMENT          — solo | node | federated | open
+ *   HIVE_DEPT_TAG            — department tag on every event
+ *   HIVE_PROJECT_TAG         — project tag on every event
  */
-
-import { loadScoutEnv } from './env.js'
 import { Scout } from './scout.js'
+import { loadScoutEnv } from './env.js'
 
 const args = process.argv.slice(2)
-const command = args[0] ?? 'status'
+const command = args[0] ?? 'start'
 
-async function main(): Promise<void> {
-  const env = loadScoutEnv()
-  const scout = new Scout({ env })
+const env = loadScoutEnv()
+const scout = new Scout({ env })
 
-  switch (command) {
-    case 'start': {
-      scout.installGlobalFetch()
-      // eslint-disable-next-line no-console
-      console.info(
-        `[hive] scout started · id=${scout.identityFingerprint} · mode=${env.HIVE_DEPLOYMENT}`,
-      )
-      // Keep the process alive for long-running observation.
-      setInterval(() => void 0, 1 << 30)
-      process.on('SIGINT', async () => {
-        await scout.shutdown()
-        process.exit(0)
-      })
-      break
-    }
-    case 'status': {
-      // eslint-disable-next-line no-console
-      console.info(
-        JSON.stringify(
-          {
-            scout_id_fingerprint: scout.identityFingerprint,
-            deployment: env.HIVE_DEPLOYMENT,
-            data_residency: env.HIVE_DATA_RESIDENCY,
-            retention_days: env.HIVE_RETENTION_DAYS,
-            regulation_tags: env.regulationTags,
-            endpoint: env.HATP_ENDPOINT ?? '(solo — local only)',
-          },
-          null,
-          2,
-        ),
-      )
+switch (command) {
+  case 'start': {
+    // Install the global fetch interceptor.
+    scout.installGlobalFetch()
+    console.log(`HIVE Scout started`)
+    console.log(`  id:         ${scout.id}`)
+    console.log(`  mode:       ${env.HIVE_DEPLOYMENT}`)
+    console.log(`  endpoint:   ${env.TTP_ENDPOINT ?? '(solo — local only)'}`)
+    console.log(`  dept:       ${env.HIVE_DEPT_TAG ?? '(none)'}`)
+    console.log(`  project:    ${env.HIVE_PROJECT_TAG ?? '(none)'}`)
+    console.log(`  flush:      every ${env.HIVE_FLUSH_INTERVAL_MS}ms`)
+    console.log(`  residency:  ${env.HIVE_DATA_RESIDENCY}`)
+    console.log(``)
+    console.log(`Intercepting: OpenAI, Anthropic (fetch-level)`)
+    console.log(`Press Ctrl+C to stop.`)
+    console.log(``)
+
+    // Keep the process alive.
+    process.on('SIGINT', async () => {
+      console.log('\nShutting down Scout...')
       await scout.shutdown()
-      break
-    }
-    case 'events': {
-      const events = scout.localEvents()
-      // eslint-disable-next-line no-console
-      console.info(JSON.stringify({ count: events.length, events }, null, 2))
-      await scout.shutdown()
-      break
-    }
-    default: {
-      // eslint-disable-next-line no-console
-      console.error(`Unknown command: ${command}\nUsage: scout [start|status|events]`)
-      process.exit(1)
-    }
+      console.log(`Flushed. ${scout.localEvents().length} events captured this session.`)
+      process.exit(0)
+    })
+
+    // Heartbeat.
+    setInterval(() => {
+      const count = scout.localEvents().length
+      if (count > 0) {
+        process.stdout.write(`  [scout] ${count} events captured\r`)
+      }
+    }, 5_000)
+    break
   }
-}
 
-main().catch((err) => {
-  // eslint-disable-next-line no-console
-  console.error('[hive] scout failed:', err)
-  process.exit(1)
-})
+  case 'status': {
+    console.log(`HIVE Scout`)
+    console.log(`  id:          ${scout.id}`)
+    console.log(`  fingerprint: ${scout.identityFingerprint}`)
+    console.log(`  mode:        ${env.HIVE_DEPLOYMENT}`)
+    console.log(`  endpoint:    ${env.TTP_ENDPOINT ?? '(solo)'}`)
+    console.log(`  residency:   ${env.HIVE_DATA_RESIDENCY}`)
+    console.log(`  retention:   ${env.HIVE_RETENTION_DAYS}d`)
+    console.log(`  regulation:  ${env.regulationTags.join(', ')}`)
+    break
+  }
+
+  case 'events': {
+    const limit = parseInt(args[1] ?? '20', 10)
+    const events = scout.localEvents().slice(-limit)
+    if (events.length === 0) {
+      console.log('No local events. Make some API calls first.')
+    } else {
+      console.log(`Last ${events.length} events:`)
+      for (const e of events) {
+        const t = new Date(e.timestamp).toISOString()
+        console.log(`  ${t} | ${e.provider.padEnd(12)} | ${e.model_hint.padEnd(24)} | ${e.direction.padEnd(8)} | ${e.estimated_tokens} tok | ${e.latency_ms ?? '-'}ms`)
+      }
+    }
+    break
+  }
+
+  default:
+    console.error(`Unknown command: ${command}`)
+    console.error(`Usage: scout <start|status|events>`)
+    process.exit(1)
+}

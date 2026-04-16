@@ -1,7 +1,8 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": [".env"],
-  "globalEnv": ["NODE_ENV", "HATP_ENDPOINT", "HATP_TOKEN", "HIVE_NODE_URL"],
+  "globalEnv": ["NODE_ENV", "TTP_ENDPOINT", "TTP_TOKEN", "HIVE_NODE_URL"],
+  "concurrency": "15",
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

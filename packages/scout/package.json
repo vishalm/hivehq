@@ -28,6 +28,7 @@
   "dependencies": {
     "@hive/connector": "0.1.0",
     "@hive/connector-anthropic": "0.1.0",
+    "@hive/connector-ollama": "0.1.0",
     "@hive/connector-openai": "0.1.0",
     "@hive/shared": "0.1.0",
     "@hive/vault": "0.1.0",

@@ -75,7 +75,7 @@
     .btn--ghost{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}
     .btn--ghost:hover{background:var(--blue-tint)}
 
-    /* ── HATP Protocol ───────────────────────────── */
+    /* ── TTP Protocol ───────────────────────────── */
     .protocol{
       position:relative;overflow:hidden;
       background:linear-gradient(135deg,#0a0824 0%,#0d1135 40%,#0a0f2e 70%,#060820 100%);
@@ -237,7 +237,7 @@
     }
     .proto-badge--mit{background:rgba(52,199,89,.15);border-color:rgba(52,199,89,.4);color:#63DA83}
     .proto-badge--open{background:rgba(0,122,255,.15);border-color:rgba(0,122,255,.4);color:#60B4FF}
-    .proto-badge--hatp{background:rgba(88,86,214,.2);border-color:rgba(88,86,214,.5);color:#A5A3FF}
+    .proto-badge--TTP{background:rgba(88,86,214,.2);border-color:rgba(88,86,214,.5);color:#A5A3FF}
 
     /* ── Nav ─────────────────────────────────────── */
     .nav{
@@ -1663,7 +1663,7 @@
   </div>
 </section>
 
-<!-- ── HATP Protocol ──────────────────────────────── -->
+<!-- ── TTP Protocol ──────────────────────────────── -->
 <section id="protocol" class="protocol" aria-labelledby="protocol-heading">
   <!-- ambient orbs -->
   <div class="protocol__orb protocol__orb--1" aria-hidden="true"></div>
@@ -1680,12 +1680,12 @@
           <path d="M6 2v4l2.5 1.5" stroke="rgba(165,163,255,.8)" stroke-width="1.2" stroke-linecap="round"/>
         </svg>
         Open Standard
-        <span class="protocol__version">HATP / 0.1</span>
+        <span class="protocol__version">TTP / 0.1</span>
       </div>
       <h2 class="protocol__title" id="protocol-heading">
         The wire protocol<br/>for <span>AI telemetry</span>
       </h2>
-      <p class="protocol__sub">HATP — Hive AI Telemetry Protocol. One canonical event schema. Any provider. Governance baked into every packet. The standard nobody built — until now.</p>
+      <p class="protocol__sub">TTP — Token Telemetry Protocol. One canonical event schema. Any provider. Governance baked into every packet. The standard nobody built — until now.</p>
     </div>
 
     <!-- body: stack + code -->
@@ -1717,7 +1717,7 @@
           </div>
           <div class="stack__layer stack__layer--l1 reveal">
             <div class="stack__num">Layer 1 · Schema</div>
-            <div class="stack__name">HATPEvent · Canonical JSON · Semver</div>
+            <div class="stack__name">TTPEvent · Canonical JSON · Semver</div>
             <div class="stack__desc">The normative event type. Versioned with backward-compat guarantees. Any compliant implementation produces exactly this.</div>
           </div>
         </div>
@@ -1726,12 +1726,12 @@
         <div class="proto-open reveal" style="margin-top:24px">
           <div class="proto-open__text">
             <strong>The standard is open. The network is HIVE.</strong><br/>
-            HATP is MIT-licensed. Any implementation can talk to any HIVE Node. HIVE cannot unilaterally break backward compatibility.
+            TTP is MIT-licensed. Any implementation can talk to any HIVE Node. HIVE cannot unilaterally break backward compatibility.
           </div>
           <div class="proto-open__badges">
             <span class="proto-badge proto-badge--mit">MIT</span>
             <span class="proto-badge proto-badge--open">Open spec</span>
-            <span class="proto-badge proto-badge--hatp">HATP WG</span>
+            <span class="proto-badge proto-badge--TTP">TTP WG</span>
           </div>
         </div>
       </div>
@@ -1743,16 +1743,16 @@
             <div class="code-chrome__dot" style="background:#FF3B30"></div>
             <div class="code-chrome__dot" style="background:#FF9500"></div>
             <div class="code-chrome__dot" style="background:#34C759"></div>
-            <div class="code-chrome__label">HATPEvent · v0.1 · canonical schema</div>
+            <div class="code-chrome__label">TTPEvent · v0.1 · canonical schema</div>
           </div>
-<pre><span class="c-cmt">// Open standard — governed by HATP Working Group
+<pre><span class="c-cmt">// Open standard — governed by TTP Working Group
 // Reference implementation: HIVE Scout
 // Privacy guarantee: content architecturally excluded</span>
 
-<span class="c-kw">interface</span> <span class="c-key">HATPEvent</span> {
+<span class="c-kw">interface</span> <span class="c-key">TTPEvent</span> {
 
   <span class="c-cmt">// Protocol</span>
-  <span class="c-key">hatp_version</span>:  <span class="c-str">'0.1'</span>
+  <span class="c-key">TTP_version</span>:  <span class="c-str">'0.1'</span>
   <span class="c-key">event_id</span>:      <span class="c-str">string</span>   <span class="c-cmt">// uuid v4</span>
   <span class="c-key">schema_hash</span>:   <span class="c-str">string</span>   <span class="c-cmt">// sha256 · self-verifying</span>
 
@@ -1792,12 +1792,12 @@
             <div class="code-chrome__dot" style="background:#FF3B30"></div>
             <div class="code-chrome__dot" style="background:#FF9500"></div>
             <div class="code-chrome__dot" style="background:#34C759"></div>
-            <div class="code-chrome__label">@hatp/sdk — drop-in</div>
+            <div class="code-chrome__label">@hive/connector-sdk — drop-in</div>
           </div>
-<pre><span class="c-kw">import</span> { <span class="c-key">HATProtocol</span> } <span class="c-kw">from</span> <span class="c-str">'@hatp/sdk'</span>
+<pre><span class="c-kw">import</span> { <span class="c-key">HiveConnector</span> } <span class="c-kw">from</span> <span class="c-str">'@hive/connector-sdk'</span>
 
-<span class="c-kw">const</span> <span class="c-key">hatp</span> = <span class="c-kw">new</span> <span class="c-key">HATProtocol</span>({
-  endpoint: <span class="c-str">'https://node.your-org/hatp/ingest'</span>,
+<span class="c-kw">const</span> <span class="c-key">hive</span> = <span class="c-kw">new</span> <span class="c-key">HiveConnector</span>({
+  endpoint: <span class="c-str">'https://node.your-org/api/v1/ttp/ingest'</span>,
   governance: {
     data_residency: <span class="c-str">'AE'</span>,
     regulation_tags: [<span class="c-str">'UAE_AI_LAW'</span>, <span class="c-str">'GDPR'</span>],
@@ -1806,8 +1806,8 @@
 })
 
 <span class="c-cmt">// Wrap any provider — zero behaviour change</span>
-<span class="c-kw">const</span> res = <span class="c-kw">await</span> <span class="c-key">hatp</span>.wrap(openai.chat.completions.create(…))
-<span class="c-cmt">// HATPEvent emitted. Governance enforced. Done.</span></pre>
+<span class="c-kw">const</span> res = <span class="c-kw">await</span> <span class="c-key">hive</span>.wrap(openai.chat.completions.create(…))
+<span class="c-cmt">// TTPEvent emitted. Governance enforced. Done.</span></pre>
         </div>
       </div>
     </div>
@@ -1954,7 +1954,7 @@
       <div class="trust-card" role="listitem">
         <div class="trust-card__layer" style="color:var(--blue)">Layer 1 · Node Hub</div>
         <div class="trust-card__name">Your org (on-prem)</div>
-        <div class="trust-card__mech">POST /api/v1/hatp/ingest<br/>X-HATP-Version: 0.1 · GovernanceBlock: required</div>
+        <div class="trust-card__mech">POST /api/v1/ttp/ingest<br/>X-TTP-Version: 0.1 · GovernanceBlock: required</div>
         <ul class="trust-card__facts">
           <li>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><rect x="1" y="3" width="12" height="8" rx="2" stroke="var(--green)" stroke-width="1.2"/><path d="M4 7l2 2 4-4" stroke="var(--green)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -2055,7 +2055,7 @@
         <span class="compliance-card__flag" style="background:#E8F4FF;color:var(--blue)">EU · AI Act</span>
         <div class="compliance-card__name">EU AI Act</div>
         <div class="compliance-card__scope">High-risk AI systems</div>
-        <p class="compliance-card__mechanism">HATPEvent provides model identity, provider, endpoint, department, timestamp — the exact audit trail required for high-risk system logs. GovernanceBlock declares regulation_tags per event.</p>
+        <p class="compliance-card__mechanism">TTPEvent provides model identity, provider, endpoint, department, timestamp — the exact audit trail required for high-risk system logs. GovernanceBlock declares regulation_tags per event.</p>
         <span class="compliance-card__status status--arch">Architecture</span>
       </article>
 
@@ -2283,11 +2283,11 @@
 
 <span class="t-gray"># Prometheus metrics scrape endpoint</span>
 <span class="t-green">GET</span> <span class="t-white">/metrics</span>
-<span class="t-orange">→</span> hatp_events_ingested_total{provider="openai"} <span class="t-blue">48291</span>
-   hatp_ingest_latency_ms{q="p99"} <span class="t-blue">187</span>
-   hatp_queue_depth_current <span class="t-blue">142</span>
-   hatp_scout_active_count <span class="t-blue">94</span>
-   hatp_hive_sync_lag_seconds <span class="t-blue">18</span>
+<span class="t-orange">→</span> TTP_events_ingested_total{provider="openai"} <span class="t-blue">48291</span>
+   TTP_ingest_latency_ms{q="p99"} <span class="t-blue">187</span>
+   TTP_queue_depth_current <span class="t-blue">142</span>
+   TTP_scout_active_count <span class="t-blue">94</span>
+   TTP_hive_sync_lag_seconds <span class="t-blue">18</span>
 
 <span class="t-gray"># Admin full status (auth required)</span>
 <span class="t-green">GET</span> <span class="t-white">/admin/status</span>
@@ -2652,7 +2652,7 @@
       <div>
         <div class="footer-full__col-title">Protocol</div>
         <ul class="footer-full__links">
-          <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/protocol.md" target="_blank" rel="noopener noreferrer">HATP Specification</a></li>
+          <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/TTP_SPEC.md" target="_blank" rel="noopener noreferrer">TTP Specification</a></li>
           <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/protocol-versioning.md" target="_blank" rel="noopener noreferrer">Version Negotiation</a></li>
           <li><a href="https://github.com/vishalm/hivehq/blob/main/docs/telemetry-edge-cases.md" target="_blank" rel="noopener noreferrer">Telemetry Edge Cases</a></li>
         </ul>
@@ -2673,7 +2673,7 @@
         <ul class="footer-full__links">
           <li><a href="https://github.com/vishalm/hivehq" target="_blank" rel="noopener noreferrer">GitHub</a></li>
           <li><a href="#waitlist">Early access</a></li>
-          <li><a href="#protocol">HATP Protocol</a></li>
+          <li><a href="#protocol">TTP Protocol</a></li>
           <li><a href="#compliance">Compliance</a></li>
           <li><a href="#trust">Trust model</a></li>
           <li><a href="#resilience">Resilience</a></li>
@@ -2686,7 +2686,7 @@
     <div class="footer-full__bottom">
       <div class="footer-full__copy">
         HIVE · The Global AI Consumption Network · April 2026<br/>
-        <span style="font-size:12px;color:var(--gray-3)">HATP Protocol · MIT License · Open standard</span>
+        <span style="font-size:12px;color:var(--gray-3)">TTP Protocol · MIT License · Open standard</span>
       </div>
       <div class="footer-full__langs">
         هايف · הייב · ہائیو · هایو · हाइव · ਹਾਈਵ · হাইভ · ஹைவ் · హైవ్ · හයිව් · ᩋ᩠ᨿ᩠ᩅ · ហ៊ីវ · ไฮฟ์ · 蜂巢 · ハイブ · 하이브 · ჰაივი · Χάιβ · Хайв · Colmena · Ruche · Kovan

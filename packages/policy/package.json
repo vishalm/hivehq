@@ -1,7 +1,7 @@
 {
   "name": "@hive/policy",
   "version": "0.1.0",
-  "description": "HIVE — Declarative policy engine for HATP events. Governance as code.",
+  "description": "HIVE — Declarative policy engine for TTP events. Governance as code.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",

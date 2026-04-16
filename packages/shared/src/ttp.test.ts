@@ -1,20 +1,20 @@
 import { describe, expect, it } from 'vitest'
 import {
-  HATPEventSchema,
-  HATP_VERSION,
-  HATP_SCHEMA_HASH,
+  TTPEventSchema,
+  TTP_VERSION,
+  TTP_SCHEMA_HASH,
   canonicalize,
-  parseHATPEvent,
-  safeParseHATPEvent,
-} from './hatp.js'
+  parseTTPEvent,
+  safeParseTTPEvent,
+} from './ttp.js'
 import { defaultUAEGovernance } from './governance.js'
 import { estimateTokens } from './tokens.js'
 import { newEventId, newSessionHash } from './hash.js'
 
 const baseEvent = {
-  hatp_version: HATP_VERSION,
+  TTP_version: TTP_VERSION,
   event_id: newEventId(),
-  schema_hash: HATP_SCHEMA_HASH,
+  schema_hash: TTP_SCHEMA_HASH,
   timestamp: Date.now(),
   observed_at: Date.now(),
   emitter_id: 'scout-hash-abc123',
@@ -32,16 +32,16 @@ const baseEvent = {
   governance: defaultUAEGovernance(),
 }
 
-describe('HATPEventSchema', () => {
+describe('TTPEventSchema', () => {
   it('accepts a well-formed event', () => {
-    const parsed = parseHATPEvent(baseEvent)
+    const parsed = parseTTPEvent(baseEvent)
     expect(parsed.provider).toBe('openai')
     expect(parsed.governance.pii_asserted).toBe(false)
   })
 
   it('rejects events missing governance', () => {
     const { governance: _g, ...invalid } = baseEvent
-    const result = safeParseHATPEvent(invalid)
+    const result = safeParseTTPEvent(invalid)
     expect(result.success).toBe(false)
   })
 
@@ -50,19 +50,19 @@ describe('HATPEventSchema', () => {
       ...baseEvent,
       governance: { ...baseEvent.governance, pii_asserted: true },
     }
-    const result = HATPEventSchema.safeParse(invalid)
+    const result = TTPEventSchema.safeParse(invalid)
     expect(result.success).toBe(false)
   })
 
   it('rejects unknown fields (strict mode)', () => {
     const invalid = { ...baseEvent, rogue_field: 'should-not-pass' }
-    const result = HATPEventSchema.safeParse(invalid)
+    const result = TTPEventSchema.safeParse(invalid)
     expect(result.success).toBe(false)
   })
 
   it('accepts custom:* providers', () => {
     const event = { ...baseEvent, provider: 'custom:my-llm' as const }
-    const parsed = parseHATPEvent(event)
+    const parsed = parseTTPEvent(event)
     expect(parsed.provider).toBe('custom:my-llm')
   })
 })

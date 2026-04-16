@@ -1,10 +1,10 @@
 /**
- * @hive/otel-bridge — OpenTelemetry → HATP.
+ * @hive/otel-bridge — OpenTelemetry → TTP.
  *
  * Adoption path for teams already instrumenting gen-AI calls with the
  * OpenTelemetry Semantic Conventions for generative AI. This bridge
  * converts a completed OTel span (in its end-callback form) into a
- * HiveConnectorEvent and hands it to a HATPCollector.
+ * HiveConnectorEvent and hands it to a TTPCollector.
  *
  * We use a structural shape (no hard dep on @opentelemetry/* at runtime)
  * so projects can adopt the bridge without OTel SDK pinning headaches.
@@ -17,7 +17,7 @@
  *   - server.address
  */
 
-import type { HATPCollector } from '@hive/connector'
+import type { TTPCollector } from '@hive/connector'
 import {
   type AIProvider,
   type HiveConnectorEvent,
@@ -34,14 +34,14 @@ export interface OtelSpanLike {
 }
 
 export interface BridgeOptions {
-  collector: HATPCollector
+  collector: TTPCollector
   /** Fallback provider if the span doesn't expose `gen_ai.system`. */
   defaultProvider?: AIProvider
   /** Optional use-case tag stamped on every emitted event. */
   useCaseTag?: string
 }
 
-// ── System → HATP provider mapping ───────────────────────────────────────────
+// ── System → TTP provider mapping ───────────────────────────────────────────
 
 const SYSTEM_TO_PROVIDER: Record<string, AIProvider> = {
   openai: 'openai',
@@ -77,7 +77,7 @@ export class OtelBridge {
   constructor(private readonly opts: BridgeOptions) {}
 
   /**
-   * Accept a completed OTel span and emit the corresponding HATP event.
+   * Accept a completed OTel span and emit the corresponding TTP event.
    * Intended for registration via OTel's SpanProcessor.onEnd hook.
    */
   onSpanEnd(span: OtelSpanLike): void {

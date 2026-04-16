@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { HATPCollector } from './collector.js'
+import { TTPCollector } from './collector.js'
 import { InMemorySink } from './sinks.js'
 import { defaultUAEGovernance } from '@hive/shared'
 
 function buildCollector() {
   const sink = new InMemorySink()
-  const collector = new HATPCollector({
+  const collector = new TTPCollector({
     sink,
     governance: defaultUAEGovernance(),
     deployment: 'solo',
@@ -15,7 +15,7 @@ function buildCollector() {
   return { sink, collector }
 }
 
-describe('HATPCollector', () => {
+describe('TTPCollector', () => {
   it('records events and flushes to sink', async () => {
     const { sink, collector } = buildCollector()
     collector.record({
@@ -37,7 +37,7 @@ describe('HATPCollector', () => {
 
   it('auto-flushes when maxBatchSize is hit', async () => {
     const sink = new InMemorySink()
-    const collector = new HATPCollector({
+    const collector = new TTPCollector({
       sink,
       governance: defaultUAEGovernance(),
       deployment: 'solo',

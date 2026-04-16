@@ -15,8 +15,10 @@
   "dependencies": {
     "@hive/shared": "0.1.0",
     "next": "^15.0.3",
+    "plotly.js-dist-min": "^3.5.0",
     "react": "^19.0.0-rc",
     "react-dom": "^19.0.0-rc",
+    "react-plotly.js": "^2.6.0",
     "recharts": "^2.13.3"
   },
   "devDependencies": {

@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import request from 'supertest'
 import {
-  HATP_VERSION,
-  HATP_SCHEMA_HASH,
+  TTP_VERSION,
+  TTP_SCHEMA_HASH,
   defaultUAEGovernance,
   newEventId,
   newSessionHash,
   generateSigningKeypair,
   signBatch,
-  type HATPEvent,
+  type TTPEvent,
 } from '@hive/shared'
 import { PolicyEngine, buildRetentionPolicy } from '@hive/policy'
 import { buildApp } from './app.js'
@@ -24,9 +24,9 @@ function buildTestEnv(overrides: Partial<NodeEnv> = {}): NodeEnv {
 
 function makeEvent() {
   return {
-    hatp_version: HATP_VERSION,
+    TTP_version: TTP_VERSION,
     event_id: newEventId(),
-    schema_hash: HATP_SCHEMA_HASH,
+    schema_hash: TTP_SCHEMA_HASH,
     timestamp: Date.now(),
     observed_at: Date.now(),
     emitter_id: 'scout-test',
@@ -54,14 +54,14 @@ describe('Node server', () => {
     expect(res.body.region).toBe('AE')
   })
 
-  it('accepts a valid HATP batch', async () => {
+  it('accepts a valid TTP batch', async () => {
     const { app, store } = buildApp({ env: buildTestEnv() })
     const batch = {
       batch_id: '11111111-1111-4111-9111-111111111111',
       sent_at: Date.now(),
       events: [makeEvent()],
     }
-    const res = await request(app).post('/api/v1/hatp/ingest').send(batch)
+    const res = await request(app).post('/api/v1/ttp/ingest').send(batch)
     expect(res.status).toBe(200)
     expect(res.body.accepted).toBe(1)
     expect(await store.count()).toBe(1)
@@ -77,7 +77,7 @@ describe('Node server', () => {
       sent_at: Date.now(),
       events: [bad],
     }
-    const res = await request(app).post('/api/v1/hatp/ingest').send(batch)
+    const res = await request(app).post('/api/v1/ttp/ingest').send(batch)
     expect(res.status).toBe(400)
     expect(res.body.rejected).toBe(1)
     expect(res.body.errors[0].code).toBe('SCHEMA_INVALID')
@@ -93,7 +93,7 @@ describe('Node server', () => {
       sent_at: Date.now(),
       events: [ev],
     }
-    const res = await request(app).post('/api/v1/hatp/ingest').send(batch)
+    const res = await request(app).post('/api/v1/ttp/ingest').send(batch)
     expect(res.body.errors[0].code).toBe('RESIDENCY_VIOLATION')
   })
 
@@ -101,7 +101,7 @@ describe('Node server', () => {
     const { app } = buildApp({
       env: buildTestEnv({ NODE_INGEST_TOKEN: 'super-secret-token-12345' }),
     })
-    const res = await request(app).post('/api/v1/hatp/ingest').send({})
+    const res = await request(app).post('/api/v1/ttp/ingest').send({})
     expect(res.status).toBe(401)
   })
 
@@ -113,12 +113,12 @@ describe('Node server', () => {
       sent_at: Date.now(),
       events: [makeEvent()],
     }
-    await request(app).post('/api/v1/hatp/ingest').send(batch)
+    await request(app).post('/api/v1/ttp/ingest').send(batch)
     const res = await request(app).get('/metrics')
     expect(res.status).toBe(200)
     expect(res.headers['content-type']).toMatch(/text\/plain/)
-    expect(res.text).toContain('# TYPE hatp_ingest_events_total counter')
-    expect(res.text).toContain('hatp_node_up 1')
+    expect(res.text).toContain('# TYPE TTP_ingest_events_total counter')
+    expect(res.text).toContain('TTP_node_up 1')
     expect(res.text).toContain('provider="openai"')
   })
 
@@ -127,7 +127,7 @@ describe('Node server', () => {
     const trustStore = new Map([[kp.kid, kp.publicKey]])
     const { app } = buildApp({ env: buildTestEnv(), trustStore })
     const res = await request(app)
-      .post('/api/v1/hatp/ingest')
+      .post('/api/v1/ttp/ingest')
       .send({
         batch_id: '55555555-5555-4555-9555-555555555555',
         sent_at: Date.now(),
@@ -141,10 +141,10 @@ describe('Node server', () => {
     const kp = generateSigningKeypair()
     const trustStore = new Map([[kp.kid, kp.publicKey]])
     const { app, store } = buildApp({ env: buildTestEnv(), trustStore })
-    const ev = makeEvent() as HATPEvent
+    const ev = makeEvent() as TTPEvent
     const envelope = signBatch([ev], kp)
     const res = await request(app)
-      .post('/api/v1/hatp/ingest')
+      .post('/api/v1/ttp/ingest')
       .send({
         batch_id: '66666666-6666-4666-9666-666666666666',
         sent_at: Date.now(),
@@ -160,11 +160,11 @@ describe('Node server', () => {
     const kp = generateSigningKeypair()
     const trustStore = new Map([[kp.kid, kp.publicKey]])
     const { app } = buildApp({ env: buildTestEnv(), trustStore })
-    const ev = makeEvent() as HATPEvent
+    const ev = makeEvent() as TTPEvent
     const envelope = signBatch([ev], kp)
     const tampered = { ...ev, payload_bytes: ev.payload_bytes + 1 }
     const res = await request(app)
-      .post('/api/v1/hatp/ingest')
+      .post('/api/v1/ttp/ingest')
       .send({
         batch_id: '77777777-7777-4777-9777-777777777777',
         sent_at: Date.now(),
@@ -180,7 +180,7 @@ describe('Node server', () => {
     const policy = new PolicyEngine(buildRetentionPolicy(30))
     const { app } = buildApp({ env: buildTestEnv(), policy })
     const res = await request(app)
-      .post('/api/v1/hatp/ingest')
+      .post('/api/v1/ttp/ingest')
       .send({
         batch_id: '88888888-8888-4888-9888-888888888888',
         sent_at: Date.now(),

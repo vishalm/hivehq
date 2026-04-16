@@ -1,7 +1,7 @@
-import { FetchHook, type HATPCollector } from '@hive/connector'
+import { FetchHook, type TTPCollector } from '@hive/connector'
 
 export interface AzureOpenAIConnectorOptions {
-  collector: HATPCollector
+  collector: TTPCollector
   defaultModelHint?: string
 }
 

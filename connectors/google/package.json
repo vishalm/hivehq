@@ -1,7 +1,7 @@
 {
   "name": "@hive/connector-google",
   "version": "0.1.0",
-  "description": "HIVE — Google Gemini / Vertex AI connector. Emits HATP telemetry.",
+  "description": "HIVE — Google Gemini / Vertex AI connector. Emits TTP telemetry.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",

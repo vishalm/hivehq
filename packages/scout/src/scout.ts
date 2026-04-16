@@ -1,14 +1,15 @@
 import { hostname } from 'node:os'
 import {
-  HATPCollector,
+  TTPCollector,
   HttpSink,
   InMemorySink,
   type CollectorSink,
 } from '@hive/connector'
 import { AnthropicConnector } from '@hive/connector-anthropic'
+import { OllamaConnector } from '@hive/connector-ollama'
 import { OpenAIConnector } from '@hive/connector-openai'
 import {
-  type HATPEvent,
+  type TTPEvent,
   type GovernanceBlock,
   type RegulationTag,
   defaultUAEGovernance,
@@ -30,12 +31,13 @@ export interface ScoutConfig {
  *
  * In Solo mode, events stay in an in-memory sink so the local dashboard
  * can display them. In Node/Federated/Open modes, events flush over HTTP
- * to the configured HATP endpoint.
+ * to the configured TTP endpoint.
  */
 export class Scout {
-  readonly collector: HATPCollector
-  readonly openai: OpenAIConnector
-  readonly anthropic: AnthropicConnector
+  readonly collector: TTPCollector
+  readonly openai?: OpenAIConnector
+  readonly anthropic?: AnthropicConnector
+  readonly ollama?: OllamaConnector
   readonly localSink?: InMemorySink
 
   private readonly scoutId: string
@@ -61,19 +63,19 @@ export class Scout {
     let sink: CollectorSink
     if (config.sinkOverride) {
       sink = config.sinkOverride
-    } else if (env.HIVE_DEPLOYMENT === 'solo' || !env.HATP_ENDPOINT) {
+    } else if (env.HIVE_DEPLOYMENT === 'solo' || !env.TTP_ENDPOINT) {
       const memSink = new InMemorySink()
       this.localSink = memSink
       sink = memSink
     } else {
       sink = new HttpSink({
-        endpoint: env.HATP_ENDPOINT,
-        ...(env.HATP_TOKEN && { token: env.HATP_TOKEN }),
+        endpoint: env.TTP_ENDPOINT,
+        ...(env.TTP_TOKEN && { token: env.TTP_TOKEN }),
         ...(config.fetchImpl && { fetchImpl: config.fetchImpl }),
       })
     }
 
-    this.collector = new HATPCollector({
+    this.collector = new TTPCollector({
       sink,
       governance,
       deployment: env.HIVE_DEPLOYMENT,
@@ -85,8 +87,21 @@ export class Scout {
       ...(env.HIVE_NODE_REGION && { nodeRegion: env.HIVE_NODE_REGION }),
     })
 
-    this.openai = new OpenAIConnector({ collector: this.collector })
-    this.anthropic = new AnthropicConnector({ collector: this.collector })
+    // Wire connectors based on HIVE_CONNECTORS env var
+    const enabled = new Set(env.enabledConnectors ?? ['anthropic', 'openai', 'ollama'])
+
+    if (enabled.has('openai')) {
+      this.openai = new OpenAIConnector({ collector: this.collector })
+    }
+    if (enabled.has('anthropic') || enabled.has('claude')) {
+      this.anthropic = new AnthropicConnector({ collector: this.collector })
+    }
+    if (enabled.has('ollama')) {
+      this.ollama = new OllamaConnector({
+        collector: this.collector,
+        ...(env.HIVE_OLLAMA_HOST && { hosts: [env.HIVE_OLLAMA_HOST] }),
+      })
+    }
   }
 
   /**
@@ -94,10 +109,11 @@ export class Scout {
    * that calls fetch() to a known provider emits telemetry automatically.
    */
   installGlobalFetch(): void {
-    const original = globalThis.fetch
-    // Chain openai and anthropic hooks — both no-op for non-matching hosts.
-    let wrapped = this.openai.wrap(original)
-    wrapped = this.anthropic.wrap(wrapped)
+    let wrapped = globalThis.fetch
+    // Chain all enabled connectors — each no-ops for non-matching hosts.
+    if (this.openai) wrapped = this.openai.wrap(wrapped)
+    if (this.anthropic) wrapped = this.anthropic.wrap(wrapped)
+    if (this.ollama) wrapped = this.ollama.wrap(wrapped)
     globalThis.fetch = wrapped
   }
 
@@ -117,7 +133,7 @@ export class Scout {
   }
 
   /** Snapshot of local events in solo mode (for the personal dashboard). */
-  localEvents(): HATPEvent[] {
+  localEvents(): TTPEvent[] {
     return this.localSink ? [...this.localSink.events] : []
   }
 }

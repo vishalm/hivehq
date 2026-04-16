@@ -1,7 +1,7 @@
 {
   "name": "@hive/otel-bridge",
   "version": "0.1.0",
-  "description": "HIVE — OpenTelemetry → HATP bridge. Convert gen-ai OTel spans into HATPEvents.",
+  "description": "HIVE — OpenTelemetry → TTP bridge. Convert gen-ai OTel spans into TTPEvents.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",

@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest'
-import { HATP_VERSION, HATP_SCHEMA_HASH, type HATPEvent } from './hatp.js'
+import { TTP_VERSION, TTP_SCHEMA_HASH, type TTPEvent } from './ttp.js'
 import { appendChain, verifyChain, merkleRoot, GENESIS_HASH } from './auditlog.js'
 
-function evt(id: string, tokens = 1): HATPEvent {
+function evt(id: string, tokens = 1): TTPEvent {
   return {
-    hatp_version: HATP_VERSION,
+    TTP_version: TTP_VERSION,
     event_id: id,
-    schema_hash: HATP_SCHEMA_HASH,
+    schema_hash: TTP_SCHEMA_HASH,
     timestamp: 1,
     observed_at: 2,
     emitter_id: 'e',

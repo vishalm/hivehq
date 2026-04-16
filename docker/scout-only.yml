@@ -1,8 +1,8 @@
 version: '3.9'
 
 # HIVE Scout — agent only. Points at an existing Node Hub.
-#   HATP_ENDPOINT=https://node.your-org.internal/api/v1/hatp/ingest \
-#   HATP_TOKEN=<scout-token> \
+#   TTP_ENDPOINT=https://node.your-org.internal/api/v1/TTP/ingest \
+#   TTP_TOKEN=<scout-token> \
 #   docker-compose -f docker/scout-only.yml up -d
 
 services:
@@ -13,8 +13,8 @@ services:
     container_name: hive-scout
     restart: unless-stopped
     environment:
-      HATP_ENDPOINT: ${HATP_ENDPOINT}
-      HATP_TOKEN: ${HATP_TOKEN}
+      TTP_ENDPOINT: ${TTP_ENDPOINT}
+      TTP_TOKEN: ${TTP_TOKEN}
       HIVE_DEPLOYMENT: ${HIVE_DEPLOYMENT:-node}
       HIVE_DATA_RESIDENCY: ${HIVE_DATA_RESIDENCY:-AE}
       HIVE_RETENTION_DAYS: ${HIVE_RETENTION_DAYS:-90}

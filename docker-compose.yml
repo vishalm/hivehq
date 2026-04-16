@@ -1,0 +1,143 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# HIVE — Full Stack Docker Compose
+# Run the entire HIVE platform in one command:
+#   docker compose up --build
+#
+# Services:
+#   - node-server : TTP ingestion & storage (port 3000)
+#   - dashboard   : Next.js HIVE Dashboard  (port 3001)
+#   - postgres    : TimescaleDB for events  (port 5432)
+#   - redis       : Queue & caching         (port 6379)
+#   - ollama      : Local LLM runtime       (port 11434)
+# ──────────────────────────────────────────────────────────────────────────────
+
+version: "3.9"
+
+x-common: &common
+  restart: unless-stopped
+  networks:
+    - hive
+
+services:
+  # ── TimescaleDB — event storage ──────────────────────────────────────────
+  postgres:
+    image: timescale/timescaledb:latest-pg16
+    <<: *common
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: hive
+      POSTGRES_USER: hive
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hive_dev_password}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hive"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ── Redis — queue & caching ──────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    <<: *common
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ── Node Server — TTP ingestion ──────────────────────────────────────────
+  node-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    <<: *common
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_PORT: "3000"
+      NODE_REGION: ${NODE_REGION:-AE}
+      NODE_DATABASE_URL: postgresql://hive:${POSTGRES_PASSWORD:-hive_dev_password}@postgres:5432/hive
+      NODE_REDIS_URL: redis://redis:6379
+      NODE_INGEST_TOKEN: ${NODE_INGEST_TOKEN:-}
+      NODE_ID: ${NODE_ID:-hive-node-01}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Dashboard — Next.js HIVE UI ──────────────────────────────────────────
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    <<: *common
+    ports:
+      - "3001:3001"
+    environment:
+      DASHBOARD_NODE_URL: http://node-server:3000
+      DASHBOARD_PORT: "3001"
+      PORT: "3001"
+    depends_on:
+      node-server:
+        condition: service_healthy
+
+  # ── Ollama — Local LLM (optional) ───────────────────────────────────────
+  ollama:
+    image: ollama/ollama:latest
+    <<: *common
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollamadata:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    profiles:
+      - gpu
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:11434/api/tags || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Ollama CPU-only (default) ────────────────────────────────────────────
+  ollama-cpu:
+    image: ollama/ollama:latest
+    <<: *common
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollamadata:/root/.ollama
+    profiles:
+      - cpu
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:11434/api/tags || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
+  redisdata:
+  ollamadata:
+
+networks:
+  hive:
+    driver: bridge

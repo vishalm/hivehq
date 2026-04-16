@@ -12,13 +12,13 @@
  */
 
 import { createHash } from 'node:crypto'
-import { canonicalize, type HATPEvent } from './hatp.js'
+import { canonicalize, type TTPEvent } from './ttp.js'
 
 /** Genesis hash for the very first entry in any chain. */
 export const GENESIS_HASH = '0'.repeat(64)
 
 export interface ChainLink {
-  event: HATPEvent
+  event: TTPEvent
   /** sha256 hex of the previous link's event_hash. */
   prev_hash: string
   /** sha256 hex of (prev_hash || canonicalize(event)). */
@@ -30,7 +30,7 @@ export interface ChainLink {
 /**
  * Compute the event hash for a given (prev_hash, event) pair.
  */
-export function computeEventHash(prevHash: string, event: HATPEvent): string {
+export function computeEventHash(prevHash: string, event: TTPEvent): string {
   const h = createHash('sha256')
   h.update(prevHash)
   h.update('\n')
@@ -42,7 +42,7 @@ export function computeEventHash(prevHash: string, event: HATPEvent): string {
  * Extend a chain by appending one event. Returns the new link.
  * If `tail` is undefined, the chain is seeded from GENESIS.
  */
-export function appendChain(tail: ChainLink | undefined, event: HATPEvent): ChainLink {
+export function appendChain(tail: ChainLink | undefined, event: TTPEvent): ChainLink {
   const prev_hash = tail?.event_hash ?? GENESIS_HASH
   const seq = (tail?.seq ?? -1) + 1
   return {

@@ -1,4 +1,4 @@
-import type { HATPEvent } from '@hive/shared'
+import type { TTPEvent } from '@hive/shared'
 import {
   PolicyDocumentSchema,
   type PolicyDocument,
@@ -13,7 +13,7 @@ import {
  * Resolve a dot-path like `governance.data_residency` or `token_breakdown.completion_tokens`
  * against an event. Returns `undefined` if any segment is missing.
  */
-export function resolvePath(event: HATPEvent, path: string): unknown {
+export function resolvePath(event: TTPEvent, path: string): unknown {
   const segments = path.split('.')
   let current: unknown = event
   for (const seg of segments) {
@@ -52,7 +52,7 @@ function sameValue(a: unknown, b: unknown): boolean {
   return false
 }
 
-export function evaluatePredicate(event: HATPEvent, p: Predicate): boolean {
+export function evaluatePredicate(event: TTPEvent, p: Predicate): boolean {
   if (!isPrimitive(p)) {
     switch (p.op) {
       case 'all':
@@ -111,7 +111,7 @@ export class PolicyEngine {
    * Evaluate the policy against an event. First rule to match wins
    * (rules are sorted by priority). Falls through to `default_decision`.
    */
-  evaluate(event: HATPEvent): PolicyResult {
+  evaluate(event: TTPEvent): PolicyResult {
     for (const rule of this.sortedRules) {
       if (rule.enabled === false) continue
       if (evaluatePredicate(event, rule.when)) {
@@ -130,7 +130,7 @@ export class PolicyEngine {
   /**
    * Evaluate many events at once. Useful for batch admission control.
    */
-  evaluateBatch(events: HATPEvent[]): PolicyResult[] {
+  evaluateBatch(events: TTPEvent[]): PolicyResult[] {
     return events.map((e) => this.evaluate(e))
   }
 }

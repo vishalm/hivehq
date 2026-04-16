@@ -1,5 +1,5 @@
 /**
- * @hive/policy — Declarative ABAC policy engine for HATP events.
+ * @hive/policy — Declarative ABAC policy engine for TTP events.
  *
  * Governance-as-code: policies are plain JSON (or YAML → JSON), evaluated
  * at ingest. A policy decision is `allow | deny | redact | route`, with

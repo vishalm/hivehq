@@ -1,7 +1,7 @@
 {
   "name": "@hive/connector",
   "version": "0.1.0",
-  "description": "HIVE — Open connector protocol. Wrap any AI provider; emit HATPEvents.",
+  "description": "HIVE — Open connector protocol. Wrap any AI provider; emit TTPEvents.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",

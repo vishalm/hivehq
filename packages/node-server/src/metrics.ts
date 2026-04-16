@@ -2,16 +2,16 @@
  * Prometheus-format metrics, handwritten — no prom-client dependency.
  *
  * Metrics exposed at `/metrics`:
- *   hatp_ingest_events_total{result, provider}       — counter
- *   hatp_ingest_bytes_total{provider}                — counter
- *   hatp_ingest_tokens_total{provider}               — counter
- *   hatp_ingest_latency_ms_sum / _count              — histogram-lite
- *   hatp_ingest_errors_total{reason}                 — counter
- *   hatp_covenant_violations_total{kind}             — counter (PII/content/residency rejects)
- *   hatp_node_up                                     — gauge, always 1
+ *   TTP_ingest_events_total{result, provider}       — counter
+ *   TTP_ingest_bytes_total{provider}                — counter
+ *   TTP_ingest_tokens_total{provider}               — counter
+ *   TTP_ingest_latency_ms_sum / _count              — histogram-lite
+ *   TTP_ingest_errors_total{reason}                 — counter
+ *   TTP_covenant_violations_total{kind}             — counter (PII/content/residency rejects)
+ *   TTP_node_up                                     — gauge, always 1
  */
 
-import type { HATPEvent } from '@hive/shared'
+import type { TTPEvent } from '@hive/shared'
 
 type Counter = Map<string, number>
 type Labels = Record<string, string>
@@ -48,38 +48,38 @@ const m = (name: string, help: string, type: Metric['type']): Metric => ({
 })
 
 export const metricsRegistry = {
-  ingestEvents: m('hatp_ingest_events_total', 'HATP events accepted by this node', 'counter'),
+  ingestEvents: m('TTP_ingest_events_total', 'TTP events accepted by this node', 'counter'),
   ingestBytes: m(
-    'hatp_ingest_bytes_total',
+    'TTP_ingest_bytes_total',
     'Total observed payload bytes by provider',
     'counter',
   ),
   ingestTokens: m(
-    'hatp_ingest_tokens_total',
+    'TTP_ingest_tokens_total',
     'Total estimated tokens by provider',
     'counter',
   ),
   ingestErrors: m(
-    'hatp_ingest_errors_total',
-    'HATP batches rejected, by reason',
+    'TTP_ingest_errors_total',
+    'TTP batches rejected, by reason',
     'counter',
   ),
   covenantViolations: m(
-    'hatp_covenant_violations_total',
+    'TTP_covenant_violations_total',
     'Protocol covenant violations intercepted at the boundary',
     'counter',
   ),
   latencySum: m(
-    'hatp_ingest_latency_ms_sum',
+    'TTP_ingest_latency_ms_sum',
     'Sum of observed call latencies in ms',
     'summary',
   ),
   latencyCount: m(
-    'hatp_ingest_latency_ms_count',
+    'TTP_ingest_latency_ms_count',
     'Count of latency observations',
     'summary',
   ),
-  nodeUp: m('hatp_node_up', 'Node hub liveness', 'gauge'),
+  nodeUp: m('TTP_node_up', 'Node hub liveness', 'gauge'),
 }
 
 // Seed the liveness gauge.
@@ -87,7 +87,7 @@ metricsRegistry.nodeUp.values.set('', 1)
 
 // ── Recording ───────────────────────────────────────────────────────────────
 
-export function recordIngest(events: HATPEvent[]): void {
+export function recordIngest(events: TTPEvent[]): void {
   for (const e of events) {
     inc(metricsRegistry.ingestEvents, { provider: e.provider, result: 'accepted' })
     inc(metricsRegistry.ingestBytes, { provider: e.provider }, e.payload_bytes)

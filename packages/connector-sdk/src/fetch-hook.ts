@@ -5,7 +5,7 @@
  * observe-request → observe-response → emit loop once, and each
  * provider connector supplies:
  *   - a host matcher
- *   - provider id (HATP enum)
+ *   - provider id (TTP enum)
  *   - model-hint header lookup
  *   - optional response-body token estimator
  *
@@ -13,7 +13,7 @@
  * only sizes and the model-hint header.
  */
 
-import type { HATPCollector } from './collector.js'
+import type { TTPCollector } from './collector.js'
 import { measureBody } from './size.js'
 import {
   type AIProvider,
@@ -24,7 +24,7 @@ import {
 import type { ProviderHook, WrapOptions } from './hook.js'
 
 export interface FetchHookSpec {
-  /** HATP provider id. Must match the core registry or be `custom:…`. */
+  /** TTP provider id. Must match the core registry or be `custom:…`. */
   provider: AIProvider
   /** Display name for logs. */
   label: string
@@ -52,7 +52,7 @@ export class FetchHook implements ProviderHook {
 
   constructor(
     private readonly spec: FetchHookSpec,
-    private readonly collector: HATPCollector,
+    private readonly collector: TTPCollector,
     private readonly defaults: { defaultModelHint?: string } = {},
   ) {
     this.provider = spec.provider

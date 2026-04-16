@@ -3,15 +3,15 @@
  *
  * Schema (see `./migrations/001_initial.sql`):
  *
- *   hatp_events         — raw HATP events, hypertable by timestamp
- *   hatp_audit_chain    — hash-chained audit log, one row per event
- *   hatp_rollup_hourly  — continuous aggregate, refreshed every 5m
+ *   TTP_events         — raw TTP events, hypertable by timestamp
+ *   TTP_audit_chain    — hash-chained audit log, one row per event
+ *   TTP_rollup_hourly  — continuous aggregate, refreshed every 5m
  *
  * This module gracefully degrades when the `pg` package isn't installed;
  * callers can still pick `InMemoryEventStore` for tests and demos.
  */
 
-import type { HATPEvent } from '@hive/shared'
+import type { TTPEvent } from '@hive/shared'
 import { appendChain, type ChainLink } from '@hive/shared'
 import { canonicalize } from '@hive/shared'
 import type { AggregateRow, EventStore } from './store.js'
@@ -87,13 +87,13 @@ export class PostgresEventStore implements EventStore {
     }
   }
 
-  async insert(events: HATPEvent[]): Promise<void> {
+  async insert(events: TTPEvent[]): Promise<void> {
     if (events.length === 0) return
     const pool = await this.getPool()
 
     // Fetch the current tail to extend the hash chain atomically.
     const tailRes = await pool.query<{ seq: number; event_hash: string }>(
-      'SELECT seq, event_hash FROM hatp_audit_chain WHERE region = $1 ORDER BY seq DESC LIMIT 1',
+      'SELECT seq, event_hash FROM TTP_audit_chain WHERE region = $1 ORDER BY seq DESC LIMIT 1',
       [this.config.region],
     )
     let tail: ChainLink | undefined
@@ -113,7 +113,7 @@ export class PostgresEventStore implements EventStore {
         const link = appendChain(tail, event)
         tail = link
         await pool.query(
-          `INSERT INTO hatp_events
+          `INSERT INTO TTP_events
            (event_id, timestamp, observed_at, emitter_id, emitter_type, session_hash,
             provider, endpoint, model_hint, direction, payload_bytes, latency_ms,
             status_code, estimated_tokens, dept_tag, project_tag, env_tag, use_case_tag,
@@ -147,7 +147,7 @@ export class PostgresEventStore implements EventStore {
           ],
         )
         await pool.query(
-          `INSERT INTO hatp_audit_chain (region, seq, event_id, prev_hash, event_hash, inserted_at)
+          `INSERT INTO TTP_audit_chain (region, seq, event_id, prev_hash, event_hash, inserted_at)
            VALUES ($1, $2, $3, $4, $5, now())
            ON CONFLICT (region, seq) DO NOTHING`,
           [this.config.region, link.seq, event.event_id, link.prev_hash, link.event_hash],
@@ -162,17 +162,17 @@ export class PostgresEventStore implements EventStore {
 
   async count(): Promise<number> {
     const pool = await this.getPool()
-    const res = await pool.query<{ n: string }>('SELECT COUNT(*)::text AS n FROM hatp_events')
+    const res = await pool.query<{ n: string }>('SELECT COUNT(*)::text AS n FROM TTP_events')
     return Number(res.rows[0]?.n ?? 0)
   }
 
-  async recent(limit: number): Promise<HATPEvent[]> {
+  async recent(limit: number): Promise<TTPEvent[]> {
     const pool = await this.getPool()
     const res = await pool.query<{ raw: string }>(
-      'SELECT raw FROM hatp_events ORDER BY timestamp DESC LIMIT $1',
+      'SELECT raw FROM TTP_events ORDER BY timestamp DESC LIMIT $1',
       [Math.max(0, limit)],
     )
-    return res.rows.map((r) => JSON.parse(r.raw) as HATPEvent)
+    return res.rows.map((r) => JSON.parse(r.raw) as TTPEvent)
   }
 
   async aggregate(): Promise<AggregateRow[]> {
@@ -191,7 +191,7 @@ export class PostgresEventStore implements EventStore {
               SUM(estimated_tokens)::text AS total_tokens,
               SUM(payload_bytes)::text    AS total_bytes,
               AVG(latency_ms)::text       AS avg_latency_ms
-       FROM hatp_events
+       FROM TTP_events
        GROUP BY provider, dept_tag`,
     )
     return res.rows.map((r) => ({
@@ -212,7 +212,7 @@ export class PostgresEventStore implements EventStore {
   async enforceRetention(): Promise<number> {
     const pool = await this.getPool()
     const res = await pool.query(
-      `DELETE FROM hatp_events
+      `DELETE FROM TTP_events
        WHERE timestamp < now() - (
          COALESCE((governance->>'retention_days')::int, 90) * INTERVAL '1 day'
        )`,
@@ -225,7 +225,7 @@ export class PostgresEventStore implements EventStore {
 
 const MIGRATION_STATEMENTS = [
   `CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE`,
-  `CREATE TABLE IF NOT EXISTS hatp_events (
+  `CREATE TABLE IF NOT EXISTS TTP_events (
      event_id         uuid         NOT NULL,
      timestamp        timestamptz  NOT NULL,
      observed_at      timestamptz  NOT NULL,
@@ -250,10 +250,10 @@ const MIGRATION_STATEMENTS = [
      raw              text         NOT NULL,
      PRIMARY KEY (event_id, timestamp)
    )`,
-  `SELECT create_hypertable('hatp_events', 'timestamp', if_not_exists => TRUE, migrate_data => TRUE)`,
-  `CREATE INDEX IF NOT EXISTS hatp_events_provider_time_idx ON hatp_events (provider, timestamp DESC)`,
-  `CREATE INDEX IF NOT EXISTS hatp_events_dept_time_idx ON hatp_events (dept_tag, timestamp DESC)`,
-  `CREATE TABLE IF NOT EXISTS hatp_audit_chain (
+  `SELECT create_hypertable('TTP_events', 'timestamp', if_not_exists => TRUE, migrate_data => TRUE)`,
+  `CREATE INDEX IF NOT EXISTS TTP_events_provider_time_idx ON TTP_events (provider, timestamp DESC)`,
+  `CREATE INDEX IF NOT EXISTS TTP_events_dept_time_idx ON TTP_events (dept_tag, timestamp DESC)`,
+  `CREATE TABLE IF NOT EXISTS TTP_audit_chain (
      region      text        NOT NULL,
      seq         bigint      NOT NULL,
      event_id    uuid        NOT NULL,
@@ -262,8 +262,8 @@ const MIGRATION_STATEMENTS = [
      inserted_at timestamptz NOT NULL DEFAULT now(),
      PRIMARY KEY (region, seq)
    )`,
-  `CREATE INDEX IF NOT EXISTS hatp_audit_chain_event_idx ON hatp_audit_chain (event_id)`,
-  `CREATE MATERIALIZED VIEW IF NOT EXISTS hatp_rollup_hourly
+  `CREATE INDEX IF NOT EXISTS TTP_audit_chain_event_idx ON TTP_audit_chain (event_id)`,
+  `CREATE MATERIALIZED VIEW IF NOT EXISTS TTP_rollup_hourly
    WITH (timescaledb.continuous) AS
    SELECT time_bucket('1 hour', timestamp) AS bucket,
           provider,
@@ -272,10 +272,10 @@ const MIGRATION_STATEMENTS = [
           SUM(estimated_tokens)    AS total_tokens,
           SUM(payload_bytes)       AS total_bytes,
           AVG(latency_ms)          AS avg_latency_ms
-     FROM hatp_events
+     FROM TTP_events
     GROUP BY bucket, provider, dept_tag
    WITH NO DATA`,
-  `SELECT add_continuous_aggregate_policy('hatp_rollup_hourly',
+  `SELECT add_continuous_aggregate_policy('TTP_rollup_hourly',
      start_offset => INTERVAL '3 days',
      end_offset   => INTERVAL '1 hour',
      schedule_interval => INTERVAL '5 minutes',

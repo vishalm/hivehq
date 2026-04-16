@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { HATPCollector, InMemorySink } from '@hive/connector'
+import { TTPCollector, InMemorySink } from '@hive/connector'
 import { defaultUAEGovernance } from '@hive/shared'
 import { OpenAIConnector } from './connector.js'
 
@@ -14,7 +14,7 @@ function mockFetchResponse(body: string, status = 200, headers: Record<string, s
 describe('OpenAIConnector', () => {
   it('records request + response events around api.openai.com calls', async () => {
     const sink = new InMemorySink()
-    const collector = new HATPCollector({
+    const collector = new TTPCollector({
       sink,
       governance: defaultUAEGovernance(),
       deployment: 'solo',
@@ -43,7 +43,7 @@ describe('OpenAIConnector', () => {
 
   it('passes through calls to non-openai hosts untouched', async () => {
     const sink = new InMemorySink()
-    const collector = new HATPCollector({
+    const collector = new TTPCollector({
       sink,
       governance: defaultUAEGovernance(),
       deployment: 'solo',
@@ -60,7 +60,7 @@ describe('OpenAIConnector', () => {
 
   it('records error direction when upstream throws', async () => {
     const sink = new InMemorySink()
-    const collector = new HATPCollector({
+    const collector = new TTPCollector({
       sink,
       governance: defaultUAEGovernance(),
       deployment: 'solo',

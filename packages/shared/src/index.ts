@@ -6,7 +6,7 @@
  * day one. Nothing outside this schema. Ever.
  */
 
-export * from './hatp.js'
+export * from './ttp.js'
 export * from './telemetry.js'
 export * from './providers.js'
 export * from './governance.js'

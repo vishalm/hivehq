@@ -11,9 +11,9 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./hatp": {
-      "types": "./dist/hatp.d.ts",
-      "import": "./dist/hatp.js"
+    "./ttp": {
+      "types": "./dist/ttp.d.ts",
+      "import": "./dist/ttp.js"
     },
     "./telemetry": {
       "types": "./dist/telemetry.d.ts",

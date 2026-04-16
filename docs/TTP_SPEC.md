@@ -1,15 +1,15 @@
-# HATP — Hive AI Telemetry Protocol
+# TTP — Token Telemetry Protocol
 
 **Version:** 0.1 (Draft · April 2026)
 **Status:** Reference implementation: [`@hive/shared`](../packages/shared)
 **License:** MIT. No CLA required.
 
-HATP is an open wire protocol for AI-consumption telemetry. It is designed to
+TTP is an open wire protocol for AI-consumption telemetry. It is designed to
 be emitted by any client (Scout, SDK, proxy, agent, sidecar), verified by any
 receiver (self-hosted Node, federated Hive, independent auditor), and audited
 by any third party without requiring access to model inputs, outputs, or keys.
 
-HATP is the covenant: **content is architecturally excluded from the protocol.
+TTP is the covenant: **content is architecturally excluded from the protocol.
 There is no prompt, no completion, no user payload, ever.**
 
 ---
@@ -20,9 +20,9 @@ There is no prompt, no completion, no user payload, ever.**
    sizes, timings, model hints, and governance metadata. Content exclusion is
    *structural*: the canonical schema cannot express content fields.
 2. **One event shape.** Scouts, SDKs, proxies, bridges — all emit the same
-   `HATPEvent`. Receivers never need a per-emitter adapter.
+   `TTPEvent`. Receivers never need a per-emitter adapter.
 3. **Open by default.** Versioned Zod schema + published schema hash. Any
-   implementation in any language can parse and produce HATP.
+   implementation in any language can parse and produce TTP.
 4. **Verifiable provenance.** Every batch is signed with Ed25519; receivers
    verify against a published key directory and reject unsigned batches at
    federation boundaries.
@@ -36,14 +36,14 @@ There is no prompt, no completion, no user payload, ever.**
 
 ## 2. Wire Schema
 
-### 2.1 HATPEvent
+### 2.1 TTPEvent
 
-The canonical event. See `HATPEventSchema` in
-[`packages/shared/src/hatp.ts`](../packages/shared/src/hatp.ts).
+The canonical event. See `TTPEventSchema` in
+[`packages/shared/src/ttp.ts`](../packages/shared/src/ttp.ts).
 
 ```
-HATPEvent := {
-  hatp_version:     "0.1"
+TTPEvent := {
+  TTP_version:     "0.1"
   event_id:         UUIDv4
   schema_hash:      "sha256:<64 hex>"
 
@@ -100,18 +100,18 @@ GovernanceBlock := {
 
 `pii_asserted` and `content_asserted` use `z.literal(false)` — any event
 setting them `true` is rejected at parse time. This is the protocol's promise
-to auditors: HATP events never carry PII or model content.
+to auditors: TTP events never carry PII or model content.
 
-### 2.3 HATPBatch
+### 2.3 TTPBatch
 
 Events are shipped in batches of 1–500. The batch wrapper carries a short
 `batch_id`, the `emitter_id`, and (recommended) a `SignedBatchEnvelope`.
 
 ```
-HATPBatch := {
+TTPBatch := {
   batch_id:    string
   emitter_id:  string
-  events:      HATPEvent[]     (1..500)
+  events:      TTPEvent[]     (1..500)
   signature:   SignedBatchEnvelope?
 }
 ```
@@ -120,7 +120,7 @@ HATPBatch := {
 
 ```
 SignedBatchEnvelope := {
-  hatp_version:   "0.1"
+  TTP_version:   "0.1"
   schema_hash:    "sha256:<64 hex>"
   events_digest:  sha256(sorted-canonical-events), hex
   signature:      Ed25519(surface), base64url
@@ -132,7 +132,7 @@ SignedBatchEnvelope := {
 The **signing surface** is the UTF-8 bytes of:
 
 ```
-<hatp_version> "." <schema_hash> "." <events_digest>
+<TTP_version> "." <schema_hash> "." <events_digest>
 ```
 
 `events_digest` is the sha256 of canonicalised events, sorted
@@ -184,7 +184,7 @@ Signing and hashing use a deterministic JSON form:
 4. UTF-8, strict.
 
 Reference implementation: `canonicalize()` in
-[`packages/shared/src/hatp.ts`](../packages/shared/src/hatp.ts).
+[`packages/shared/src/ttp.ts`](../packages/shared/src/ttp.ts).
 
 ---
 
@@ -216,7 +216,7 @@ Any other provider is represented as `custom:<slug>` where `slug` is
 
 ## 7. Versioning
 
-- `hatp_version` is a dotted major.minor string.
+- `TTP_version` is a dotted major.minor string.
 - Breaking changes bump the major. Additive, optional fields bump minor.
 - Receivers MUST reject events with a major version they do not implement.
 - `schema_hash` is regenerated on every schema change and serves as a
@@ -227,7 +227,7 @@ Any other provider is represented as `custom:<slug>` where `slug` is
 
 ## 8. Governance & Compliance
 
-HATP is compatible with, but not bound to, specific regulatory regimes.
+TTP is compatible with, but not bound to, specific regulatory regimes.
 Built-in recognisers include:
 
 - `UAE_AI_LAW` — Federal Decree-Law on the responsible use of AI (UAE)
@@ -244,9 +244,9 @@ Tags are free-form strings; regulators MAY publish canonical tag lists.
 
 ## 9. Conformance
 
-A conforming HATP implementation:
+A conforming TTP implementation:
 
-1. Produces events that parse cleanly against `HATPEventSchema`.
+1. Produces events that parse cleanly against `TTPEventSchema`.
 2. Rejects events that attempt `pii_asserted: true` or `content_asserted: true`.
 3. Implements canonicalisation identical to §4.
 4. Signs batches with Ed25519 when operating in `federated` or `open` mode.
@@ -255,7 +255,7 @@ A conforming HATP implementation:
 
 The `@hive/shared`, `@hive/node-server`, and `@hive/scout` packages are the
 reference implementation. Third-party implementations in Python, Go, Rust,
-Java, and .NET are welcome and should version-align on `hatp_version`.
+Java, and .NET are welcome and should version-align on `TTP_version`.
 
 ---
 
@@ -273,7 +273,7 @@ Java, and .NET are welcome and should version-align on `hatp_version`.
 
 ## 11. Governance of the Protocol
 
-HATP is developed in public at `github.com/vishalm/hivehq`. Breaking changes
+TTP is developed in public at `github.com/vishalm/hivehq`. Breaking changes
 require:
 
 1. A published RFC on the repo
@@ -281,4 +281,4 @@ require:
 3. 90 days of comment period
 4. A published migration note covering `schema_hash` transition
 
-No single company controls HATP. Anyone can fork, ship, and audit.
+No single company controls TTP. Anyone can fork, ship, and audit.

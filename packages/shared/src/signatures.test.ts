@@ -1,13 +1,13 @@
 import { describe, it, expect } from 'vitest'
-import { HATP_VERSION, HATP_SCHEMA_HASH } from './hatp.js'
-import type { HATPEvent } from './hatp.js'
+import { TTP_VERSION, TTP_SCHEMA_HASH } from './ttp.js'
+import type { TTPEvent } from './ttp.js'
 import { generateSigningKeypair, signBatch, verifyBatch, eventsDigest } from './signatures.js'
 
-function buildEvent(eventId: string, tokens = 10): HATPEvent {
+function buildEvent(eventId: string, tokens = 10): TTPEvent {
   return {
-    hatp_version: HATP_VERSION,
+    TTP_version: TTP_VERSION,
     event_id: eventId,
-    schema_hash: HATP_SCHEMA_HASH,
+    schema_hash: TTP_SCHEMA_HASH,
     timestamp: 1_700_000_000_000,
     observed_at: 1_700_000_000_001,
     emitter_id: 'scout-abc',
@@ -32,7 +32,7 @@ function buildEvent(eventId: string, tokens = 10): HATPEvent {
   }
 }
 
-describe('HATP batch signatures', () => {
+describe('TTP batch signatures', () => {
   it('round-trips sign and verify', () => {
     const kp = generateSigningKeypair()
     const events = [

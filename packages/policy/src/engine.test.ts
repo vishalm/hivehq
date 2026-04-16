@@ -1,13 +1,13 @@
 import { describe, it, expect } from 'vitest'
-import { HATP_VERSION, HATP_SCHEMA_HASH, type HATPEvent } from '@hive/shared'
+import { TTP_VERSION, TTP_SCHEMA_HASH, type TTPEvent } from '@hive/shared'
 import { PolicyEngine, loadPolicy, resolvePath } from './engine.js'
 import { uaeResidencyPolicy, buildShadowAIPolicy, buildRetentionPolicy } from './builtins.js'
 
-function evt(overrides: Partial<HATPEvent> = {}): HATPEvent {
+function evt(overrides: Partial<TTPEvent> = {}): TTPEvent {
   return {
-    hatp_version: HATP_VERSION,
+    TTP_version: TTP_VERSION,
     event_id: '11111111-1111-1111-1111-111111111111',
-    schema_hash: HATP_SCHEMA_HASH,
+    schema_hash: TTP_SCHEMA_HASH,
     timestamp: 1,
     observed_at: 2,
     emitter_id: 'e',

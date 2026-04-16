@@ -1,4 +1,4 @@
-import type { HATPEvent, HATPIngestResponse } from '@hive/shared'
+import type { TTPEvent, TTPIngestResponse } from '@hive/shared'
 import type { CollectorSink } from './collector.js'
 
 export interface SinkResult {
@@ -8,20 +8,20 @@ export interface SinkResult {
 
 /** In-memory sink — for Solo-mode dashboards and tests. */
 export class InMemorySink implements CollectorSink {
-  readonly events: HATPEvent[] = []
+  readonly events: TTPEvent[] = []
 
-  async emit(events: HATPEvent[]): Promise<void> {
+  async emit(events: TTPEvent[]): Promise<void> {
     this.events.push(...events)
   }
 
-  drain(): HATPEvent[] {
+  drain(): TTPEvent[] {
     return this.events.splice(0, this.events.length)
   }
 }
 
 /** Console sink — for local development. */
 export class ConsoleSink implements CollectorSink {
-  async emit(events: HATPEvent[]): Promise<void> {
+  async emit(events: TTPEvent[]): Promise<void> {
     // eslint-disable-next-line no-console
     console.info(`[hive] emitting ${events.length} event(s)`)
   }
@@ -37,13 +37,13 @@ export interface HttpSinkOptions {
 }
 
 /**
- * HTTP sink — POSTs batches to a HATP-compatible ingest endpoint.
+ * HTTP sink — POSTs batches to a TTP-compatible ingest endpoint.
  * Implements exponential backoff for transient failures.
  */
 export class HttpSink implements CollectorSink {
   constructor(private readonly opts: HttpSinkOptions) {}
 
-  async emit(events: HATPEvent[]): Promise<void> {
+  async emit(events: TTPEvent[]): Promise<void> {
     const fetchImpl = this.opts.fetchImpl ?? globalThis.fetch
     if (!fetchImpl) {
       throw new Error('No fetch implementation available. Provide opts.fetchImpl.')
@@ -62,22 +62,22 @@ export class HttpSink implements CollectorSink {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-HATP-Version': '0.1',
-            'X-HATP-Batch-ID': batch.batch_id,
+            'X-TTP-Version': '0.1',
+            'X-TTP-Batch-ID': batch.batch_id,
             ...(this.opts.token && { Authorization: `Bearer ${this.opts.token}` }),
           },
           body: JSON.stringify(batch),
         })
         if (res.ok) {
           // Response shape is informational — caller may log rejections.
-          const _body = (await res.json().catch(() => ({}))) as Partial<HATPIngestResponse>
+          const _body = (await res.json().catch(() => ({}))) as Partial<TTPIngestResponse>
           void _body
           return
         }
         if (res.status >= 500 || res.status === 429) {
-          lastErr = new Error(`HATP ingest transient ${res.status}`)
+          lastErr = new Error(`TTP ingest transient ${res.status}`)
         } else {
-          throw new Error(`HATP ingest failed ${res.status}`)
+          throw new Error(`TTP ingest failed ${res.status}`)
         }
       } catch (err) {
         lastErr = err
@@ -86,7 +86,7 @@ export class HttpSink implements CollectorSink {
         await sleep(backoffMs(attempt))
       }
     }
-    throw lastErr ?? new Error('HATP ingest failed after retries')
+    throw lastErr ?? new Error('TTP ingest failed after retries')
   }
 }
 

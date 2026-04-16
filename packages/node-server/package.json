@@ -1,10 +1,17 @@
 {
   "name": "@hive/node-server",
   "version": "0.1.0",
-  "description": "HIVE — Node Hub server. On-prem HATP ingest, storage, rollups.",
+  "description": "HIVE — Node Hub server. On-prem TTP ingest, storage, rollups.",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/cli.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "bin": {
     "hive-node": "./dist/cli.js"
   },
@@ -20,6 +27,7 @@
     "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
+    "@hive/intelligence": "0.1.0",
     "@hive/policy": "0.1.0",
     "@hive/shared": "0.1.0",
     "express": "^4.21.1",

@@ -1,5 +1,5 @@
 import {
-  type HATPCollector,
+  type TTPCollector,
   type ProviderHook,
   type WrapOptions,
   measureBody,
@@ -12,7 +12,7 @@ import {
 
 export interface OpenAIConnectorOptions {
   /** The collector that receives events. Required. */
-  collector: HATPCollector
+  collector: TTPCollector
   /** Default model hint if the response doesn't expose one. */
   defaultModelHint?: string
 }

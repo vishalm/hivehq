@@ -1,14 +1,14 @@
-import type { HATPEvent } from '@hive/shared'
+import type { TTPEvent } from '@hive/shared'
 
 /**
- * Storage interface for HATPEvents. Phase 1 ships with an in-memory
+ * Storage interface for TTPEvents. Phase 1 ships with an in-memory
  * store; Phase 2 replaces it with TimescaleDB via Drizzle ORM.
  */
 export interface EventStore {
-  insert(events: HATPEvent[]): Promise<void>
+  insert(events: TTPEvent[]): Promise<void>
   count(): Promise<number>
   /** Return up to `limit` most recent events, newest first. */
-  recent(limit: number): Promise<HATPEvent[]>
+  recent(limit: number): Promise<TTPEvent[]>
   /** Rollup aggregation — grouped by provider + dept_tag. */
   aggregate(): Promise<AggregateRow[]>
 }
@@ -23,9 +23,9 @@ export interface AggregateRow {
 }
 
 export class InMemoryEventStore implements EventStore {
-  private readonly events: HATPEvent[] = []
+  private readonly events: TTPEvent[] = []
 
-  async insert(events: HATPEvent[]): Promise<void> {
+  async insert(events: TTPEvent[]): Promise<void> {
     this.events.push(...events)
   }
 
@@ -33,7 +33,7 @@ export class InMemoryEventStore implements EventStore {
     return this.events.length
   }
 
-  async recent(limit: number): Promise<HATPEvent[]> {
+  async recent(limit: number): Promise<TTPEvent[]> {
     return this.events.slice(-Math.max(0, limit)).reverse()
   }
 

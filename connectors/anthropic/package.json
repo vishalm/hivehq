@@ -1,7 +1,7 @@
 {
   "name": "@hive/connector-anthropic",
   "version": "0.1.0",
-  "description": "HIVE — Anthropic connector. Drop-in replacement that emits HATP telemetry.",
+  "description": "HIVE — Anthropic connector. Drop-in replacement that emits TTP telemetry.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",

@@ -13,7 +13,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="site-header">
           <div className="container">
             <span className="brand">HIVE</span>
-            <span className="tag">pre-alpha · Phase 1</span>
+            <nav className="nav">
+              <a href="/">Dashboard</a>
+              <a href="/intelligence">Intelligence</a>
+              <a href="/setup">Setup</a>
+            </nav>
+            <span className="tag">pre-alpha · Phase 2</span>
           </div>
         </header>
         <main className="container">{children}</main>

@@ -1,39 +1,39 @@
 /**
- * HATPCollector — the SDK entry point.
+ * TTPCollector — the SDK entry point.
  *
  * Usage:
- *   const collector = new HATPCollector({ sink, governance, deployment })
+ *   const collector = new TTPCollector({ sink, governance, deployment })
  *   collector.record({ provider, endpoint, payload_bytes, ... })
  *   await collector.flush()
  */
 
 import {
-  type HATPEvent,
+  type TTPEvent,
   type HiveConnectorEvent,
-  HATP_SCHEMA_HASH,
-  HATP_VERSION,
+  TTP_SCHEMA_HASH,
+  TTP_VERSION,
   type GovernanceBlock,
   newEventId,
 } from '@hive/shared'
 
 export interface CollectorSink {
-  /** Persist or forward a batch of HATPEvents. Must not throw synchronously. */
-  emit(events: HATPEvent[]): Promise<void>
+  /** Persist or forward a batch of TTPEvents. Must not throw synchronously. */
+  emit(events: TTPEvent[]): Promise<void>
 }
 
 export interface CollectorConfig {
   sink: CollectorSink
   governance: GovernanceBlock
   /** 'solo' | 'node' | 'federated' | 'open' */
-  deployment: HATPEvent['deployment']
+  deployment: TTPEvent['deployment']
   /** Scout/SDK id — hashed, rotating. */
   emitterId: string
-  emitterType?: HATPEvent['emitter_type']
+  emitterType?: TTPEvent['emitter_type']
   orgNodeId?: string
   /** Optional default classification. */
   deptTag?: string
   projectTag?: string
-  envTag?: HATPEvent['env_tag']
+  envTag?: TTPEvent['env_tag']
   nodeRegion?: string
   /** Auto-flush cadence in ms. 0 disables the timer. */
   flushIntervalMs?: number
@@ -41,8 +41,8 @@ export interface CollectorConfig {
   maxBatchSize?: number
 }
 
-export class HATPCollector {
-  private readonly queue: HATPEvent[] = []
+export class TTPCollector {
+  private readonly queue: TTPEvent[] = []
   private timer: ReturnType<typeof setInterval> | null = null
   private flushing: Promise<void> | null = null
 
@@ -59,12 +59,12 @@ export class HATPCollector {
     }
   }
 
-  /** Record a HiveConnectorEvent. The collector upgrades it to HATPEvent. */
-  record(event: HiveConnectorEvent, overrides: Partial<HATPEvent> = {}): HATPEvent {
-    const hatp: HATPEvent = {
-      hatp_version: HATP_VERSION,
+  /** Record a HiveConnectorEvent. The collector upgrades it to TTPEvent. */
+  record(event: HiveConnectorEvent, overrides: Partial<TTPEvent> = {}): TTPEvent {
+    const TTP: TTPEvent = {
+      TTP_version: TTP_VERSION,
       event_id: newEventId(),
-      schema_hash: HATP_SCHEMA_HASH,
+      schema_hash: TTP_SCHEMA_HASH,
       timestamp: event.timestamp,
       observed_at: Date.now(),
       emitter_id: this.config.emitterId,
@@ -88,11 +88,11 @@ export class HATPCollector {
       ...(this.config.nodeRegion && { node_region: this.config.nodeRegion }),
       ...overrides,
     }
-    this.queue.push(hatp)
+    this.queue.push(TTP)
     if (this.queue.length >= (this.config.maxBatchSize ?? 500)) {
       void this.flush()
     }
-    return hatp
+    return TTP
   }
 
   /** Force a flush. Safe to call concurrently. */

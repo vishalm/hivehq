@@ -1,5 +1,5 @@
 /**
- * HATP Token Estimation — deterministic, content-free.
+ * TTP Token Estimation — deterministic, content-free.
  *
  * When providers return token counts in headers, those are authoritative.
  * Otherwise, estimation is purely byte-based with provider-specific
@@ -35,7 +35,7 @@ export const BYTES_PER_TOKEN: Record<KnownProvider, number> = {
 export const DEFAULT_BYTES_PER_TOKEN = 4.0
 
 /**
- * Estimate tokens from payload byte count using the HATP calibration table.
+ * Estimate tokens from payload byte count using the TTP calibration table.
  * Deterministic and content-free.
  */
 export function estimateTokens(provider: AIProvider, payloadBytes: number): number {

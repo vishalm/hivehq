@@ -64,9 +64,9 @@ Personal ChatGPT. Expensed API keys. Rogue Mistral deployments. IT is flying bli
 
 ---
 
-## HATP — The Open Wire Protocol
+## TTP — The Open Wire Protocol
 
-> **HATP (Hive AI Telemetry Protocol)** is to AI consumption what OpenTelemetry is to infrastructure observability. One canonical event schema. Any provider. Governance baked into every packet. MIT-licensed open standard — governed by HIVE.
+> **TTP (Token Telemetry Protocol)** is to AI consumption what OpenTelemetry is to infrastructure observability. One canonical event schema. Any provider. Governance baked into every packet. MIT-licensed open standard — governed by HIVE.
 
 ```mermaid
 graph LR
@@ -77,13 +77,13 @@ graph LR
         P4["custom:your-llm"]
     end
 
-    subgraph HATP_LAYER ["HATP Protocol Layer"]
+    subgraph TTP_LAYER ["TTP Protocol Layer"]
         direction TB
         L5["Layer 5 · Governance — consent · residency · retention"]
         L4["Layer 4 · Identity — signed events · org attestation"]
         L3["Layer 3 · Registry — provider namespace · model fingerprints"]
         L2["Layer 2 · Transport — HTTPS/2 · batch flush · msgpack"]
-        L1["Layer 1 · Schema — HATPEvent · canonical JSON · semver"]
+        L1["Layer 1 · Schema — TTPEvent · canonical JSON · semver"]
     end
 
     subgraph NETWORK ["HIVE Network"]
@@ -92,10 +92,10 @@ graph LR
         HV["Hive\nConstellation"]
     end
 
-    PROVIDERS -->|"@hatp/sdk wrap()"| HATP_LAYER
-    HATP_LAYER --> NETWORK
+    PROVIDERS -->|"@TTP/sdk wrap()"| TTP_LAYER
+    TTP_LAYER --> NETWORK
 
-    style HATP_LAYER fill:#F0EEFF,stroke:#5856D6,stroke-width:2px,color:#1D1D1F
+    style TTP_LAYER fill:#F0EEFF,stroke:#5856D6,stroke-width:2px,color:#1D1D1F
     style PROVIDERS fill:#F5F5F7,stroke:#86868B,color:#1D1D1F
     style NETWORK fill:#E8F4FF,stroke:#007AFF,color:#1D1D1F
 ```
@@ -103,7 +103,7 @@ graph LR
 **Key design principle:** `pii_asserted: false` and `content_asserted: false` are protocol-enforced constants. They cannot be set to true. Compliance is structural.
 
 ```typescript
-// The HATP GovernanceBlock — required on every event, no exceptions
+// The TTP GovernanceBlock — required on every event, no exceptions
 governance: {
   consent_basis:   'org_policy',
   data_residency:  'AE',           // ISO 3166-1 · enforced at Node Hub
@@ -429,11 +429,11 @@ import { openai } from '@hive/connector-openai'
 ```
 hive/
 ├── packages/
-│   ├── shared/             ← HATP schema, signatures, audit chain, canonical JSON
+│   ├── shared/             ← TTP schema, signatures, audit chain, canonical JSON
 │   ├── vault/              ← libsodium-wrappers client-side encryption
-│   ├── connector-sdk/      ← @hive/connector — HATPCollector + FetchHook base
+│   ├── connector-sdk/      ← @hive/connector — TTPCollector + FetchHook base
 │   ├── policy/             ← @hive/policy — ABAC engine + built-in residency/retention rules
-│   ├── otel-bridge/        ← @hive/otel-bridge — OpenTelemetry gen-AI spans → HATP
+│   ├── otel-bridge/        ← @hive/otel-bridge — OpenTelemetry gen-AI spans → TTP
 │   ├── scout/              ← Node.js agent (batch + sign + ship)
 │   ├── node-server/        ← Express + Postgres/Timescale + Prometheus /metrics
 │   └── dashboard/          ← Next.js + recharts — shadow-AI, top providers, governance
@@ -445,7 +445,7 @@ hive/
 │   ├── bedrock/            ← @hive/connector-bedrock
 │   └── mistral/            ← @hive/connector-mistral
 ├── docs/
-│   └── HATP_SPEC.md        ← Protocol spec v0.1 (MIT, no CLA)
+│   └── TTP_SPEC.md        ← Protocol spec v0.1 (MIT, no CLA)
 ├── docker/
 │   ├── node-compose.yml    ← Full on-prem stack (one command)
 │   └── scout-only.yml      ← Just the agent
@@ -456,7 +456,7 @@ hive/
 
 ### What ships today
 
-- **HATP v0.1** — [`docs/HATP_SPEC.md`](./docs/HATP_SPEC.md). Open wire protocol with Ed25519 batch signatures, canonical JSON, hash-chained audit log, daily Merkle anchors.
+- **TTP v0.1** — [`docs/TTP_SPEC.md`](./docs/TTP_SPEC.md). Open wire protocol with Ed25519 batch signatures, canonical JSON, hash-chained audit log, daily Merkle anchors.
 - **Connectors** — OpenAI, Anthropic, Google (Gemini + Vertex), Azure OpenAI, Bedrock, Mistral, plus `@hive/otel-bridge` for teams already on OpenTelemetry gen-AI conventions.
 - **Policy engine** — `@hive/policy` with ABAC predicates, first-match-wins ordering, and built-in recipes: UAE residency, shadow-AI routing, retention caps, composition.
 - **Node server** — Express app with ingest, signature verification, policy admission control, residency enforcement, `/metrics` Prometheus endpoint, Postgres/Timescale store with continuous aggregates.
@@ -534,7 +534,7 @@ docker-compose -f node-compose.yml up -d
 | Document | What it covers |
 |----------|---------------|
 | [**PLAN.md**](./PLAN.md) | North star · Full strategy · Build sequence · Risk matrix |
-| [**Protocol — HATP**](./docs/protocol.md) | Open wire standard · HATPEvent schema · Governance layer · SDK |
+| [**Protocol — TTP**](./docs/protocol.md) | Open wire standard · TTPEvent schema · Governance layer · SDK |
 | [Architecture](./docs/architecture.md) | Scout → Node → Hive system design · Mermaid diagrams |
 | [Data Model](./docs/data-model.md) | Telemetry covenant · DB schema · "never collect" manifest |
 | [Identity](./docs/identity.md) | CIAM · TokenPrint · Agent economy · Social layer |

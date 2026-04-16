@@ -1,0 +1,94 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deployment at a time; don't cancel in-flight runs.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  # ── Validate ──────────────────────────────────────────────────────────────
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify required files exist
+        run: |
+          echo "Checking required files..."
+          for f in index.html README.md logo.svg banner.svg .nojekyll; do
+            if [ ! -f "$f" ]; then
+              echo "MISSING: $f" && exit 1
+            else
+              echo "OK: $f"
+            fi
+          done
+
+      - name: Check HTML is well-formed
+        run: |
+          # Quick sanity: confirm index.html has opening and closing html tags
+          grep -q "<html" index.html || (echo "No <html> tag found" && exit 1)
+          grep -q "</html>" index.html || (echo "No </html> closing tag" && exit 1)
+          echo "HTML structure OK"
+
+      - name: Check SVGs are valid XML
+        run: |
+          sudo apt-get install -y libxml2-utils -q 2>/dev/null
+          for f in logo.svg banner.svg; do
+            xmllint --noout "$f" && echo "SVG OK: $f" || (echo "Invalid SVG: $f" && exit 1)
+          done
+
+  # ── Build ──────────────────────────────────────────────────────────────────
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Stage landing site files
+        run: |
+          mkdir -p _site
+          # Only the landing page assets — docs stay in the repo but off Pages
+          cp index.html _site/
+          cp logo.svg _site/
+          cp banner.svg _site/
+          cp .nojekyll _site/
+          echo "Staged files:"
+          ls -la _site/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  # ── Deploy (main branch only) ──────────────────────────────────────────────
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,7 +1,7 @@
 /**
- * HATPEvent v0.1 — The canonical AI consumption telemetry event.
+ * TTPEvent v0.1 — The canonical AI consumption telemetry event.
  *
- * Open standard — governed by the HATP Working Group.
+ * Open standard — governed by the TTP Working Group.
  * Reference implementation: HIVE Scout.
  *
  * PRIVACY GUARANTEE: Content is architecturally excluded.
@@ -18,12 +18,12 @@ import { GovernanceBlockSchema } from './governance.js'
 
 // ── Protocol version ─────────────────────────────────────────────────────────
 
-export const HATP_VERSION = '0.1' as const
-export type HATPVersion = typeof HATP_VERSION
+export const TTP_VERSION = '0.1' as const
+export type TTPVersion = typeof TTP_VERSION
 
 // Self-verifying schema fingerprint. Updated when the schema shape changes.
 // Computed deterministically from the schema definition at build time.
-export const HATP_SCHEMA_HASH =
+export const TTP_SCHEMA_HASH =
   'sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6' as const
 
 // ── Emitter & direction ──────────────────────────────────────────────────────
@@ -61,10 +61,10 @@ export type TokenBreakdown = z.infer<typeof TokenBreakdownSchema>
 
 // ── The canonical event ──────────────────────────────────────────────────────
 
-export const HATPEventSchema = z
+export const TTPEventSchema = z
   .object({
     // Protocol metadata
-    hatp_version: z.literal(HATP_VERSION),
+    TTP_version: z.literal(TTP_VERSION),
     event_id: z.string().uuid(),
     schema_hash: z.string().startsWith('sha256:'),
 
@@ -116,7 +116,7 @@ export const HATPEventSchema = z
   })
   .strict()
 
-export type HATPEvent = z.infer<typeof HATPEventSchema>
+export type TTPEvent = z.infer<typeof TTPEventSchema>
 
 // ── Re-exports for ergonomics ────────────────────────────────────────────────
 
@@ -125,26 +125,26 @@ export type { AIProvider, GovernanceBlock }
 // ── Validation helpers ───────────────────────────────────────────────────────
 
 /**
- * Parse an unknown value as a HATPEvent. Throws on invalid events.
+ * Parse an unknown value as a TTPEvent. Throws on invalid events.
  * Use at ingest boundaries (Scout → Node, Node → Hive).
  */
-export function parseHATPEvent(value: unknown): HATPEvent {
-  return HATPEventSchema.parse(value)
+export function parseTTPEvent(value: unknown): TTPEvent {
+  return TTPEventSchema.parse(value)
 }
 
 /**
  * Safe parse variant that returns the validation result without throwing.
  */
-export function safeParseHATPEvent(
+export function safeParseTTPEvent(
   value: unknown,
-): z.SafeParseReturnType<unknown, HATPEvent> {
-  return HATPEventSchema.safeParse(value)
+): z.SafeParseReturnType<unknown, TTPEvent> {
+  return TTPEventSchema.safeParse(value)
 }
 
 /**
  * Canonical JSON serialisation for signing.
  * Keys are sorted alphabetically; undefined fields are omitted.
  */
-export function canonicalize(event: HATPEvent): string {
+export function canonicalize(event: TTPEvent): string {
   return JSON.stringify(event, Object.keys(event).sort())
 }
