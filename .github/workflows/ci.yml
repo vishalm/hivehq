@@ -1,0 +1,103 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ── Monorepo build + test ─────────────────────────────────────────────────
+  build:
+    name: Lint · Typecheck · Test · Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install --workspaces --include-workspace-root
+
+      - name: Lint
+        run: npm run lint --if-present
+
+      - name: Typecheck
+        run: npm run typecheck --if-present
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm run test --if-present
+
+  # ── Governance invariants: the covenant must hold ─────────────────────────
+  covenant:
+    name: Covenant invariants
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Reject pii_asserted:true in production source
+        run: |
+          # The protocol guarantees pii_asserted is structurally false.
+          # Any production code that sets it true is a covenant breach.
+          # Test files are allowed to assert the *rejection* of this value.
+          if grep -rnE 'pii_asserted\s*:\s*true' \
+              --include='*.ts' --include='*.js' \
+              --exclude='*.test.ts' --exclude='*.spec.ts' \
+              packages connectors 2>/dev/null; then
+            echo "::error::pii_asserted: true found in production source — covenant breach"
+            exit 1
+          fi
+          echo "OK: no pii_asserted:true in production source"
+
+      - name: Reject content_asserted:true in production source
+        run: |
+          if grep -rnE 'content_asserted\s*:\s*true' \
+              --include='*.ts' --include='*.js' \
+              --exclude='*.test.ts' --exclude='*.spec.ts' \
+              packages connectors 2>/dev/null; then
+            echo "::error::content_asserted: true found in production source — covenant breach"
+            exit 1
+          fi
+          echo "OK: no content_asserted:true in production source"
+
+      - name: Vault must not import Node Hub
+        run: |
+          # Zero-knowledge vault is client-side only.
+          if grep -rnE "from\s+['\"]@hive/node-server['\"]" \
+              packages/vault/src 2>/dev/null; then
+            echo "::error::@hive/vault imports @hive/node-server — covenant breach"
+            exit 1
+          fi
+          echo "OK: vault package is server-free"
+
+      - name: Node server must not import vault
+        run: |
+          # Server must never see plaintext material from the vault path.
+          if grep -rnE "from\s+['\"]@hive/vault['\"]" \
+              packages/node-server/src 2>/dev/null; then
+            echo "::error::@hive/node-server imports @hive/vault — covenant breach"
+            exit 1
+          fi
+          echo "OK: node-server does not depend on vault"
+
+      - name: .env files must not be committed
+        run: |
+          if git ls-files | grep -E '(^|/)\.env($|\.)' | grep -v '\.env\.example$'; then
+            echo "::error::.env file committed to repo"
+            exit 1
+          fi
+          echo "OK: no .env files tracked"

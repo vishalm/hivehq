@@ -1,0 +1,25 @@
+FROM node:22-alpine AS build
+WORKDIR /app
+COPY package.json package-lock.json* turbo.json tsconfig.base.json ./
+COPY packages/shared/package.json packages/shared/
+COPY packages/vault/package.json packages/vault/
+COPY packages/connector-sdk/package.json packages/connector-sdk/
+COPY packages/scout/package.json packages/scout/
+COPY connectors/openai/package.json connectors/openai/
+COPY connectors/anthropic/package.json connectors/anthropic/
+RUN npm install --workspaces --include-workspace-root
+COPY packages packages
+COPY connectors connectors
+RUN npm --workspace @hive/shared run build \
+ && npm --workspace @hive/vault run build \
+ && npm --workspace @hive/connector run build \
+ && npm --workspace @hive/connector-openai run build \
+ && npm --workspace @hive/connector-anthropic run build \
+ && npm --workspace @hive/scout run build
+
+FROM node:22-alpine AS runtime
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=build /app ./
+USER node
+CMD ["node", "packages/scout/dist/cli.js", "start"]

@@ -1,0 +1,25 @@
+version: '3.9'
+
+# HIVE Scout — agent only. Points at an existing Node Hub.
+#   HATP_ENDPOINT=https://node.your-org.internal/api/v1/hatp/ingest \
+#   HATP_TOKEN=<scout-token> \
+#   docker-compose -f docker/scout-only.yml up -d
+
+services:
+  scout:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.scout
+    container_name: hive-scout
+    restart: unless-stopped
+    environment:
+      HATP_ENDPOINT: ${HATP_ENDPOINT}
+      HATP_TOKEN: ${HATP_TOKEN}
+      HIVE_DEPLOYMENT: ${HIVE_DEPLOYMENT:-node}
+      HIVE_DATA_RESIDENCY: ${HIVE_DATA_RESIDENCY:-AE}
+      HIVE_RETENTION_DAYS: ${HIVE_RETENTION_DAYS:-90}
+      HIVE_REGULATION_TAGS: ${HIVE_REGULATION_TAGS:-UAE_AI_LAW,GDPR}
+      HIVE_DEPT_TAG: ${HIVE_DEPT_TAG:-}
+      HIVE_PROJECT_TAG: ${HIVE_PROJECT_TAG:-}
+      HIVE_NODE_REGION: ${HIVE_NODE_REGION:-AE}
+    command: ['node', 'packages/scout/dist/cli.js', 'start']

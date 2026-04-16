@@ -1,0 +1,28 @@
+{
+  "name": "@hive/dashboard",
+  "version": "0.1.0",
+  "description": "HIVE — Dashboard. Next.js + Recharts. Personal · Org · Hive views.",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p ${DASHBOARD_PORT:-3001}",
+    "build": "next build",
+    "start": "next start -p ${DASHBOARD_PORT:-3001}",
+    "typecheck": "tsc --noEmit",
+    "lint": "next lint",
+    "clean": "rm -rf .next .turbo"
+  },
+  "dependencies": {
+    "@hive/shared": "0.1.0",
+    "next": "^15.0.3",
+    "react": "^19.0.0-rc",
+    "react-dom": "^19.0.0-rc",
+    "recharts": "^2.13.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "typescript": "^5.6.3"
+  }
+}

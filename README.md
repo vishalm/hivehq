@@ -429,25 +429,39 @@ import { openai } from '@hive/connector-openai'
 ```
 hive/
 ├── packages/
-│   ├── scout/              ← Node.js agent → single binary (pkg)
-│   ├── node-server/        ← Express + PostgreSQL + TimescaleDB + Redis
-│   ├── hive-server/        ← Same codebase, Supabase adapter
-│   ├── dashboard/          ← Next.js — works for both Node + Hive
-│   ├── vault/              ← libsodium-wrappers (client-side ONLY)
-│   ├── connector-sdk/      ← @hive/connector npm protocol
-│   └── shared/             ← telemetry schema, types, utils
+│   ├── shared/             ← HATP schema, signatures, audit chain, canonical JSON
+│   ├── vault/              ← libsodium-wrappers client-side encryption
+│   ├── connector-sdk/      ← @hive/connector — HATPCollector + FetchHook base
+│   ├── policy/             ← @hive/policy — ABAC engine + built-in residency/retention rules
+│   ├── otel-bridge/        ← @hive/otel-bridge — OpenTelemetry gen-AI spans → HATP
+│   ├── scout/              ← Node.js agent (batch + sign + ship)
+│   ├── node-server/        ← Express + Postgres/Timescale + Prometheus /metrics
+│   └── dashboard/          ← Next.js + recharts — shadow-AI, top providers, governance
 ├── connectors/
 │   ├── openai/             ← @hive/connector-openai
 │   ├── anthropic/          ← @hive/connector-anthropic
-│   ├── gemini/             ← @hive/connector-gemini
+│   ├── google/             ← @hive/connector-google (Gemini + Vertex)
+│   ├── azure-openai/       ← @hive/connector-azure-openai
 │   ├── bedrock/            ← @hive/connector-bedrock
-│   ├── ollama/             ← @hive/connector-ollama
-│   └── azure-openai/       ← @hive/connector-azure-openai
+│   └── mistral/            ← @hive/connector-mistral
+├── docs/
+│   └── HATP_SPEC.md        ← Protocol spec v0.1 (MIT, no CLA)
 ├── docker/
 │   ├── node-compose.yml    ← Full on-prem stack (one command)
 │   └── scout-only.yml      ← Just the agent
-└── package.json            ← Turborepo
+├── .github/workflows/
+│   ├── ci.yml              ← build + covenant guardrails
+└── package.json            ← Turborepo · 19 packages, 48 tests, 33 green tasks
 ```
+
+### What ships today
+
+- **HATP v0.1** — [`docs/HATP_SPEC.md`](./docs/HATP_SPEC.md). Open wire protocol with Ed25519 batch signatures, canonical JSON, hash-chained audit log, daily Merkle anchors.
+- **Connectors** — OpenAI, Anthropic, Google (Gemini + Vertex), Azure OpenAI, Bedrock, Mistral, plus `@hive/otel-bridge` for teams already on OpenTelemetry gen-AI conventions.
+- **Policy engine** — `@hive/policy` with ABAC predicates, first-match-wins ordering, and built-in recipes: UAE residency, shadow-AI routing, retention caps, composition.
+- **Node server** — Express app with ingest, signature verification, policy admission control, residency enforcement, `/metrics` Prometheus endpoint, Postgres/Timescale store with continuous aggregates.
+- **Dashboard** — Next.js with recharts: activity timeline, top providers, dept/project split, shadow-AI panel, regulation-tag roll-ups.
+
 
 ---
 
