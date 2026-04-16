@@ -280,7 +280,7 @@ export default function SetupClient({
                     </span>
                   </div>
                   {c.id === 'ollama' && active && (
-                    <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid #e5e5ea' }}>
+                    <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
                       <label style={{ fontSize: 12, color: 'var(--muted)', display: 'block', marginBottom: 4 }}>
                         Ollama Host
                       </label>

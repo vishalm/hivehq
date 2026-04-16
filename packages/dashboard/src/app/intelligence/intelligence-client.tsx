@@ -101,48 +101,54 @@ export default function IntelligenceClient({ cost, anomalies, forecast, clusters
   return (
     <>
       {/* ── Header ──────────────────────────────────────────────────────── */}
-      <section className="card" style={{ background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)', color: 'white', border: 'none' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
+      <section className="card no-lift" style={{ background: 'var(--gradient-hero)', borderTop: '2px solid rgba(255,214,10,0.15)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: 0, right: 0, width: '35%', height: '100%', background: 'radial-gradient(ellipse at 100% 0%, rgba(255,214,10,0.03) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16, position: 'relative' }}>
           <div>
-            <h1 style={{ marginTop: 0, fontSize: 28, fontWeight: 700, letterSpacing: '-0.5px' }}>
+            <div style={{ fontSize: 10, fontWeight: 500, textTransform: 'uppercase', letterSpacing: 1.5, color: 'rgba(255,214,10,0.5)', marginBottom: 8 }}>Token Economy Intelligence</div>
+            <h1 style={{ marginTop: 0, fontSize: 28, fontWeight: 700, letterSpacing: '-0.5px', lineHeight: 1.2 }}>
               <span style={{ color: ACCENT }}>HIVE</span> Intelligence
             </h1>
-            <p style={{ color: 'rgba(255,255,255,0.6)', marginTop: 4, fontSize: 14 }}>
-              Talk to your data. Define your value. TTP telemetry is a queryable intelligence layer.
+            <p style={{ color: 'var(--text-secondary)', marginTop: 8, fontSize: 14, lineHeight: 1.7, maxWidth: 520 }}>
+              Talk to your data. Define your value. See where your AI budget goes,
+              detect waste, and prove governance compliance.
             </p>
           </div>
-          <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 4, color: ACCENT, fontSize: 13, textDecoration: 'none' }}>
-            {icons.refresh} Refresh Data
+          <a href="/" className="btn" style={{ fontSize: 12, padding: '8px 16px', gap: 6, minHeight: 'auto' }}>
+            {icons.refresh} Refresh
           </a>
         </div>
 
-        {/* ── KPI Row ───────────────────────────────────────────────────── */}
-        <div className="kpi" style={{ marginTop: 20 }}>
-          <KpiCard label="Total Cost" value={`$${totalCost.toFixed(2)}`} accent />
+        {/* ── KPI Row — Token Economy Metrics ──────────────────────────── */}
+        <div className="kpi stagger" style={{ marginTop: 24 }}>
+          <KpiCard label="Token Spend" value={`$${totalCost.toFixed(2)}`} accent />
           <KpiCard label="Tokens Processed" value={compact(totalTokens)} />
           <KpiCard label="API Calls" value={compact(totalCalls)} />
           <KpiCard label="Anomalies" value={String(anomalyCount)} alert={anomalyCount > 0} />
           <KpiCard label="90d Forecast" value={`$${projectedSpend.toFixed(2)}`} />
-          <KpiCard label="Confidence" value={confidence.toUpperCase()} />
-          <KpiCard label="Clusters" value={String(clusterCount)} />
+          <KpiCard label="ROI Confidence" value={confidence.toUpperCase()} />
+          <KpiCard label="Behavior Clusters" value={String(clusterCount)} />
           <KpiCard label="R\u00B2 Fit" value={r2.toFixed(3)} />
         </div>
       </section>
 
       {/* ── Tab Navigation ──────────────────────────────────────────────── */}
-      <div style={{ display: 'flex', gap: 4, overflowX: 'auto', padding: '8px 0', borderBottom: '1px solid #e5e5ea', marginBottom: 16 }}>
+      <div style={{ display: 'flex', gap: 4, overflowX: 'auto', padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', marginBottom: 16, scrollbarWidth: 'none' }}>
         {tabs.map(t => (
           <button
             key={t.key}
             onClick={() => setActiveTab(t.key)}
             style={{
               display: 'flex', alignItems: 'center', gap: 6,
-              padding: '8px 16px', border: 'none', borderRadius: 8,
-              background: activeTab === t.key ? '#0a0a0a' : 'transparent',
-              color: activeTab === t.key ? ACCENT : '#666',
-              fontWeight: activeTab === t.key ? 700 : 500,
+              padding: '8px 16px', border: 'none', borderRadius: 'var(--r-md, 10px)',
+              background: activeTab === t.key ? 'rgba(255,214,10,0.08)' : 'transparent',
+              color: activeTab === t.key ? ACCENT : 'var(--text-secondary, rgba(255,255,255,0.55))',
+              fontWeight: 500,
               fontSize: 13, cursor: 'pointer', whiteSpace: 'nowrap',
-              transition: 'all 0.15s ease',
+              transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+              minHeight: 44,
+              position: 'relative',
+              fontFamily: 'inherit',
             }}
           >
             {t.icon} {t.label}
@@ -187,7 +193,7 @@ function OverviewTab({ cost, costByProvider, costByModel, anomalyList, forecastD
                 dataKey="cost"
                 nameKey="name"
                 aspectRatio={4 / 3}
-                stroke="#fff"
+                stroke="rgba(255,255,255,0.1)"
                 content={<TreemapContent />}
               />
             </ResponsiveContainer>
@@ -199,7 +205,7 @@ function OverviewTab({ cost, costByProvider, costByModel, anomalyList, forecastD
           {anomalyList.length > 0 ? (
             <ResponsiveContainer width="100%" height={280}>
               <ScatterChart>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                 <XAxis dataKey="timestamp" type="number" domain={['dataMin', 'dataMax']} tickFormatter={(v: number) => new Date(v).toLocaleDateString()} name="Time" />
                 <YAxis dataKey="severity" type="category" name="Severity" />
                 <Tooltip content={<AnomalyTooltip />} />
@@ -241,7 +247,7 @@ function OverviewTab({ cost, costByProvider, costByModel, anomalyList, forecastD
                     <stop offset="95%" stopColor="#007aff" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                 <XAxis dataKey="date" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} tickFormatter={(v: number) => `$${v.toFixed(2)}`} />
                 <Tooltip formatter={(v: number) => `$${v.toFixed(4)}`} />
@@ -258,7 +264,7 @@ function OverviewTab({ cost, costByProvider, costByModel, anomalyList, forecastD
           {costByModel.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={costByModel} layout="vertical" margin={{ left: 60 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                 <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={(v: number) => `$${v.toFixed(2)}`} />
                 <YAxis dataKey="name" type="category" tick={{ fontSize: 10 }} width={70} />
                 <Tooltip formatter={(v: number) => `$${v.toFixed(4)}`} />
@@ -285,7 +291,7 @@ function OverviewTab({ cost, costByProvider, costByModel, anomalyList, forecastD
                 events: Math.log10(Math.max(c.events, 1)) * 10,
                 costPer: c.costProfile?.avgCostPerEvent ? Math.min(c.costProfile.avgCostPerEvent * 1000, 100) : 0,
               }))}>
-                <PolarGrid stroke="#e5e5ea" />
+                <PolarGrid stroke="rgba(255,255,255,0.08)" />
                 <PolarAngleAxis dataKey="label" tick={{ fontSize: 10 }} />
                 <PolarRadiusAxis tick={{ fontSize: 9 }} />
                 <Radar name="Actors" dataKey="actors" stroke="#007aff" fill="#007aff" fillOpacity={0.2} />
@@ -301,15 +307,15 @@ function OverviewTab({ cost, costByProvider, costByModel, anomalyList, forecastD
           <SectionHeader icon={icons.trend} title="Intelligence Summary" subtitle="Key insights from your data" />
           <div style={{ padding: '8px 0', fontSize: 14, lineHeight: 1.8 }}>
             {forecastData?.insight && (
-              <div style={{ padding: '12px 16px', background: '#fffbeb', borderRadius: 8, marginBottom: 12, borderLeft: `3px solid ${ACCENT}` }}>
-                <strong style={{ fontSize: 12, color: '#92400e', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Forecast Insight</strong>
-                <div style={{ marginTop: 4, color: '#78350f' }}>{forecastData.insight}</div>
+              <div style={{ padding: '12px 16px', background: 'rgba(255,214,10,0.08)', borderRadius: 8, marginBottom: 12, borderLeft: `3px solid ${ACCENT}` }}>
+                <strong style={{ fontSize: 12, color: ACCENT, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Forecast Insight</strong>
+                <div style={{ marginTop: 4, color: 'rgba(255,255,255,0.7)' }}>{forecastData.insight}</div>
               </div>
             )}
             {anomalyList.length > 0 && (
-              <div style={{ padding: '12px 16px', background: '#fef2f2', borderRadius: 8, marginBottom: 12, borderLeft: '3px solid #ff3b30' }}>
-                <strong style={{ fontSize: 12, color: '#991b1b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Anomalies</strong>
-                <div style={{ marginTop: 4, color: '#7f1d1d' }}>
+              <div style={{ padding: '12px 16px', background: 'rgba(255,59,48,0.08)', borderRadius: 8, marginBottom: 12, borderLeft: '3px solid #ff3b30' }}>
+                <strong style={{ fontSize: 12, color: '#ff3b30', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Anomalies</strong>
+                <div style={{ marginTop: 4, color: 'rgba(255,255,255,0.7)' }}>
                   {anomalyList.length} anomal{anomalyList.length === 1 ? 'y' : 'ies'} detected.{' '}
                   {anomalyList.filter((a: any) => a.severity === 'critical' || a.severity === 'high').length > 0 &&
                     `${anomalyList.filter((a: any) => a.severity === 'critical' || a.severity === 'high').length} require immediate attention.`}
@@ -317,9 +323,9 @@ function OverviewTab({ cost, costByProvider, costByModel, anomalyList, forecastD
               </div>
             )}
             {clusterList.length > 0 && (
-              <div style={{ padding: '12px 16px', background: '#eff6ff', borderRadius: 8, marginBottom: 12, borderLeft: '3px solid #007aff' }}>
-                <strong style={{ fontSize: 12, color: '#1e40af', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Behavior</strong>
-                <div style={{ marginTop: 4, color: '#1e3a5f' }}>
+              <div style={{ padding: '12px 16px', background: 'rgba(0,122,255,0.08)', borderRadius: 8, marginBottom: 12, borderLeft: '3px solid #007aff' }}>
+                <strong style={{ fontSize: 12, color: '#007aff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Behavior</strong>
+                <div style={{ marginTop: 4, color: 'rgba(255,255,255,0.7)' }}>
                   {clusterList.length} behavioral cluster{clusterList.length === 1 ? '' : 's'} identified across{' '}
                   {clusterList.reduce((s: number, c: any) => s + (c.actors ?? 0), 0)} actors.
                   {clusterList.find((c: any) => c.tags?.includes('high-error-rate')) &&
@@ -367,7 +373,7 @@ function CostTab({ cost, costByProvider, costByModel, costByDept }: any) {
           {costByDept.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={costByDept}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} tickFormatter={(v: number) => `$${v}`} />
                 <Tooltip formatter={(v: number) => `$${v.toFixed(4)}`} />
@@ -407,7 +413,7 @@ function CostTab({ cost, costByProvider, costByModel, costByDept }: any) {
                       <td style={{ textAlign: 'right', fontWeight: 600 }}>${m.cost.toFixed(4)}</td>
                       <td style={{ textAlign: 'right', color: 'var(--muted)' }}>{pct.toFixed(1)}%</td>
                       <td style={{ width: '30%' }}>
-                        <div style={{ background: '#f0f0f0', borderRadius: 4, height: 8, overflow: 'hidden' }}>
+                        <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 4, height: 8, overflow: 'hidden' }}>
                           <div style={{ width: `${Math.min(pct, 100)}%`, height: '100%', background: PALETTE[i % PALETTE.length], borderRadius: 4 }} />
                         </div>
                       </td>
@@ -430,7 +436,7 @@ function CostTab({ cost, costByProvider, costByModel, costByDept }: any) {
               dataKey="tokens"
               nameKey="name"
               aspectRatio={4 / 3}
-              stroke="#fff"
+              stroke="rgba(255,255,255,0.1)"
               content={<TreemapContent />}
             />
           </ResponsiveContainer>
@@ -483,7 +489,7 @@ function AnomaliesTab({ anomalyList }: { anomalyList: any[] }) {
           {typeCounts.length > 0 ? (
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={typeCounts}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                 <XAxis dataKey="name" tick={{ fontSize: 10 }} angle={-30} textAnchor="end" height={60} />
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip />
@@ -561,9 +567,9 @@ function ForecastTab({ data }: { data: any }) {
     <>
       {/* Insight banner */}
       {data.insight && (
-        <section className="card" style={{ background: '#fffbeb', borderLeft: `4px solid ${ACCENT}`, padding: 20 }}>
-          <div style={{ fontWeight: 600, fontSize: 13, color: '#92400e', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>Forecast Insight</div>
-          <div style={{ color: '#78350f', fontSize: 15, lineHeight: 1.6 }}>{data.insight}</div>
+        <section className="card" style={{ background: 'rgba(255,214,10,0.08)', borderLeft: `4px solid ${ACCENT}`, padding: 20 }}>
+          <div style={{ fontWeight: 600, fontSize: 13, color: ACCENT, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>Forecast Insight</div>
+          <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: 15, lineHeight: 1.6 }}>{data.insight}</div>
         </section>
       )}
 
@@ -583,7 +589,7 @@ function ForecastTab({ data }: { data: any }) {
             ...d,
             trendline: +(trend.slope * i + trend.intercept).toFixed(4),
           }))}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
             <XAxis dataKey="date" tick={{ fontSize: 10 }} />
             <YAxis tick={{ fontSize: 11 }} tickFormatter={(v: number) => `$${v.toFixed(2)}`} />
             <Tooltip formatter={(v: number) => `$${v.toFixed(4)}`} />
@@ -600,7 +606,7 @@ function ForecastTab({ data }: { data: any }) {
         <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: 16 }} className="two-col">
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={monthlyData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
               <XAxis dataKey="month" tick={{ fontSize: 11 }} />
               <YAxis tick={{ fontSize: 11 }} tickFormatter={(v: number) => `$${v}`} />
               <Tooltip formatter={(v: number) => `$${v.toFixed(2)}`} />
@@ -630,7 +636,7 @@ function ForecastTab({ data }: { data: any }) {
         <SectionHeader icon={icons.dollar} title="Daily Token Volume + Providers" subtitle="Stacked area" />
         <ResponsiveContainer width="100%" height={250}>
           <AreaChart data={dailyData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
             <XAxis dataKey="date" tick={{ fontSize: 10 }} />
             <YAxis tick={{ fontSize: 11 }} />
             <Tooltip />
@@ -656,7 +662,7 @@ function ClustersTab({ clusterList }: { clusterList: any[] }) {
         {clusterList.length > 0 ? (
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={clusterList}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
               <XAxis dataKey="label" tick={{ fontSize: 10 }} angle={-20} textAnchor="end" height={60} />
               <YAxis tick={{ fontSize: 11 }} />
               <Tooltip />
@@ -674,7 +680,7 @@ function ClustersTab({ clusterList }: { clusterList: any[] }) {
         {clusterList.length > 0 ? (
           <ResponsiveContainer width="100%" height={300}>
             <LineChart>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
               <XAxis dataKey="hour" type="number" domain={[0, 23]} tick={{ fontSize: 11 }} tickFormatter={(v: number) => `${v}:00`} />
               <YAxis tick={{ fontSize: 11 }} />
               <Tooltip labelFormatter={(v: number) => `${v}:00`} />
@@ -712,7 +718,7 @@ function ClustersTab({ clusterList }: { clusterList: any[] }) {
             </div>
             <div style={{ marginTop: 10, display: 'flex', gap: 4, flexWrap: 'wrap' }}>
               {(c.tags ?? []).map((t: string) => (
-                <span key={t} style={{ fontSize: 10, padding: '2px 8px', borderRadius: 999, background: t.includes('error') ? '#ffebee' : t.includes('high-cost') ? '#fff3e0' : '#f0f9ff', color: t.includes('error') ? '#c62828' : t.includes('high-cost') ? '#e65100' : '#0d47a1', fontWeight: 600 }}>
+                <span key={t} style={{ fontSize: 10, padding: '2px 8px', borderRadius: 999, background: t.includes('error') ? 'rgba(255,59,48,0.15)' : t.includes('high-cost') ? 'rgba(255,149,0,0.15)' : 'rgba(0,122,255,0.15)', color: t.includes('error') ? '#ff3b30' : t.includes('high-cost') ? '#ff9500' : '#007aff', fontWeight: 600 }}>
                   {t}
                 </span>
               ))}
@@ -750,7 +756,7 @@ function FlowsTab({ data }: { data: any }) {
           <>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={flows.slice(0, 15)} layout="vertical" margin={{ left: 100 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis dataKey={(d: any) => `${d.from} \u2192 ${d.to}`} type="category" tick={{ fontSize: 11 }} width={100} />
                 <Tooltip />
@@ -809,7 +815,7 @@ function FingerprintsTab({ fpList }: { fpList: any[] }) {
         {fpList.length > 0 ? (
           <ResponsiveContainer width="100%" height={350}>
             <ScatterChart>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
               <XAxis dataKey="totalTokens" type="number" name="Tokens" tick={{ fontSize: 11 }} tickFormatter={(v: number) => compact(v)} />
               <YAxis dataKey="totalCost" type="number" name="Cost" tick={{ fontSize: 11 }} tickFormatter={(v: number) => `$${v}`} />
               <Tooltip content={<FingerprintTooltip />} />
@@ -834,8 +840,8 @@ function FingerprintsTab({ fpList }: { fpList: any[] }) {
               </div>
               <span style={{
                 fontSize: 11, padding: '3px 10px', borderRadius: 999, fontWeight: 600,
-                background: fp.classification?.includes('Unstable') ? '#ffebee' : fp.classification?.includes('power') ? '#ede7f6' : '#e8f5e9',
-                color: fp.classification?.includes('Unstable') ? '#c62828' : fp.classification?.includes('power') ? '#6a1b9a' : '#2e7d32',
+                background: fp.classification?.includes('Unstable') ? 'rgba(255,59,48,0.15)' : fp.classification?.includes('power') ? 'rgba(175,82,222,0.15)' : 'rgba(52,199,89,0.15)',
+                color: fp.classification?.includes('Unstable') ? '#ff3b30' : fp.classification?.includes('power') ? '#af52de' : '#34c759',
               }}>
                 {fp.classification}
               </span>
@@ -877,7 +883,7 @@ function FingerprintsTab({ fpList }: { fpList: any[] }) {
                 <div style={{ display: 'flex', alignItems: 'flex-end', gap: 1, height: 30 }}>
                   {(fp.hourlyDistribution as number[]).map((v: number, h: number) => {
                     const max = Math.max(...fp.hourlyDistribution, 1)
-                    return <div key={h} style={{ flex: 1, background: v > 0 ? PALETTE[i % PALETTE.length] : '#f0f0f0', height: `${(v / max) * 100}%`, minHeight: 2, borderRadius: '2px 2px 0 0' }} title={`${h}:00 — ${v} events`} />
+                    return <div key={h} style={{ flex: 1, background: v > 0 ? PALETTE[i % PALETTE.length] : 'rgba(255,255,255,0.04)', height: `${(v / max) * 100}%`, minHeight: 2, borderRadius: '2px 2px 0 0' }} title={`${h}:00 — ${v} events`} />
                   })}
                 </div>
               </div>
@@ -895,20 +901,20 @@ function FingerprintsTab({ fpList }: { fpList: any[] }) {
 
 function SectionHeader({ icon, title, subtitle }: { icon: React.ReactNode; title: string; subtitle: string }) {
   return (
-    <div style={{ marginBottom: 12 }}>
-      <h2 style={{ marginTop: 0, fontSize: 16, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
+    <div style={{ marginBottom: 16 }}>
+      <h2 style={{ marginTop: 0, fontSize: 15, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-primary, rgba(255,255,255,0.92))' }}>
         {icon} {title}
       </h2>
-      <p style={{ margin: 0, fontSize: 12, color: 'var(--muted)' }}>{subtitle}</p>
+      <p style={{ margin: '4px 0 0', fontSize: 12, color: 'var(--text-secondary, rgba(255,255,255,0.55))' }}>{subtitle}</p>
     </div>
   )
 }
 
 function KpiCard({ label, value, accent, alert }: { label: string; value: string; accent?: boolean; alert?: boolean }) {
   return (
-    <div className="kpi-item">
-      <div className="label" style={{ color: 'rgba(255,255,255,0.5)' }}>{label}</div>
-      <div className="value" style={{ color: alert ? '#ff3b30' : accent ? ACCENT : 'white', fontWeight: 700 }}>{value}</div>
+    <div className="kpi-item" style={accent ? { borderTop: '2px solid var(--hive-yellow, #ffd60a)' } : undefined}>
+      <div className="label">{label}</div>
+      <div className="value" style={{ color: alert ? 'var(--hive-red, #ff3b30)' : accent ? ACCENT : 'var(--text-primary, rgba(255,255,255,0.92))' }}>{value}</div>
     </div>
   )
 }
@@ -936,7 +942,7 @@ function TreemapContent(props: any) {
   if (width < 40 || height < 30) return null
   return (
     <g>
-      <rect x={x} y={y} width={width} height={height} fill={fill} stroke="#fff" strokeWidth={2} rx={4} />
+      <rect x={x} y={y} width={width} height={height} fill={fill} stroke="rgba(0,0,0,0.3)" strokeWidth={2} rx={4} />
       <text x={x + width / 2} y={y + height / 2} textAnchor="middle" dominantBaseline="central" fill="#fff" fontSize={Math.min(12, width / 6)} fontWeight={600}>
         {name}
       </text>
@@ -949,9 +955,9 @@ function AnomalyTooltip({ active, payload }: any) {
   if (!active || !payload?.length) return null
   const d = payload[0]?.payload
   return (
-    <div style={{ background: 'white', border: '1px solid #e5e5ea', borderRadius: 8, padding: 12, fontSize: 12, maxWidth: 250, boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
-      <div style={{ fontWeight: 700, marginBottom: 4 }}>{d?.type}</div>
-      <div style={{ color: '#666' }}>{d?.description}</div>
+    <div style={{ background: '#1a1a28', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 8, padding: 12, fontSize: 12, maxWidth: 250, boxShadow: '0 4px 12px rgba(0,0,0,0.4)' }}>
+      <div style={{ fontWeight: 700, marginBottom: 4, color: 'rgba(255,255,255,0.92)' }}>{d?.type}</div>
+      <div style={{ color: 'rgba(255,255,255,0.55)' }}>{d?.description}</div>
       <div style={{ marginTop: 4, fontWeight: 600, color: d?.severity === 'critical' ? '#ff3b30' : '#ff9500' }}>{d?.severity?.toUpperCase()}</div>
     </div>
   )
@@ -961,7 +967,7 @@ function FingerprintTooltip({ active, payload }: any) {
   if (!active || !payload?.length) return null
   const d = payload[0]?.payload
   return (
-    <div style={{ background: 'white', border: '1px solid #e5e5ea', borderRadius: 8, padding: 12, fontSize: 12, boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
+    <div style={{ background: '#1a1a28', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 8, padding: 12, fontSize: 12, boxShadow: '0 4px 12px rgba(0,0,0,0.4)', color: 'rgba(255,255,255,0.92)' }}>
       <div style={{ fontWeight: 700, marginBottom: 4 }}>{d?.entity} ({d?.entityType})</div>
       <div>Tokens: {compact(d?.totalTokens ?? 0)}</div>
       <div>Cost: ${d?.totalCost?.toFixed(4)}</div>
@@ -1007,7 +1013,7 @@ function FlowDiagram({ flows }: { flows: Array<{ from: string; to: string; count
               strokeWidth={thickness}
               strokeLinecap="round"
             />
-            <text x={300} y={(y1 + y2) / 2 - 4} textAnchor="middle" fontSize={10} fill="#666">{f.count}</text>
+            <text x={300} y={(y1 + y2) / 2 - 4} textAnchor="middle" fontSize={10} fill="rgba(255,255,255,0.55)">{f.count}</text>
           </g>
         )
       })}

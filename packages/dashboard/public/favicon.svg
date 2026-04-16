@@ -1,0 +1,19 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffe066"/>
+      <stop offset="50%" stop-color="#ffd60a"/>
+      <stop offset="100%" stop-color="#e6b800"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle for visibility on any tab bar -->
+  <circle cx="32" cy="32" r="30" fill="#0a0a0f"/>
+  <!-- Main hexagon -->
+  <polygon points="32,8 52,20 52,44 32,56 12,44 12,20" fill="url(#g)" opacity="0.95"/>
+  <!-- Center cell -->
+  <polygon points="32,22 39,26 39,34 32,38 25,34 25,26" fill="#0a0a0f" opacity="0.85"/>
+  <!-- Top-right cell -->
+  <polygon points="41,14 48,18 48,26 41,30 34,26 34,18" fill="#0a0a0f" opacity="0.6"/>
+  <!-- Bottom-left cell -->
+  <polygon points="23,34 30,38 30,46 23,50 16,46 16,38" fill="#0a0a0f" opacity="0.6"/>
+</svg>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import type { TTPEvent } from '@hive/shared'
 import { CallsOverTime, ProviderBar, DeptPie } from './charts'
 
@@ -47,6 +47,9 @@ export default function DashboardClient({
   const [sortDir, setSortDir] = useState<SortDir>('desc')
   const [showShadowOnly, setShowShadowOnly] = useState(false)
   const [tableLimit, setTableLimit] = useState(25)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => { setMounted(true) }, [])
 
   // Derive unique providers
   const allProviders = useMemo(
@@ -129,39 +132,66 @@ export default function DashboardClient({
 
   return (
     <>
-      {/* ── HIVE Header ──────────────────────────────────────────────── */}
-      <section className="card" style={{ background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)', color: 'white', border: 'none' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
+      {/* ── HIVE Hero — Token Economy Dashboard ──────────────────────── */}
+      <section className="card no-lift" style={{ background: 'var(--gradient-hero)', border: '1px solid rgba(255,214,10,0.08)', position: 'relative', overflow: 'hidden' }}>
+        {/* Subtle gradient shimmer overlay */}
+        <div style={{ position: 'absolute', top: 0, right: 0, width: '40%', height: '100%', background: 'radial-gradient(ellipse at 100% 0%, rgba(255,214,10,0.04) 0%, transparent 70%)', pointerEvents: 'none' }} />
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16, position: 'relative' }}>
           <div>
-            <h1 style={{ marginTop: 0, fontSize: 28, fontWeight: 700, letterSpacing: '-0.5px' }}>
+            <div style={{ fontSize: 10, fontWeight: 500, textTransform: 'uppercase', letterSpacing: 1.5, color: 'rgba(255,214,10,0.5)', marginBottom: 8 }}>Token Economy</div>
+            <h1 style={{ marginTop: 0, fontSize: 28, fontWeight: 700, letterSpacing: '-0.5px', lineHeight: 1.2 }}>
               <span style={{ color: '#ffd60a' }}>HIVE</span> Dashboard
             </h1>
-            <p style={{ color: 'rgba(255,255,255,0.6)', marginTop: 4, fontSize: 14 }}>
-              Connectors &rarr; Scout &rarr; Node &rarr; HIVE &nbsp;&middot;&nbsp; Zero content &middot; Governance-native &middot; Signed provenance
+            <p style={{ color: 'var(--text-secondary)', marginTop: 8, fontSize: 14, lineHeight: 1.7, maxWidth: 520 }}>
+              Every token is a decision. From invisible API calls to visible ROI.
             </p>
           </div>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <span style={{ padding: '4px 12px', borderRadius: 999, background: events.length > 0 ? 'rgba(52,199,89,0.2)' : 'rgba(255,149,0,0.2)', color: events.length > 0 ? '#34c759' : '#ff9f0a', fontSize: 12, fontWeight: 600 }}>
-              {events.length > 0 ? `\u25CF Live \u2014 ${events.length} events` : '\u25CB Waiting for events...'}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-end' }}>
+            <span style={{ padding: '6px 14px', borderRadius: 'var(--r-full)', background: events.length > 0 ? 'var(--hive-green-dim)' : 'var(--hive-orange-dim)', color: events.length > 0 ? 'var(--hive-green)' : 'var(--hive-orange)', fontSize: 11, fontWeight: 500, border: `1px solid ${events.length > 0 ? 'rgba(52,199,89,0.2)' : 'rgba(255,149,0,0.2)'}`, display: 'flex', alignItems: 'center', gap: 6 }}>
+              {events.length > 0 && <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--hive-green)', boxShadow: '0 0 8px rgba(52,199,89,0.5)' }} />}
+              {events.length > 0 ? `Live \u2014 ${events.length} events` : 'Waiting for events...'}
             </span>
             {shadowCount > 0 && (
-              <span style={{ padding: '4px 12px', borderRadius: 999, background: 'rgba(255,59,48,0.2)', color: '#ff3b30', fontSize: 12, fontWeight: 600 }}>
-                {shadowCount} shadow AI events
+              <span style={{ padding: '6px 14px', borderRadius: 'var(--r-full)', background: 'var(--hive-red-dim)', color: 'var(--hive-red)', fontSize: 11, fontWeight: 500, border: '1px solid rgba(255,59,48,0.2)' }}>
+                {shadowCount} shadow AI detected
               </span>
             )}
           </div>
         </div>
 
-        <div className="kpi" style={{ marginTop: 20 }}>
-          <KPI label="Total Events" value={totalCalls.toLocaleString()} dark />
-          <KPI label="Est. Tokens" value={compact(totalTokens)} dark />
-          <KPI label="Payload" value={compact(totalBytes) + ' B'} dark />
-          <KPI label="Providers" value={String(providers)} dark />
-          <KPI label="p50 Latency" value={p50 !== null ? `${Math.round(p50)} ms` : '\u2014'} dark />
-          <KPI label="p95 Latency" value={p95 !== null ? `${Math.round(p95)} ms` : '\u2014'} dark />
-          <KPI label="Errors" value={String(errorCount)} dark alert={errorCount > 0} />
+        {/* ── Token Economy KPIs ─────────────────────────────────────── */}
+        <div className="kpi stagger" style={{ marginTop: 24 }}>
+          <KPI label="Token Spend" value={compact(totalTokens)} accent />
+          <KPI label="Est. Cost" value={`$${(totalTokens * 0.000003).toFixed(2)}`} accent />
+          <KPI label="API Events" value={compact(totalCalls)} />
+          <KPI label="Providers" value={String(providers)} />
+          <KPI label="p50 Latency" value={p50 !== null ? `${Math.round(p50)}ms` : '\u2014'} />
+          <KPI label="p95 Latency" value={p95 !== null ? `${Math.round(p95)}ms` : '\u2014'} />
+          <KPI label="Error Rate" value={events.length > 0 ? `${((errorCount / events.length) * 100).toFixed(1)}%` : '0%'} alert={errorCount > 0} />
+          <KPI label="Governance" value={events.length > 0 ? 'Compliant' : '\u2014'} compliant={events.length > 0} />
         </div>
       </section>
+
+      {/* ── Token Governance Banner ──────────────────────────────────── */}
+      <div style={{
+        display: 'flex', gap: 16, padding: '14px 20px', borderRadius: 'var(--r-lg)',
+        background: 'rgba(255,214,10,0.03)', border: '1px solid rgba(255,214,10,0.08)',
+        margin: '8px 0 16px', alignItems: 'center', flexWrap: 'wrap',
+        transition: 'border-color 0.2s ease',
+      }}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffd60a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
+        <span style={{ fontSize: 12, color: 'var(--text-secondary)', flex: 1, lineHeight: 1.6 }}>
+          <strong style={{ color: 'var(--hive-yellow)', fontWeight: 500 }}>Token Governance Active</strong> &mdash; pii_asserted: false &middot; content_asserted: false &middot; Ed25519 signatures &middot; Tamper-evident audit chain
+        </span>
+        {tags.length > 0 && (
+          <div style={{ display: 'flex', gap: 4 }}>
+            {tags.slice(0, 4).map(([tag]) => (
+              <span key={tag} style={{ padding: '3px 10px', borderRadius: 'var(--r-full)', background: 'var(--hive-yellow-dim)', color: 'var(--hive-yellow)', fontSize: 10, fontWeight: 500 }}>{tag}</span>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* ── Filters Bar ──────────────────────────────────────────────── */}
       <div className="filters-bar">
@@ -178,7 +208,7 @@ export default function DashboardClient({
           </span>
         ))}
 
-        <span style={{ width: 1, height: 24, background: '#e5e5ea', margin: '0 4px' }} />
+        <span style={{ width: 1, height: 24, background: 'rgba(255,255,255,0.08)', margin: '0 4px' }} />
 
         <select
           className="filter-select"
@@ -253,9 +283,10 @@ export default function DashboardClient({
         </section>
       </div>
 
-      {/* ── Shadow AI ────────────────────────────────────────────────── */}
-      <section className="card" style={{ border: shadow.length > 0 ? '2px solid #ff3b30' : undefined }}>
-        <h2 style={{ marginTop: 0, color: shadow.length > 0 ? '#ff3b30' : undefined }}>
+      {/* ── Shadow AI — Governance Risk ──────────────────────────────── */}
+      <section className="card" style={{ border: shadow.length > 0 ? '1px solid rgba(255,59,48,0.2)' : undefined, borderTop: shadow.length > 0 ? '2px solid var(--hive-red)' : undefined }}>
+        <div style={{ fontSize: 10, fontWeight: 500, textTransform: 'uppercase', letterSpacing: 1.5, color: shadow.length > 0 ? 'rgba(255,59,48,0.5)' : 'var(--text-tertiary)', marginBottom: 8 }}>Governance Risk</div>
+        <h2 style={{ marginTop: 0, fontSize: 18, fontWeight: 500, color: shadow.length > 0 ? 'var(--hive-red)' : undefined }}>
           Shadow AI Detection
         </h2>
         {shadow.length === 0 ? (
@@ -287,32 +318,37 @@ export default function DashboardClient({
         )}
       </section>
 
-      {/* ── Governance & Regulation ──────────────────────────────────── */}
+      {/* ── Token Governance & Compliance ────────────────────────────── */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }} className="two-col">
-        <section className="card">
-          <h2 style={{ marginTop: 0 }}>Governance</h2>
-          <div style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 2 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              TTP pii_asserted / content_asserted: <strong style={{ color: '#34c759' }}>structurally false</strong>
+        <section className="card" style={{ borderTop: '2px solid var(--hive-yellow)' }}>
+          <div style={{ fontSize: 10, fontWeight: 500, textTransform: 'uppercase', letterSpacing: 1.5, color: 'rgba(255,214,10,0.5)', marginBottom: 8 }}>Token Governance</div>
+          <h2 style={{ marginTop: 0, fontSize: 18, fontWeight: 500 }}>Compliance is Structural</h2>
+          <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: 16 }}>
+            Every TTP event carries immutable governance. Privacy is not a policy — it is enforced by the protocol itself.
+          </p>
+          <div style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 2.2 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffd60a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span>pii_asserted / content_asserted: <strong style={{ color: '#34c759' }}>structurally false</strong></span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
-              Covenant enforced at ingest &mdash; see <code>/metrics</code>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffd60a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
+              <span>Covenant enforced at ingest &mdash; <code>/metrics</code></span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m16 3 5 5-11 11H5v-5L16 3Z"/></svg>
-              Batch signatures: <strong>Ed25519</strong> &middot; Tamper-evident audit chain
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffd60a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m16 3 5 5-11 11H5v-5L16 3Z"/></svg>
+              <span>Batch signatures: <strong style={{ color: 'var(--fg)' }}>Ed25519</strong> &middot; Tamper-evident chain</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="9" x2="12" y2="2"/><path d="M4.9 7.9 7 10"/><path d="M19.1 7.9 17 10"/></svg>
-              Canonical JSON hashing &middot; Daily Merkle anchors
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffd60a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="9" x2="12" y2="2"/><path d="M4.9 7.9 7 10"/><path d="M19.1 7.9 17 10"/></svg>
+              <span>Canonical JSON hashing &middot; Daily Merkle anchors</span>
             </div>
           </div>
         </section>
 
         <section className="card">
-          <h2 style={{ marginTop: 0 }}>Regulation Tags</h2>
+          <div style={{ fontSize: 10, fontWeight: 500, textTransform: 'uppercase', letterSpacing: 1.5, color: 'rgba(255,214,10,0.5)', marginBottom: 8 }}>Compliance</div>
+          <h2 style={{ marginTop: 0, fontSize: 18, fontWeight: 500 }}>Regulation Tags</h2>
           {tags.length === 0 ? (
             <p style={{ color: 'var(--muted)' }}>No regulation tags observed.</p>
           ) : (
@@ -374,7 +410,7 @@ export default function DashboardClient({
               <tbody>
                 {sortedEvents.slice(0, tableLimit).map((e) => (
                   <tr key={e.event_id} style={e.direction === 'error' ? { background: 'rgba(255,59,48,0.05)' } : undefined}>
-                    <td style={{ whiteSpace: 'nowrap' }}>{new Date(e.timestamp).toLocaleTimeString()}</td>
+                    <td style={{ whiteSpace: 'nowrap' }} suppressHydrationWarning>{mounted ? new Date(e.timestamp).toLocaleTimeString() : '\u2014'}</td>
                     <td>
                       <code>{e.provider}</code>
                       {!SANCTIONED.has(e.provider) && (
@@ -384,16 +420,16 @@ export default function DashboardClient({
                     <td>
                       <span style={{
                         fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 4,
-                        background: e.direction === 'response' ? '#e8f5e9' : e.direction === 'error' ? '#ffebee' : '#e3f2fd',
-                        color: e.direction === 'response' ? '#2e7d32' : e.direction === 'error' ? '#c62828' : '#1565c0',
+                        background: e.direction === 'response' ? 'rgba(52,199,89,0.15)' : e.direction === 'error' ? 'rgba(255,59,48,0.15)' : 'rgba(0,122,255,0.15)',
+                        color: e.direction === 'response' ? '#34c759' : e.direction === 'error' ? '#ff3b30' : '#007aff',
                       }}>
                         {e.direction}
                       </span>
                     </td>
                     <td style={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis' }}>{e.endpoint}</td>
                     <td><code>{e.model_hint}</code></td>
-                    <td>{e.payload_bytes.toLocaleString()}</td>
-                    <td>{e.estimated_tokens.toLocaleString()}</td>
+                    <td suppressHydrationWarning>{e.payload_bytes.toLocaleString()}</td>
+                    <td suppressHydrationWarning>{e.estimated_tokens.toLocaleString()}</td>
                     <td>{e.latency_ms !== undefined ? `${Math.round(e.latency_ms)} ms` : '\u2014'}</td>
                     <td>
                       <span style={{
@@ -417,13 +453,14 @@ export default function DashboardClient({
 
 // ── Utilities ────────────────────────────────────────────────────────────────
 
-function KPI({ label, value, dark, alert }: { label: string; value: string; dark?: boolean; alert?: boolean }) {
+function KPI({ label, value, alert, accent, compliant }: { label: string; value: string; dark?: boolean; alert?: boolean; accent?: boolean; compliant?: boolean }) {
   return (
-    <div className="kpi-item">
-      <div className="label" style={dark ? { color: 'rgba(255,255,255,0.5)' } : undefined}>{label}</div>
+    <div className="kpi-item" style={accent ? { borderTop: '2px solid var(--hive-yellow)' } : undefined}>
+      <div className="label">{label}</div>
       <div className="value" style={{
-        ...(dark ? { color: 'white' } : {}),
-        ...(alert ? { color: '#ff3b30' } : {}),
+        ...(alert ? { color: 'var(--hive-red)' } : {}),
+        ...(accent ? { color: 'var(--hive-yellow)' } : {}),
+        ...(compliant ? { color: 'var(--hive-green)', fontSize: 20 } : {}),
       }}>{value}</div>
     </div>
   )
@@ -442,6 +479,13 @@ function percentile(values: number[], p: number): number | null {
   return sorted[Math.min(sorted.length - 1, Math.floor(p * sorted.length))] ?? null
 }
 
+function formatTime(ts: number): string {
+  const d = new Date(ts)
+  const h = String(d.getHours()).padStart(2, '0')
+  const m = String(d.getMinutes()).padStart(2, '0')
+  return `${h}:${m}`
+}
+
 function bucketize(events: TTPEvent[], bucketMs = 60_000) {
   if (events.length === 0) return []
   const map = new Map<number, { calls: number; tokens: number }>()
@@ -455,7 +499,7 @@ function bucketize(events: TTPEvent[], bucketMs = 60_000) {
   return [...map.entries()]
     .sort(([a], [b]) => a - b)
     .map(([b, v]) => ({
-      bucket: new Date(b).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      bucket: formatTime(b),
       calls: v.calls,
       tokens: v.tokens,
     }))

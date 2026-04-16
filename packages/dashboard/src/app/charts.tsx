@@ -45,7 +45,7 @@ export function CallsOverTime({ data }: { data: TimeSeriesPoint[] }) {
     <div style={{ width: '100%', height: 240 }}>
       <ResponsiveContainer>
         <LineChart data={data} margin={{ top: 10, right: 24, left: 0, bottom: 0 }}>
-          <CartesianGrid stroke="#e5e5ea" strokeDasharray="3 3" />
+          <CartesianGrid stroke="rgba(255,255,255,0.06)" strokeDasharray="3 3" />
           <XAxis dataKey="bucket" tick={{ fontSize: 11, fill: '#86868b' }} />
           <YAxis yAxisId="l" tick={{ fontSize: 11, fill: '#86868b' }} />
           <YAxis yAxisId="r" orientation="right" tick={{ fontSize: 11, fill: '#86868b' }} />
@@ -87,7 +87,7 @@ export function ProviderBar({ data }: { data: ProviderBarPoint[] }) {
     <div style={{ width: '100%', height: 240 }}>
       <ResponsiveContainer>
         <BarChart data={data} margin={{ top: 10, right: 24, left: 0, bottom: 0 }}>
-          <CartesianGrid stroke="#e5e5ea" strokeDasharray="3 3" />
+          <CartesianGrid stroke="rgba(255,255,255,0.06)" strokeDasharray="3 3" />
           <XAxis dataKey="provider" tick={{ fontSize: 11, fill: '#86868b' }} />
           <YAxis tick={{ fontSize: 11, fill: '#86868b' }} />
           <Tooltip />
@@ -143,7 +143,7 @@ function Empty({ message }: { message: string }) {
         justifyContent: 'center',
         color: '#86868b',
         fontSize: 13,
-        border: '1px dashed #e5e5ea',
+        border: '1px dashed rgba(255,255,255,0.08)',
         borderRadius: 10,
       }}
     >

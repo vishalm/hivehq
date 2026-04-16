@@ -365,29 +365,32 @@ export default function ChatWidget() {
   const fabStyle: React.CSSProperties = {
     position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
     width: 56, height: 56, borderRadius: '50%',
-    background: '#ffd60a', color: '#1d1d1f',
+    background: '#ffd60a', color: '#0a0a0f',
     border: 'none', cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-    transition: 'transform 0.2s, box-shadow 0.2s',
+    boxShadow: '0 4px 24px rgba(255,214,10,0.3), 0 0 0 1px rgba(255,214,10,0.1)',
+    transition: 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease',
   }
 
   const panelStyle: React.CSSProperties = {
     position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
     width: 400, maxWidth: 'calc(100vw - 48px)',
-    borderRadius: 16,
-    background: '#ffffff',
-    boxShadow: '0 8px 40px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.06)',
+    borderRadius: 18,
+    background: 'rgba(18,18,26,0.95)',
+    backdropFilter: 'blur(24px) saturate(180%)',
+    WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+    boxShadow: '0 8px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.04)',
     display: 'flex', flexDirection: 'column',
     overflow: 'hidden',
-    transition: 'all 0.2s ease',
+    transition: 'height 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease',
     ...(state.minimized ? { height: 52 } : { height: 520, maxHeight: 'calc(100vh - 120px)' }),
   }
 
   const headerStyle: React.CSSProperties = {
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-    padding: '12px 16px',
-    background: 'linear-gradient(135deg, #1d1d1f, #2c2c2e)',
+    padding: '14px 16px',
+    background: 'linear-gradient(135deg, rgba(255,214,10,0.04), rgba(0,0,0,0.2))',
+    borderBottom: '1px solid rgba(255,255,255,0.06)',
     color: '#ffffff',
     cursor: 'pointer',
     userSelect: 'none',
@@ -396,8 +399,9 @@ export default function ChatWidget() {
 
   const controlBtnStyle: React.CSSProperties = {
     background: 'none', border: 'none', cursor: 'pointer',
-    color: 'rgba(255,255,255,0.7)', padding: 4, display: 'flex',
-    borderRadius: 4, transition: 'color 0.15s',
+    color: 'rgba(255,255,255,0.5)', padding: 6, display: 'flex',
+    borderRadius: 6, transition: 'color 0.15s ease, background 0.15s ease',
+    minWidth: 28, minHeight: 28, alignItems: 'center', justifyContent: 'center',
   }
 
   if (!state.open) {
@@ -405,8 +409,8 @@ export default function ChatWidget() {
       <button
         onClick={toggleOpen}
         style={fabStyle}
-        onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.boxShadow = '0 6px 28px rgba(0,0,0,0.2)' }}
-        onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)' }}
+        onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.08)'; e.currentTarget.style.boxShadow = '0 6px 32px rgba(255,214,10,0.4), 0 0 0 1px rgba(255,214,10,0.15)' }}
+        onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(255,214,10,0.3), 0 0 0 1px rgba(255,214,10,0.1)' }}
         title="Talk to your data"
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -469,7 +473,8 @@ export default function ChatWidget() {
         <>
           <div style={{
             flex: 1, overflowY: 'auto', padding: 16,
-            display: 'flex', flexDirection: 'column', gap: 12,
+            display: 'flex', flexDirection: 'column', gap: 10,
+            background: 'rgba(0,0,0,0.15)',
           }}>
             {state.messages.length === 0 && !state.loading && (
               <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--muted)' }}>
@@ -494,13 +499,14 @@ export default function ChatWidget() {
                       key={q}
                       onClick={() => { setInput(q); inputRef.current?.focus() }}
                       style={{
-                        background: 'var(--card)', border: '1px solid #e5e5ea',
-                        borderRadius: 8, padding: '8px 12px', fontSize: 12,
-                        cursor: 'pointer', textAlign: 'left', color: 'var(--fg)',
-                        transition: 'border-color 0.15s',
+                        background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
+                        borderRadius: 10, padding: '10px 14px', fontSize: 12,
+                        cursor: 'pointer', textAlign: 'left', color: 'rgba(255,255,255,0.7)',
+                        transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                        lineHeight: 1.5,
                       }}
-                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent)' }}
-                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#e5e5ea' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(255,214,10,0.3)'; e.currentTarget.style.background = 'rgba(255,214,10,0.04)'; e.currentTarget.style.color = 'rgba(255,255,255,0.92)' }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.color = 'rgba(255,255,255,0.7)' }}
                     >
                       {q}
                     </button>
@@ -521,12 +527,14 @@ export default function ChatWidget() {
                   maxWidth: '85%',
                   padding: '10px 14px',
                   borderRadius: msg.role === 'user' ? '14px 14px 4px 14px' : '14px 14px 14px 4px',
-                  background: msg.role === 'user' ? '#007aff' : 'var(--card)',
-                  color: msg.role === 'user' ? '#ffffff' : 'var(--fg)',
+                  background: msg.role === 'user' ? 'linear-gradient(135deg, #007aff, #0055d4)' : 'rgba(255,255,255,0.05)',
+                  color: msg.role === 'user' ? '#ffffff' : 'rgba(255,255,255,0.85)',
                   fontSize: 13,
                   lineHeight: 1.6,
                   whiteSpace: 'pre-wrap',
                   wordBreak: 'break-word',
+                  boxShadow: msg.role === 'user' ? '0 2px 8px rgba(0,122,255,0.3)' : 'none',
+                  border: msg.role === 'user' ? 'none' : '1px solid rgba(255,255,255,0.04)',
                 }}>
                   {msg.content}
                 </div>
@@ -551,7 +559,7 @@ export default function ChatWidget() {
             {state.error && (
               <div style={{
                 padding: '10px 14px', borderRadius: 10,
-                background: '#fef2f2', color: '#b91c1c', fontSize: 12, lineHeight: 1.5,
+                background: 'rgba(255,59,48,0.1)', color: '#ff3b30', fontSize: 12, lineHeight: 1.5,
               }}>
                 {state.error}
                 <div style={{ marginTop: 6 }}>
@@ -565,7 +573,7 @@ export default function ChatWidget() {
 
           {/* Input */}
           <div style={{
-            padding: '12px 16px', borderTop: '1px solid #e5e5ea',
+            padding: '12px 16px', borderTop: '1px solid rgba(255,255,255,0.08)',
             display: 'flex', gap: 8, flexShrink: 0,
           }}>
             <input
@@ -577,12 +585,12 @@ export default function ChatWidget() {
               placeholder="Ask about your data..."
               style={{
                 flex: 1, padding: '10px 14px', borderRadius: 10,
-                border: '1px solid #e5e5ea', fontSize: 13,
-                fontFamily: 'inherit', outline: 'none',
+                border: '1px solid rgba(255,255,255,0.08)', fontSize: 13,
+                fontFamily: 'inherit', outline: 'none', background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.92)',
                 transition: 'border-color 0.15s',
               }}
               onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--accent)' }}
-              onBlur={(e) => { e.currentTarget.style.borderColor = '#e5e5ea' }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
               disabled={state.loading}
             />
             <button
@@ -590,7 +598,7 @@ export default function ChatWidget() {
               disabled={!input.trim() || state.loading}
               style={{
                 width: 40, height: 40, borderRadius: 10,
-                background: input.trim() && !state.loading ? '#ffd60a' : '#e5e5ea',
+                background: input.trim() && !state.loading ? '#ffd60a' : 'rgba(255,255,255,0.08)',
                 border: 'none', cursor: input.trim() && !state.loading ? 'pointer' : 'default',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 transition: 'background 0.15s',

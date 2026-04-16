@@ -309,13 +309,13 @@ export default function SettingsClient() {
                   <div style={{
                     width: 40, height: 40, borderRadius: 10,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: provider.category === 'local' ? '#e8f5e9' : '#e3f2fd',
-                    color: provider.category === 'local' ? '#388e3c' : '#1976d2',
+                    background: provider.category === 'local' ? 'rgba(52,199,89,0.15)' : 'rgba(0,122,255,0.15)',
+                    color: provider.category === 'local' ? '#34c759' : '#007aff',
                   }}>
                     <SvgIcon icon={provider.category === 'local' ? 'cpu' : 'cloud'} size={22} />
                   </div>
                   <div>
-                    <h3 style={{ margin: 0, fontSize: 17, fontWeight: 600 }}>{provider.name}</h3>
+                    <h3 style={{ margin: 0, fontSize: 17, fontWeight: 500 }}>{provider.name}</h3>
                     <p style={{ margin: 0, color: 'var(--muted)', fontSize: 13 }}>{provider.description}</p>
                   </div>
                 </div>
@@ -324,7 +324,7 @@ export default function SettingsClient() {
                   {isActive && (
                     <span style={{
                       display: 'inline-block', padding: '3px 10px',
-                      borderRadius: 999, fontSize: 11, fontWeight: 600,
+                      borderRadius: 999, fontSize: 11, fontWeight: 500,
                       background: '#ffd60a', color: '#1d1d1f', letterSpacing: 0.5,
                     }}>
                       ACTIVE
@@ -477,7 +477,7 @@ export default function SettingsClient() {
       {/* Info note */}
       <div style={{
         marginTop: 16, padding: '14px 20px', borderRadius: 12,
-        background: '#fffde7', fontSize: 13, lineHeight: 1.6, color: '#5d4037',
+        background: 'rgba(255,214,10,0.08)', fontSize: 13, lineHeight: 1.6, color: 'rgba(255,255,255,0.7)',
       }}>
         <strong>How HIVE Chat works:</strong> The floating chat (bottom-right on every page) sends your
         question to the selected LLM along with your HIVE telemetry data as context. It never
