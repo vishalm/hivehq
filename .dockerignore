@@ -1,0 +1,90 @@
+# ── Dependencies (re-installed in build stage) ──────────────────────────────
+node_modules/
+**/node_modules/
+
+# ── Git ─────────────────────────────────────────────────────────────────────
+.git/
+.gitignore
+
+# ── Build artifacts (rebuilt in Docker) ─────────────────────────────────────
+dist/
+**/dist/
+.next/
+**/.next/
+out/
+*.tsbuildinfo
+
+# ── Turbo cache ─────────────────────────────────────────────────────────────
+.turbo/
+**/.turbo/
+
+# ── Environment & Secrets ───────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+credentials.json
+secrets/
+
+# ── HIVE vault runtime data ────────────────────────────────────────────────
+.hive/
+*.sqlite
+*.sqlite-journal
+
+# ── Docker (avoid recursive context) ───────────────────────────────────────
+docker-compose.yml
+docker-compose.*.yml
+docker/
+docker-data/
+Dockerfile.*
+
+# ── Test ────────────────────────────────────────────────────────────────────
+coverage/
+**/__snapshots__/
+**/*.test.ts
+**/*.spec.ts
+*.timestamp-*.mjs
+
+# ── Documentation (not needed in image) ─────────────────────────────────────
+docs/
+raw-docs/
+*.md
+!packages/*/README.md
+
+# ── CI/CD ───────────────────────────────────────────────────────────────────
+.github/
+.gitlab-ci.yml
+
+# ── AI tooling ──────────────────────────────────────────────────────────────
+.claude/
+.cursor/
+.copilot/
+.aider*
+.continue/
+CLAUDE.md
+PLAN.md
+
+# ── IDE / Editor ────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── OS files ────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Misc ────────────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+.cache/
+tmp/
+temp/
+*.tgz
+scripts/
+banner.svg
+logo.svg
+index.html
+.nojekyll

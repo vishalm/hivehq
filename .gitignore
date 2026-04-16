@@ -1,29 +1,90 @@
-.env
-.env.local
-.env.*.local
+# ── Dependencies ────────────────────────────────────────────────────────────
 node_modules/
-.DS_Store
+.pnp
+.pnp.js
+.yarn/install-state.gz
 
-# Build
+# ── Environment & Secrets ───────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+*.p12
+credentials.json
+secrets/
+
+# ── Build Artifacts ─────────────────────────────────────────────────────────
 dist/
+build/
 .next/
 out/
 *.tsbuildinfo
+*.js.map
+*.d.ts.map
 
-# Turbo
+# ── Turbo ───────────────────────────────────────────────────────────────────
 .turbo/
 
-# Test coverage
+# ── Test ────────────────────────────────────────────────────────────────────
 coverage/
+.nyc_output/
+*.timestamp-*.mjs
+__snapshots__/
 
-# Logs
+# ── HIVE Vault & Runtime ───────────────────────────────────────────────────
+.hive/
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+
+# ── Docker ──────────────────────────────────────────────────────────────────
+docker-data/
+pgdata/
+redisdata/
+ollamadata/
+
+# ── Logs ────────────────────────────────────────────────────────────────────
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pino-pretty.log
+lerna-debug.log*
 
-# IDE
+# ── OS ──────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+Desktop.ini
+._*
+.Spotlight-V100
+.Trashes
+
+# ── IDE / Editor ────────────────────────────────────────────────────────────
 .vscode/
 .idea/
 *.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
 
-# OS
-Thumbs.db
+# ── AI Tooling ──────────────────────────────────────────────────────────────
+.claude/
+.cursor/
+.copilot/
+.aider*
+.continue/
+
+# ── Misc ────────────────────────────────────────────────────────────────────
+*.tgz
+*.lock.old
+.cache/
+tmp/
+temp/
+.temp/
