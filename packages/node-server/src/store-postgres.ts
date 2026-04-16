@@ -23,8 +23,14 @@ interface PgQueryResult<T = unknown> {
   rowCount: number | null
 }
 
+interface PgClient {
+  query<T = unknown>(text: string, values?: unknown[]): Promise<PgQueryResult<T>>
+  release(): void
+}
+
 interface PgPool {
   query<T = unknown>(text: string, values?: unknown[]): Promise<PgQueryResult<T>>
+  connect(): Promise<PgClient>
   end(): Promise<void>
 }
 
@@ -91,28 +97,31 @@ export class PostgresEventStore implements EventStore {
     if (events.length === 0) return
     const pool = await this.getPool()
 
-    // Fetch the current tail to extend the hash chain atomically.
-    const tailRes = await pool.query<{ seq: number; event_hash: string }>(
-      'SELECT seq, event_hash FROM TTP_audit_chain WHERE region = $1 ORDER BY seq DESC LIMIT 1',
-      [this.config.region],
-    )
-    let tail: ChainLink | undefined
-    if (tailRes.rows[0]) {
-      tail = {
-        event: events[0]!, // placeholder — only seq/event_hash are read in appendChain
-        prev_hash: '',
-        event_hash: tailRes.rows[0].event_hash,
-        seq: tailRes.rows[0].seq,
-      }
-    }
-
-    // Transactional insert across both tables.
-    await pool.query('BEGIN')
+    // Use a dedicated client so BEGIN/INSERT/COMMIT all run on the same connection.
+    const client = await pool.connect()
     try {
+      // Fetch the current tail to extend the hash chain atomically.
+      // Cast bigint seq to integer — pg driver returns bigint as string by default.
+      const tailRes = await client.query<{ seq: number; event_hash: string }>(
+        'SELECT seq::integer, event_hash FROM TTP_audit_chain WHERE region = $1 ORDER BY seq DESC LIMIT 1',
+        [this.config.region],
+      )
+      let tail: ChainLink | undefined
+      if (tailRes.rows[0]) {
+        tail = {
+          event: events[0]!, // placeholder — only seq/event_hash are read in appendChain
+          prev_hash: '',
+          event_hash: tailRes.rows[0].event_hash.trim(), // char(64) may pad
+          seq: Number(tailRes.rows[0].seq), // ensure numeric
+        }
+      }
+
+      // Transactional insert across both tables.
+      await client.query('BEGIN')
       for (const event of events) {
         const link = appendChain(tail, event)
         tail = link
-        await pool.query(
+        await client.query(
           `INSERT INTO TTP_events
            (event_id, timestamp, observed_at, emitter_id, emitter_type, session_hash,
             provider, endpoint, model_hint, direction, payload_bytes, latency_ms,
@@ -120,7 +129,7 @@ export class PostgresEventStore implements EventStore {
             deployment, node_region, governance, raw)
            VALUES ($1, to_timestamp($2/1000.0), to_timestamp($3/1000.0), $4, $5, $6, $7,
                    $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)
-           ON CONFLICT (event_id) DO NOTHING`,
+           ON CONFLICT (event_id, timestamp) DO NOTHING`,
           [
             event.event_id,
             event.timestamp,
@@ -146,17 +155,19 @@ export class PostgresEventStore implements EventStore {
             canonicalize(event),
           ],
         )
-        await pool.query(
+        await client.query(
           `INSERT INTO TTP_audit_chain (region, seq, event_id, prev_hash, event_hash, inserted_at)
            VALUES ($1, $2, $3, $4, $5, now())
            ON CONFLICT (region, seq) DO NOTHING`,
           [this.config.region, link.seq, event.event_id, link.prev_hash, link.event_hash],
         )
       }
-      await pool.query('COMMIT')
+      await client.query('COMMIT')
     } catch (err) {
-      await pool.query('ROLLBACK')
+      await client.query('ROLLBACK').catch(() => {/* ignore rollback errors */})
       throw err
+    } finally {
+      client.release()
     }
   }
 

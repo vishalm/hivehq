@@ -34,7 +34,17 @@ coverage/
 __snapshots__/
 
 # ── HIVE Vault & Runtime ───────────────────────────────────────────────────
-.hive/
+# Ignore .hive/ except the data directory skeleton (.gitkeep at parent level)
+.hive/*
+!.hive/data/
+.hive/data/*
+!.hive/data/.gitkeep
+!.hive/data/postgres/
+!.hive/data/redis/
+!.hive/data/ollama/
+.hive/data/postgres/*
+.hive/data/redis/*
+.hive/data/ollama/*
 *.sqlite
 *.sqlite-journal
 *.sqlite-wal

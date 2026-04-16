@@ -1,38 +1,67 @@
 # ── HIVE Node Server ─────────────────────────────────────────────────────────
-# Multi-stage build for minimal production image.
+# Build with tsc, bundle with esbuild into a single file, run.
+# esbuild inlines all @hive/* workspace imports — no symlinks needed at runtime.
 
-FROM node:22-alpine AS base
+FROM node:22-alpine AS builder
 WORKDIR /app
 
-# ── Install dependencies ─────────────────────────────────────────────────────
-FROM base AS deps
-COPY package.json package-lock.json* ./
+# ── Install dependencies ────────────────────────────────────────────────────
+COPY package.json package-lock.json* tsconfig.base.json ./
 COPY packages/shared/package.json packages/shared/
 COPY packages/policy/package.json packages/policy/
+COPY packages/intelligence/package.json packages/intelligence/
 COPY packages/node-server/package.json packages/node-server/
-RUN npm ci --workspace=packages/shared --workspace=packages/policy --workspace=packages/node-server --ignore-scripts 2>/dev/null || npm install --workspace=packages/shared --workspace=packages/policy --workspace=packages/node-server
+RUN npm ci --workspace=packages/shared \
+           --workspace=packages/policy \
+           --workspace=packages/intelligence \
+           --workspace=packages/node-server \
+           --ignore-scripts 2>/dev/null \
+    || npm install --workspace=packages/shared \
+                   --workspace=packages/policy \
+                   --workspace=packages/intelligence \
+                   --workspace=packages/node-server
 
-# ── Build ────────────────────────────────────────────────────────────────────
-FROM deps AS builder
-COPY tsconfig.base.json ./
-COPY packages/shared/ packages/shared/
-COPY packages/policy/ packages/policy/
-COPY packages/node-server/ packages/node-server/
+# ── Copy source & compile TypeScript ─────────────────────────────────────────
+COPY packages/shared/src packages/shared/src
+COPY packages/shared/tsconfig.json packages/shared/
+COPY packages/policy/src packages/policy/src
+COPY packages/policy/tsconfig.json packages/policy/
+COPY packages/intelligence/src packages/intelligence/src
+COPY packages/intelligence/tsconfig.json packages/intelligence/
+COPY packages/node-server/src packages/node-server/src
+COPY packages/node-server/tsconfig.json packages/node-server/
+
 RUN npx tsc -p packages/shared/tsconfig.json && \
     npx tsc -p packages/policy/tsconfig.json && \
+    npx tsc -p packages/intelligence/tsconfig.json && \
     npx tsc -p packages/node-server/tsconfig.json
 
-# ── Production ───────────────────────────────────────────────────────────────
-FROM base AS runner
-ENV NODE_ENV=production
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/packages/shared/dist ./packages/shared/dist
-COPY --from=builder /app/packages/shared/package.json ./packages/shared/
-COPY --from=builder /app/packages/policy/dist ./packages/policy/dist
-COPY --from=builder /app/packages/policy/package.json ./packages/policy/
-COPY --from=builder /app/packages/node-server/dist ./packages/node-server/dist
-COPY --from=builder /app/packages/node-server/package.json ./packages/node-server/
-COPY package.json ./
+# ── Bundle with esbuild — inlines all @hive/* packages ──────────────────────
+RUN npx esbuild packages/node-server/dist/cli.js \
+      --bundle \
+      --platform=node \
+      --format=esm \
+      --target=node22 \
+      --outfile=bundle.mjs \
+      --external:express \
+      --external:pino \
+      --external:pino-http \
+      --external:pg \
+      --external:zod \
+      --banner:js="import{createRequire}from'module';const require=createRequire(import.meta.url);"
 
+# ── Minimal production image ─────────────────────────────────────────────────
+FROM node:22-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY --from=builder /app/bundle.mjs ./bundle.mjs
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./
+
+# ConfigStore writes to .hive/ — create it writable for non-root user
+RUN mkdir -p .hive && chown node:node .hive
+
+USER node
 EXPOSE 3000
-CMD ["node", "packages/node-server/dist/cli.js"]
+CMD ["node", "bundle.mjs"]

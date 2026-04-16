@@ -1,80 +1,93 @@
-version: '3.9'
-
-# HIVE Node Hub — full on-prem stack.
-#   docker-compose -f docker/node-compose.yml up -d
+# ── HIVE Node Hub — full on-prem stack ────────────────────────────────────────
+#
+#   docker compose -f docker/node-compose.yml up -d
+#
 #   Dashboard: http://localhost:${DASHBOARD_PORT:-3001}
 #   Node API:  http://localhost:${NODE_PORT:-3000}
+#
+# Persistent data lives on disk at .hive/data/{postgres,redis}
+# No Docker-managed volumes — survives `docker compose down`.
+
+x-common: &common
+  restart: unless-stopped
+  networks:
+    - hive
 
 services:
   postgres:
-    image: timescale/timescaledb:2.17.2-pg16
+    image: timescale/timescaledb:latest-pg16
+    <<: *common
     container_name: hive-postgres
-    restart: unless-stopped
     environment:
       POSTGRES_DB: hive_node
       POSTGRES_USER: hive
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hive-dev-password}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hive_dev_password}
+      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - hive-postgres-data:/var/lib/postgresql/data
+      - ../.hive/data/postgres:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U hive -d hive_node']
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: ["CMD-SHELL", "pg_isready -U hive -d hive_node"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   redis:
     image: redis:7-alpine
+    <<: *common
     container_name: hive-redis
-    restart: unless-stopped
     volumes:
-      - hive-redis-data:/data
+      - ../.hive/data/redis:/data
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
-      interval: 10s
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
       timeout: 3s
-      retries: 5
+      retries: 10
 
   node-server:
     build:
       context: ..
       dockerfile: docker/Dockerfile.node-server
+    <<: *common
     container_name: hive-node-server
-    restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
     environment:
-      NODE_PORT: 3000
-      NODE_DATABASE_URL: postgres://hive:${POSTGRES_PASSWORD:-hive-dev-password}@postgres:5432/hive_node
+      NODE_PORT: "3000"
+      NODE_DATABASE_URL: postgresql://hive:${POSTGRES_PASSWORD:-hive_dev_password}@postgres:5432/hive_node
       NODE_REDIS_URL: redis://redis:6379
       NODE_REGION: ${NODE_REGION:-AE}
-      NODE_ID: ${NODE_ID:-}
-      NODE_INGEST_TOKEN: ${NODE_INGEST_TOKEN:-}
+      NODE_ID: ${NODE_ID:-hive-node-01}
+      NODE_INGEST_TOKEN: ${NODE_INGEST_TOKEN:-hive-dev-token-2026}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
     ports:
-      - '${NODE_PORT:-3000}:3000'
+      - "${NODE_PORT:-3000}:3000"
     healthcheck:
-      test: ['CMD', 'wget', '-qO-', 'http://localhost:3000/health']
-      interval: 15s
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>{if(!r.ok)throw 1}).catch(()=>process.exit(1))"]
+      interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 15s
 
   dashboard:
     build:
       context: ..
       dockerfile: docker/Dockerfile.dashboard
+    <<: *common
     container_name: hive-dashboard
-    restart: unless-stopped
     depends_on:
       node-server:
         condition: service_healthy
     environment:
-      DASHBOARD_PORT: 3001
+      HOSTNAME: "0.0.0.0"
+      PORT: "3001"
       DASHBOARD_NODE_URL: http://node-server:3000
+      NEXT_PUBLIC_NODE_URL: http://localhost:${NODE_PORT:-3000}
     ports:
-      - '${DASHBOARD_PORT:-3001}:3001'
+      - "${DASHBOARD_PORT:-3001}:3001"
 
-volumes:
-  hive-postgres-data:
-  hive-redis-data:
+networks:
+  hive:
+    driver: bridge

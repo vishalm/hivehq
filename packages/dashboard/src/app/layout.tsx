@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import ChatWidget from './chat-widget'
 
 export const metadata: Metadata = {
   title: 'HIVE — The Global AI Consumption Network',
@@ -17,11 +18,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <a href="/">Dashboard</a>
               <a href="/intelligence">Intelligence</a>
               <a href="/setup">Setup</a>
+              <a href="/settings">Settings</a>
             </nav>
             <span className="tag">pre-alpha · Phase 2</span>
           </div>
         </header>
         <main className="container">{children}</main>
+        <ChatWidget />
       </body>
     </html>
   )

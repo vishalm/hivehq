@@ -66,7 +66,7 @@ function SvgIcon({ icon, size = 24 }: { icon: string; size?: number }) {
 }
 
 const NODE_URL = typeof window !== 'undefined'
-  ? (window.location.port === '3001' ? 'http://localhost:3000' : window.location.origin)
+  ? (process.env['NEXT_PUBLIC_NODE_URL'] ?? (window.location.port === '3001' ? 'http://localhost:3000' : window.location.origin))
   : 'http://localhost:3000'
 
 // ── Component ───────────────────────────────────────────────────────────────

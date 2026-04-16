@@ -430,28 +430,32 @@ import { openai } from '@hive/connector-openai'
 hive/
 ├── packages/
 │   ├── shared/             ← TTP schema, signatures, audit chain, canonical JSON
+│   ├── intelligence/       ← Cost modeling, anomaly detection, forecasting, clustering
 │   ├── vault/              ← libsodium-wrappers client-side encryption
-│   ├── connector-sdk/      ← @hive/connector — TTPCollector + FetchHook base
+│   ├── connector/          ← @hive/connector — TTPCollector + FetchHook base
 │   ├── policy/             ← @hive/policy — ABAC engine + built-in residency/retention rules
 │   ├── otel-bridge/        ← @hive/otel-bridge — OpenTelemetry gen-AI spans → TTP
 │   ├── scout/              ← Node.js agent (batch + sign + ship)
 │   ├── node-server/        ← Express + Postgres/Timescale + Prometheus /metrics
-│   └── dashboard/          ← Next.js + recharts — shadow-AI, top providers, governance
+│   └── dashboard/          ← Next.js + Recharts — intelligence, governance, setup wizard
 ├── connectors/
-│   ├── openai/             ← @hive/connector-openai
 │   ├── anthropic/          ← @hive/connector-anthropic
+│   ├── openai/             ← @hive/connector-openai
 │   ├── google/             ← @hive/connector-google (Gemini + Vertex)
 │   ├── azure-openai/       ← @hive/connector-azure-openai
 │   ├── bedrock/            ← @hive/connector-bedrock
-│   └── mistral/            ← @hive/connector-mistral
+│   ├── mistral/            ← @hive/connector-mistral
+│   └── ollama/             ← @hive/connector-ollama (local LLM)
 ├── docs/
-│   └── TTP_SPEC.md        ← Protocol spec v0.1 (MIT, no CLA)
-├── docker/
-│   ├── node-compose.yml    ← Full on-prem stack (one command)
-│   └── scout-only.yml      ← Just the agent
-├── .github/workflows/
-│   ├── ci.yml              ← build + covenant guardrails
-└── package.json            ← Turborepo · 19 packages, 48 tests, 33 green tasks
+│   └── TTP_SPEC.md         ← Protocol spec v0.1 (MIT, no CLA)
+├── .env.local               ← Local dev config (localhost URLs)
+├── .env.docker              ← Docker Compose config (network names)
+├── .env.example             ← Full reference of all variables
+├── docker-compose.yml       ← Full stack: Node + Dashboard + Postgres + Redis + Ollama
+├── Dockerfile.node          ← Multi-stage Node server image
+├── Dockerfile.dashboard     ← Multi-stage Next.js standalone image
+├── QUICKSTART.md            ← Setup guide with diagrams
+└── package.json             ← Turborepo · npm workspaces · 9 packages + 7 connectors
 ```
 
 ### What ships today
@@ -501,30 +505,43 @@ hive/
 
 ---
 
-## Getting Started (Phase 1 Preview)
+## Quick Start
+
+Two ways to run HIVE — pick one:
+
+### Docker (recommended)
 
 ```bash
-# Install Scout (macOS — coming Phase 1)
-brew install hivehq/tap/scout
-
-# Or via npm global
-npm install -g @hive/scout
-
-# Drop in the SDK connector
-npm install @hive/connector-openai
-
-# Your existing OpenAI code — unchanged
-import { openai } from '@hive/connector-openai'
-const response = await openai.chat.completions.create({ ... })
-# Telemetry flows. Nothing else changed.
+git clone https://github.com/vishalm/hivehq.git && cd hivehq
+npm run docker:up
 ```
 
+Opens: Dashboard at `http://localhost:3001`, Node API at `http://localhost:3000`
+
+### Local Development
+
 ```bash
-# Self-host a Node Hub — one command
-curl -O https://hive.io/install/node-compose.yml
-docker-compose -f node-compose.yml up -d
-# → Dashboard at http://localhost:3001
-# → Share enrollment URL with your team
+git clone https://github.com/vishalm/hivehq.git && cd hivehq
+npm install
+npm run local:setup    # copies .env.local -> .env
+npm run dev
+```
+
+Requires: Node 20+, PostgreSQL 16, Redis 7 running locally.
+
+See **[QUICKSTART.md](./QUICKSTART.md)** for the full guide with architecture diagrams, API examples, and troubleshooting.
+
+### Drop-in Connector
+
+```typescript
+// Before — your existing code
+import OpenAI from 'openai'
+
+// After — zero behaviour change, full telemetry
+import { openai } from '@hive/connector-openai'
+
+const response = await openai.chat.completions.create({ ... })
+// Telemetry flows. Nothing else changed.
 ```
 
 ---
@@ -533,8 +550,9 @@ docker-compose -f node-compose.yml up -d
 
 | Document | What it covers |
 |----------|---------------|
+| [**QUICKSTART.md**](./QUICKSTART.md) | Setup guide · Docker & local · API examples · Troubleshooting |
 | [**PLAN.md**](./PLAN.md) | North star · Full strategy · Build sequence · Risk matrix |
-| [**Protocol — TTP**](./docs/protocol.md) | Open wire standard · TTPEvent schema · Governance layer · SDK |
+| [**Protocol — TTP**](./docs/TTP_SPEC.md) | Open wire standard · TTPEvent schema · Governance layer |
 | [Architecture](./docs/architecture.md) | Scout → Node → Hive system design · Mermaid diagrams |
 | [Data Model](./docs/data-model.md) | Telemetry covenant · DB schema · "never collect" manifest |
 | [Identity](./docs/identity.md) | CIAM · TokenPrint · Agent economy · Social layer |

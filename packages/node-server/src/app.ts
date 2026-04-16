@@ -59,6 +59,16 @@ export function buildApp(deps: AppDeps): AppContext {
 
   const app = express()
   app.disable('x-powered-by')
+
+  // ── CORS — allow dashboard (different port) to reach the API ──────────────
+  app.use((_req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    if (_req.method === 'OPTIONS') { res.sendStatus(204); return }
+    next()
+  })
+
   app.use(express.json({ limit: '2mb' }))
   app.use(pinoHttp({ logger }))
 

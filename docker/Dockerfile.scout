@@ -1,25 +1,52 @@
-FROM node:22-alpine AS build
+# ── HIVE Scout (docker/ variant) ──────────────────────────────────────────────
+# Used by docker/scout-only.yml (context: ..)
+#
+# Packages: shared → vault → connector-sdk → connectors → scout
+
+FROM node:22-alpine
 WORKDIR /app
-COPY package.json package-lock.json* turbo.json tsconfig.base.json ./
+
+# ── Install ALL dependencies ────────────────────────────────────────────────
+COPY package.json package-lock.json* tsconfig.base.json ./
 COPY packages/shared/package.json packages/shared/
 COPY packages/vault/package.json packages/vault/
 COPY packages/connector-sdk/package.json packages/connector-sdk/
 COPY packages/scout/package.json packages/scout/
 COPY connectors/openai/package.json connectors/openai/
 COPY connectors/anthropic/package.json connectors/anthropic/
+COPY connectors/ollama/package.json connectors/ollama/
 RUN npm install --workspaces --include-workspace-root
-COPY packages packages
-COPY connectors connectors
-RUN npm --workspace @hive/shared run build \
- && npm --workspace @hive/vault run build \
- && npm --workspace @hive/connector run build \
- && npm --workspace @hive/connector-openai run build \
- && npm --workspace @hive/connector-anthropic run build \
- && npm --workspace @hive/scout run build
 
-FROM node:22-alpine AS runtime
-WORKDIR /app
+# ── Copy source & compile ───────────────────────────────────────────────────
+COPY packages/shared/src packages/shared/src
+COPY packages/shared/tsconfig.json packages/shared/
+COPY packages/vault/src packages/vault/src
+COPY packages/vault/tsconfig.json packages/vault/
+COPY packages/connector-sdk/src packages/connector-sdk/src
+COPY packages/connector-sdk/tsconfig.json packages/connector-sdk/
+COPY connectors/openai/src connectors/openai/src
+COPY connectors/openai/tsconfig.json connectors/openai/
+COPY connectors/anthropic/src connectors/anthropic/src
+COPY connectors/anthropic/tsconfig.json connectors/anthropic/
+COPY connectors/ollama/src connectors/ollama/src
+COPY connectors/ollama/tsconfig.json connectors/ollama/
+COPY packages/scout/src packages/scout/src
+COPY packages/scout/tsconfig.json packages/scout/
+
+RUN npx tsc -p packages/shared/tsconfig.json && \
+    npx tsc -p packages/vault/tsconfig.json && \
+    npx tsc -p packages/connector-sdk/tsconfig.json && \
+    npx tsc -p connectors/openai/tsconfig.json && \
+    npx tsc -p connectors/anthropic/tsconfig.json && \
+    npx tsc -p connectors/ollama/tsconfig.json && \
+    npx tsc -p packages/scout/tsconfig.json
+
+# ── Strip source (keep dist + node_modules intact) ──────────────────────────
+# NOTE: Do NOT run `npm prune --production` — it destroys workspace symlinks.
+RUN rm -rf packages/*/src connectors/*/src \
+           packages/*/tsconfig.json connectors/*/tsconfig.json \
+           tsconfig.base.json
+
 ENV NODE_ENV=production
-COPY --from=build /app ./
 USER node
 CMD ["node", "packages/scout/dist/cli.js", "start"]

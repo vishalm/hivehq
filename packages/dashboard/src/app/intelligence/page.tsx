@@ -1,6 +1,6 @@
 import IntelligenceClient from './intelligence-client'
 
-const NODE_URL = process.env['HIVE_NODE_URL'] ?? 'http://localhost:3000'
+const NODE_URL = process.env['DASHBOARD_NODE_URL'] ?? 'http://localhost:3000'
 
 async function fetchJSON<T>(path: string): Promise<T | null> {
   try {

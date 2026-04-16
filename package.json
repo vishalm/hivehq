@@ -17,6 +17,13 @@
     "typecheck": "turbo run typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\" --ignore-path .gitignore",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md}\" --ignore-path .gitignore",
+    "seed": "node scripts/seed-events.mjs",
+    "seed:500": "node scripts/seed-events.mjs 500",
+    "proxy:ollama": "node scripts/ollama-proxy.mjs",
+    "docker:up": "docker compose --env-file .env.docker up --build -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "local:setup": "cp -n .env.local .env 2>/dev/null; echo 'Ready — run: npm run dev'",
     "clean": "turbo run clean && rm -rf node_modules",
     "postinstall": "node scripts/fix-libsodium.mjs"
   },

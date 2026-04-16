@@ -14,6 +14,7 @@ import {
 } from '@hive/shared'
 
 const NODE_URL = process.env.NODE_URL ?? 'http://localhost:3000'
+const TOKEN = process.env.NODE_INGEST_TOKEN ?? 'hive-dev-token-2026'
 const COUNT = parseInt(process.argv[2] ?? '200', 10)
 
 // ── Realistic distribution ──────────────────────────────────────────────────
@@ -26,14 +27,16 @@ const PROVIDERS = [
   { provider: 'bedrock',   weight: 5,  models: ['anthropic.claude-3-sonnet', 'amazon.titan-text-express'], endpoint: '/model/invoke' },
   { provider: 'azure_openai', weight: 5, models: ['gpt-4-turbo', 'gpt-35-turbo'], endpoint: '/openai/deployments/chat/completions' },
   // Shadow AI — unsanctioned custom provider
+  { provider: 'ollama',   weight: 10, models: ['llama3.1:8b', 'mistral:7b', 'codellama:13b', 'gemma2:9b'], endpoint: '/api/chat' },
   { provider: 'custom:internal-llama', weight: 3, models: ['llama-3.1-70b', 'llama-3.1-8b'], endpoint: '/v1/completions' },
   { provider: 'custom:deepseek', weight: 2, models: ['deepseek-coder-v2', 'deepseek-chat'], endpoint: '/v1/chat/completions' },
 ]
 
-const DEPTS = ['engineering', 'product', 'data-science', 'marketing', 'legal', null]
-const PROJECTS = ['copilot-assist', 'doc-gen', 'code-review', 'customer-support', 'internal-search', null]
+// NOTE: undefined (not null!) for optional fields — Zod .optional() rejects null.
+const DEPTS = ['engineering', 'product', 'data-science', 'marketing', 'legal', undefined]
+const PROJECTS = ['copilot-assist', 'doc-gen', 'code-review', 'customer-support', 'internal-search', undefined]
 const ENVS = ['production', 'staging', 'development']
-const USE_CASES = ['chat', 'code-completion', 'summarisation', 'embedding', 'classification', null]
+const USE_CASES = ['chat', 'code-completion', 'summarisation', 'embedding', 'classification', undefined]
 
 function weightedPick(items) {
   const total = items.reduce((s, i) => s + i.weight, 0)
@@ -99,12 +102,36 @@ for (let i = 0; i < COUNT; i++) {
     env_tag: pick(ENVS),
     use_case_tag: pick(USE_CASES),
     deployment: 'node',
+    node_region: 'AE',
     governance: defaultUAEGovernance(),
   })
 }
 
 // Sort by timestamp so the time-series looks natural
 events.sort((a, b) => a.timestamp - b.timestamp)
+
+// ── Wait for Node server to be ready ────────────────────────────────────────
+
+console.log(`Connecting to ${NODE_URL} ...`)
+for (let attempt = 1; attempt <= 30; attempt++) {
+  try {
+    const res = await fetch(`${NODE_URL}/health`, { signal: AbortSignal.timeout(2000) })
+    if (res.ok) {
+      const health = await res.json()
+      console.log(`Node server online (${health.region}, ${health.events_ingested} events)\n`)
+      break
+    }
+  } catch {
+    // not ready yet
+  }
+  if (attempt === 30) {
+    console.error('Node server not reachable after 30 attempts. Is it running?')
+    console.error(`  Try: curl ${NODE_URL}/health`)
+    process.exit(1)
+  }
+  process.stdout.write(`  waiting... (attempt ${attempt}/30)\r`)
+  await new Promise(r => setTimeout(r, 2000))
+}
 
 // ── Send in batches of 50 ───────────────────────────────────────────────────
 
@@ -120,17 +147,30 @@ for (let i = 0; i < events.length; i += BATCH_SIZE) {
     events: batch,
   }
 
-  const res = await fetch(`${NODE_URL}/api/v1/ttp/ingest`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  })
+  try {
+    const res = await fetch(`${NODE_URL}/api/v1/ttp/ingest`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${TOKEN}`,
+      },
+      body: JSON.stringify(body),
+    })
 
-  const result = await res.json()
-  accepted += result.accepted ?? 0
-  rejected += result.rejected ?? 0
+    if (!res.ok) {
+      const text = await res.text()
+      console.error(`  batch ${Math.floor(i / BATCH_SIZE) + 1}: HTTP ${res.status} — ${text}`)
+      continue
+    }
 
-  process.stdout.write(`  batch ${Math.floor(i / BATCH_SIZE) + 1}: ${result.accepted} accepted, ${result.rejected} rejected\n`)
+    const result = await res.json()
+    accepted += result.accepted ?? 0
+    rejected += result.rejected ?? 0
+
+    process.stdout.write(`  batch ${Math.floor(i / BATCH_SIZE) + 1}: ${result.accepted} accepted, ${result.rejected} rejected\n`)
+  } catch (err) {
+    console.error(`  batch ${Math.floor(i / BATCH_SIZE) + 1}: FAILED — ${err.message}`)
+  }
 }
 
 console.log(`\nDone. ${accepted} accepted, ${rejected} rejected out of ${COUNT} events.`)

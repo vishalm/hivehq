@@ -1,9 +1,10 @@
-version: '3.9'
-
-# HIVE Scout — agent only. Points at an existing Node Hub.
-#   TTP_ENDPOINT=https://node.your-org.internal/api/v1/TTP/ingest \
+# ── HIVE Scout — agent only ───────────────────────────────────────────────────
+#
+# Points at an existing Node Hub. No local storage needed.
+#
+#   TTP_ENDPOINT=https://node.your-org.internal/api/v1/ttp/ingest \
 #   TTP_TOKEN=<scout-token> \
-#   docker-compose -f docker/scout-only.yml up -d
+#   docker compose -f docker/scout-only.yml up -d
 
 services:
   scout:
@@ -19,7 +20,7 @@ services:
       HIVE_DATA_RESIDENCY: ${HIVE_DATA_RESIDENCY:-AE}
       HIVE_RETENTION_DAYS: ${HIVE_RETENTION_DAYS:-90}
       HIVE_REGULATION_TAGS: ${HIVE_REGULATION_TAGS:-UAE_AI_LAW,GDPR}
+      HIVE_CONNECTORS: ${HIVE_CONNECTORS:-anthropic,openai,ollama}
       HIVE_DEPT_TAG: ${HIVE_DEPT_TAG:-}
       HIVE_PROJECT_TAG: ${HIVE_PROJECT_TAG:-}
       HIVE_NODE_REGION: ${HIVE_NODE_REGION:-AE}
-    command: ['node', 'packages/scout/dist/cli.js', 'start']
