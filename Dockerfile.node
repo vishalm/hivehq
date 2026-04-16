@@ -48,6 +48,8 @@ RUN npx esbuild packages/node-server/dist/cli.js \
       --external:pino-http \
       --external:pg \
       --external:zod \
+      --external:swagger-ui-express \
+      --external:swagger-ui-dist \
       --banner:js="import{createRequire}from'module';const require=createRequire(import.meta.url);"
 
 # ── Minimal production image ─────────────────────────────────────────────────

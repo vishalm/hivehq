@@ -28,6 +28,7 @@ import {
   recordCovenantViolation,
   renderMetrics,
 } from './metrics.js'
+import { mountSwagger } from './swagger.js'
 
 export interface AppDeps {
   env: NodeEnv
@@ -85,6 +86,9 @@ export function buildApp(deps: AppDeps): AppContext {
     next(err)
   })
   app.use(pinoHttp({ logger }))
+
+  // ── Swagger UI at /api/docs ──────────────────────────────────────────────
+  mountSwagger(app)
 
   // ── Health check — governance blocker B3 ──────────────────────────────────
   app.get('/health', async (_req, res) => {

@@ -38,7 +38,7 @@ export default function LoginClient() {
     // Authentication not yet implemented — placeholder for Phase 4
     setLoading(true)
     setTimeout(() => {
-      window.location.href = '/'
+      window.location.href = '/dashboard'
     }, 800)
   }
 
@@ -248,7 +248,7 @@ export default function LoginClient() {
 
         {/* Back to landing */}
         <p style={{ textAlign: 'center', marginTop: 12, fontSize: 12 }}>
-          <a href="/landing" style={{ color: 'rgba(255,255,255,0.25)', textDecoration: 'none' }}>
+          <a href="/" style={{ color: 'rgba(255,255,255,0.25)', textDecoration: 'none' }}>
             Back to home
           </a>
         </p>

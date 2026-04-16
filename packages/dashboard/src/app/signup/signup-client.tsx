@@ -38,7 +38,7 @@ export default function SignupClient() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    setTimeout(() => { window.location.href = '/' }, 800)
+    setTimeout(() => { window.location.href = '/dashboard' }, 800)
   }
 
   const inputStyle: React.CSSProperties = {
@@ -138,7 +138,7 @@ export default function SignupClient() {
           Already have an account? <a href="/login" style={{ color: '#ffd60a', textDecoration: 'none', fontWeight: 500 }}>Sign in</a>
         </p>
         <p style={{ textAlign: 'center', marginTop: 12, fontSize: 12 }}>
-          <a href="/landing" style={{ color: 'rgba(255,255,255,0.25)', textDecoration: 'none' }}>Back to home</a>
+          <a href="/" style={{ color: 'rgba(255,255,255,0.25)', textDecoration: 'none' }}>Back to home</a>
         </p>
       </div>
     </div>

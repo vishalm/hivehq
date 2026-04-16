@@ -775,7 +775,7 @@ export default function LandingClient() {
       {/* ── Sticky Navigation ─────────────────────────────────────────── */}
       <nav style={navStyle}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
-          <a href="/landing" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+          <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
             <HiveLogoLarge size={28} />
             <span style={{ fontWeight: 700, fontSize: 17, letterSpacing: 2, color: '#ffd60a', textShadow: '0 0 24px rgba(255,214,10,0.3)' }}>HIVE</span>
           </a>

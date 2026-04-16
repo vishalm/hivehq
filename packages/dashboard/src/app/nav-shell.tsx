@@ -87,7 +87,7 @@ function HiveLogo({ size = 28 }: { size?: number }) {
 /* ── SVG Icons for nav ─────────────────────────────────────────────────── */
 const navItems = [
   {
-    href: '/',
+    href: '/dashboard',
     label: 'Dashboard',
     icon: (
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -139,12 +139,12 @@ export default function NavShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
 
   /* Landing page and auth pages render their own chrome */
-  if (pathname === '/landing' || pathname === '/login' || pathname === '/signup') {
+  if (pathname === '/' || pathname === '/landing' || pathname === '/login' || pathname === '/signup') {
     return <>{children}</>
   }
 
   const isActive = (href: string) => {
-    if (href === '/') return pathname === '/'
+    if (href === '/dashboard') return pathname === '/dashboard'
     return pathname.startsWith(href)
   }
 
@@ -152,7 +152,7 @@ export default function NavShell({ children }: { children: React.ReactNode }) {
     <>
       <header className="site-header" role="banner">
         <div className="container">
-          <a href="/" className="brand" aria-label="HIVE Home" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
+          <a href="/dashboard" className="brand" aria-label="HIVE Home" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
             <HiveLogo size={28} />
             <span>HIVE</span>
           </a>
