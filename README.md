@@ -13,7 +13,7 @@
 <br/>
 
 [![Status](https://img.shields.io/badge/status-pre--alpha-FF9500?style=flat-square)](https://github.com/vishalm/hivehq)
-[![Phase](https://img.shields.io/badge/phase-0%20%E2%80%93%20discovery-5856D6?style=flat-square)](./docs/build-sequence.md)
+[![Phase](https://img.shields.io/badge/phase-4%20%E2%80%93%20auth%20%2B%20RBAC-5856D6?style=flat-square)](./docs/build-sequence.md)
 [![License](https://img.shields.io/badge/license-MIT-34C759?style=flat-square)](LICENSE)
 [![Stack](https://img.shields.io/badge/stack-TypeScript%20%2F%20Node.js-007AFF?style=flat-square)](./docs/architecture.md)
 [![Docs](https://img.shields.io/badge/docs-PLAN.md-1D1D1F?style=flat-square)](./PLAN.md)
@@ -433,11 +433,12 @@ hive/
 │   ├── intelligence/       ← Cost modeling, anomaly detection, forecasting, clustering
 │   ├── vault/              ← libsodium-wrappers client-side encryption
 │   ├── connector/          ← @hive/connector — TTPCollector + FetchHook base
+│   ├── auth/               ← @hive/auth — Keycloak OIDC, RBAC middleware, tenants, API keys, audit
 │   ├── policy/             ← @hive/policy — ABAC engine + built-in residency/retention rules
 │   ├── otel-bridge/        ← @hive/otel-bridge — OpenTelemetry gen-AI spans → TTP
 │   ├── scout/              ← Node.js agent (batch + sign + ship)
-│   ├── node-server/        ← Express + Postgres/Timescale + Prometheus /metrics
-│   └── dashboard/          ← Next.js + Recharts — intelligence, governance, setup wizard
+│   ├── node-server/        ← Express + Postgres/Timescale + Auth + Prometheus /metrics
+│   └── dashboard/          ← Next.js + Recharts + OIDC login + Admin UI
 ├── connectors/
 │   ├── anthropic/          ← @hive/connector-anthropic
 │   ├── openai/             ← @hive/connector-openai
@@ -554,8 +555,9 @@ const response = await openai.chat.completions.create({ ... })
 
 | Document | What it covers |
 |----------|---------------|
-| [**QUICKSTART.md**](./QUICKSTART.md) | Setup guide · Docker & local · API examples · Troubleshooting |
+| [**QUICKSTART.md**](./QUICKSTART.md) | Full setup guide · Docker & local · Auth & RBAC · API examples · Troubleshooting |
 | [**PLAN.md**](./PLAN.md) | North star · Full strategy · Build sequence · Risk matrix |
+| [**AUTH_PLAN.md**](./AUTH_PLAN.md) | Keycloak OIDC/SSO · RBAC roles · Multi-tenant hierarchy · API keys · Audit log |
 | [**Protocol — TTP**](./docs/TTP_SPEC.md) | Open wire standard · TTPEvent schema · Governance layer |
 | [Architecture](./docs/architecture.md) | Scout → Node → Hive system design · Mermaid diagrams |
 | [Data Model](./docs/data-model.md) | Telemetry covenant · DB schema · "never collect" manifest |
@@ -580,9 +582,9 @@ In Arabic: **خلية** (Khaliya) — it sounds powerful.
 
 <div align="center">
 
-**HIVE is pre-alpha. Phase 0 customer discovery is underway.**
+**HIVE is pre-alpha. Phase 4 — auth, RBAC, and multi-tenant isolation complete.**
 
-[ Read the Plan](./PLAN.md) · [ Architecture](./docs/architecture.md) · [ Business Model](./docs/business-model.md)
+[ Quick Start](./QUICKSTART.md) · [ Read the Plan](./PLAN.md) · [ Architecture](./docs/architecture.md) · [ Business Model](./docs/business-model.md)
 
 <br/>
 
