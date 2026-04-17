@@ -23,6 +23,13 @@ const sidebars = {
     },
     {
       type: 'category',
+      label: 'Authentication',
+      items: [
+        'roadmap/authentication',
+      ],
+    },
+    {
+      type: 'category',
       label: 'Connectors',
       items: [
         'connectors/overview',

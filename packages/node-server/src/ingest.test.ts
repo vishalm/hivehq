@@ -1,3 +1,6 @@
+// Auth bypass for tests
+process.env['HIVE_AUTH_MODE'] = 'none'
+
 import { describe, expect, it } from 'vitest'
 import request from 'supertest'
 import {
@@ -368,7 +371,9 @@ describe('TTP Ingest Endpoint', () => {
     })
 
     it('rejects request without token when required', async () => {
-      const { app } = buildApp({ env: buildTestEnv({ NODE_INGEST_TOKEN: 'secret-xyz' }) })
+      const prev = process.env['HIVE_AUTH_MODE']
+      process.env['HIVE_AUTH_MODE'] = 'keycloak'
+      const { app } = buildApp({ env: buildTestEnv({ NODE_INGEST_TOKEN: 'secret-xyz-1234567890' }) })
       const batch = {
         batch_id: 'ffffffff-ffff-4fff-ffff-ffffffffffff',
         sent_at: Date.now(),
@@ -378,10 +383,13 @@ describe('TTP Ingest Endpoint', () => {
       const res = await request(app).post('/api/v1/ttp/ingest').send(batch)
 
       expect(res.status).toBe(401)
+      process.env['HIVE_AUTH_MODE'] = prev
     })
 
     it('rejects request with wrong token', async () => {
-      const { app } = buildApp({ env: buildTestEnv({ NODE_INGEST_TOKEN: 'secret-correct' }) })
+      const prev = process.env['HIVE_AUTH_MODE']
+      process.env['HIVE_AUTH_MODE'] = 'keycloak'
+      const { app } = buildApp({ env: buildTestEnv({ NODE_INGEST_TOKEN: 'secret-correct-1234567890' }) })
       const batch = {
         batch_id: '00000000-0000-4000-0000-000000000000',
         sent_at: Date.now(),
@@ -394,6 +402,7 @@ describe('TTP Ingest Endpoint', () => {
         .send(batch)
 
       expect(res.status).toBe(401)
+      process.env['HIVE_AUTH_MODE'] = prev
     })
   })
 })

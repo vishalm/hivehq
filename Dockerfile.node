@@ -10,15 +10,18 @@ COPY package.json package-lock.json* tsconfig.base.json ./
 COPY packages/shared/package.json packages/shared/
 COPY packages/policy/package.json packages/policy/
 COPY packages/intelligence/package.json packages/intelligence/
+COPY packages/auth/package.json packages/auth/
 COPY packages/node-server/package.json packages/node-server/
 RUN npm ci --workspace=packages/shared \
            --workspace=packages/policy \
            --workspace=packages/intelligence \
+           --workspace=packages/auth \
            --workspace=packages/node-server \
            --ignore-scripts 2>/dev/null \
     || npm install --workspace=packages/shared \
                    --workspace=packages/policy \
                    --workspace=packages/intelligence \
+                   --workspace=packages/auth \
                    --workspace=packages/node-server
 
 # ── Copy source & compile TypeScript ─────────────────────────────────────────
@@ -28,12 +31,15 @@ COPY packages/policy/src packages/policy/src
 COPY packages/policy/tsconfig.json packages/policy/
 COPY packages/intelligence/src packages/intelligence/src
 COPY packages/intelligence/tsconfig.json packages/intelligence/
+COPY packages/auth/src packages/auth/src
+COPY packages/auth/tsconfig.json packages/auth/
 COPY packages/node-server/src packages/node-server/src
 COPY packages/node-server/tsconfig.json packages/node-server/
 
 RUN npx tsc -p packages/shared/tsconfig.json && \
     npx tsc -p packages/policy/tsconfig.json && \
     npx tsc -p packages/intelligence/tsconfig.json && \
+    npx tsc -p packages/auth/tsconfig.json && \
     npx tsc -p packages/node-server/tsconfig.json
 
 # ── Bundle with esbuild — inlines all @hive/* packages ──────────────────────

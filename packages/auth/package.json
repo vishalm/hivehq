@@ -1,7 +1,7 @@
 {
-  "name": "@hive/node-server",
+  "name": "@hive/auth",
   "version": "0.1.0",
-  "description": "HIVE — Node Hub server. On-prem TTP ingest, storage, rollups.",
+  "description": "HIVE — Authentication, RBAC, multi-tenant isolation, and audit logging.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
@@ -12,16 +12,10 @@
       "import": "./dist/index.js"
     }
   },
-  "bin": {
-    "hive-node": "./dist/cli.js"
-  },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json --watch",
-    "start": "node dist/cli.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
@@ -29,14 +23,6 @@
     "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
-    "@hive/auth": "0.1.0",
-    "@hive/intelligence": "0.1.0",
-    "@hive/policy": "0.1.0",
-    "@hive/shared": "0.1.0",
-    "express": "^4.21.1",
-    "pino": "^9.5.0",
-    "pino-http": "^10.3.0",
-    "swagger-ui-express": "^5.0.1",
     "zod": "^3.23.8"
   },
   "optionalDependencies": {
@@ -46,9 +32,7 @@
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.9.0",
-    "@types/supertest": "^6.0.2",
-    "@types/swagger-ui-express": "^4.1.8",
-    "supertest": "^7.0.0",
+    "express": "^4.21.1",
     "typescript": "^5.6.3",
     "vitest": "^2.1.5"
   }

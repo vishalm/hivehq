@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useAuth } from '../../lib/auth-context'
 
-/* ── HIVE Login Page — Glassmorphic Auth ─────────────────────────────────── */
+/* ── HIVE Login Page — Keycloak OIDC Redirect ──────────────────────────── */
 
 function HiveLogoLarge({ size = 48 }: { size?: number }) {
   const id = 'hive-login-logo'
@@ -29,17 +30,24 @@ function HiveLogoLarge({ size = 48 }: { size?: number }) {
 }
 
 export default function LoginClient() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
+  const { user, loading, login } = useAuth()
+  const [redirecting, setRedirecting] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Authentication not yet implemented — placeholder for Phase 4
-    setLoading(true)
-    setTimeout(() => {
+  // If already logged in, redirect to dashboard
+  useEffect(() => {
+    if (!loading && user) {
       window.location.href = '/dashboard'
-    }, 800)
+    }
+  }, [loading, user])
+
+  const handleLogin = async () => {
+    setRedirecting(true)
+    await login('login')
+  }
+
+  const handleSSO = async () => {
+    setRedirecting(true)
+    await login('login')
   }
 
   return (
@@ -85,10 +93,10 @@ export default function LoginClient() {
             color: 'rgba(255,255,255,0.92)',
             margin: '0 0 8px',
           }}>
-            Welcome back
+            Welcome to HIVE
           </h1>
           <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', margin: 0 }}>
-            Sign in to the HIVE dashboard
+            Sign in to the Token Governance dashboard
           </p>
         </div>
 
@@ -101,113 +109,37 @@ export default function LoginClient() {
           padding: 32,
           boxShadow: '0 24px 80px rgba(0,0,0,0.4)',
         }}>
-          <form onSubmit={handleSubmit}>
-            {/* Email */}
-            <div style={{ marginBottom: 20 }}>
-              <label style={{
-                display: 'block',
-                fontSize: 11,
-                fontWeight: 500,
-                textTransform: 'uppercase',
-                letterSpacing: 0.5,
-                color: 'rgba(255,255,255,0.5)',
-                marginBottom: 6,
-              }}>Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="you@company.com"
-                required
-                style={{
-                  width: '100%',
-                  padding: '12px 16px',
-                  borderRadius: 12,
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  background: 'rgba(255,255,255,0.03)',
-                  color: 'rgba(255,255,255,0.92)',
-                  fontSize: 14,
-                  fontFamily: 'inherit',
-                  outline: 'none',
-                  transition: 'border-color 0.2s, box-shadow 0.2s',
-                  boxSizing: 'border-box',
-                }}
-                onFocus={e => {
-                  e.currentTarget.style.borderColor = 'rgba(0,122,255,0.5)'
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0,122,255,0.15)'
-                }}
-                onBlur={e => {
-                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
-                  e.currentTarget.style.boxShadow = 'none'
-                }}
-              />
-            </div>
-
-            {/* Password */}
-            <div style={{ marginBottom: 28 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                <label style={{
-                  fontSize: 11,
-                  fontWeight: 500,
-                  textTransform: 'uppercase',
-                  letterSpacing: 0.5,
-                  color: 'rgba(255,255,255,0.5)',
-                }}>Password</label>
-                <a href="#" style={{ fontSize: 12, color: 'rgba(255,214,10,0.7)', textDecoration: 'none' }}>Forgot?</a>
-              </div>
-              <input
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                required
-                style={{
-                  width: '100%',
-                  padding: '12px 16px',
-                  borderRadius: 12,
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  background: 'rgba(255,255,255,0.03)',
-                  color: 'rgba(255,255,255,0.92)',
-                  fontSize: 14,
-                  fontFamily: 'inherit',
-                  outline: 'none',
-                  transition: 'border-color 0.2s, box-shadow 0.2s',
-                  boxSizing: 'border-box',
-                }}
-                onFocus={e => {
-                  e.currentTarget.style.borderColor = 'rgba(0,122,255,0.5)'
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0,122,255,0.15)'
-                }}
-                onBlur={e => {
-                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
-                  e.currentTarget.style.boxShadow = 'none'
-                }}
-              />
-            </div>
-
-            {/* Submit */}
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                width: '100%',
-                padding: '14px 24px',
-                borderRadius: 12,
-                border: 'none',
-                background: '#ffd60a',
-                color: '#0a0a0f',
-                fontSize: 15,
-                fontWeight: 600,
-                fontFamily: 'inherit',
-                cursor: loading ? 'wait' : 'pointer',
-                opacity: loading ? 0.7 : 1,
-                transition: 'all 0.2s',
-                boxShadow: '0 0 20px rgba(255,214,10,0.15)',
-              }}
-            >
-              {loading ? 'Signing in...' : 'Sign In'}
-            </button>
-          </form>
+          {/* Sign in with Keycloak */}
+          <button
+            onClick={handleLogin}
+            disabled={redirecting || loading}
+            style={{
+              width: '100%',
+              padding: '14px 24px',
+              borderRadius: 12,
+              border: 'none',
+              background: '#ffd60a',
+              color: '#0a0a0f',
+              fontSize: 15,
+              fontWeight: 600,
+              fontFamily: 'inherit',
+              cursor: redirecting ? 'wait' : 'pointer',
+              opacity: redirecting ? 0.7 : 1,
+              transition: 'all 0.2s',
+              boxShadow: '0 0 20px rgba(255,214,10,0.15)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 10,
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+              <polyline points="10 17 15 12 10 7" />
+              <line x1="15" y1="12" x2="3" y2="12" />
+            </svg>
+            {redirecting ? 'Redirecting...' : 'Sign In'}
+          </button>
 
           {/* Divider */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, margin: '24px 0' }}>
@@ -216,34 +148,63 @@ export default function LoginClient() {
             <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
           </div>
 
-          {/* SSO placeholder */}
-          <button style={{
-            width: '100%',
-            padding: '12px 24px',
-            borderRadius: 12,
-            border: '1px solid rgba(255,255,255,0.08)',
-            background: 'rgba(255,255,255,0.03)',
-            color: 'rgba(255,255,255,0.7)',
-            fontSize: 14,
-            fontWeight: 500,
-            fontFamily: 'inherit',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 8,
-            transition: 'all 0.2s',
-          }}>
+          {/* SSO */}
+          <button
+            onClick={handleSSO}
+            disabled={redirecting || loading}
+            style={{
+              width: '100%',
+              padding: '12px 24px',
+              borderRadius: 12,
+              border: '1px solid rgba(255,255,255,0.08)',
+              background: 'rgba(255,255,255,0.03)',
+              color: 'rgba(255,255,255,0.7)',
+              fontSize: 14,
+              fontWeight: 500,
+              fontFamily: 'inherit',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              transition: 'all 0.2s',
+            }}
+          >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
             Continue with SSO
           </button>
+
+          {/* Dev credentials hint */}
+          <div style={{
+            marginTop: 20,
+            padding: '12px 16px',
+            borderRadius: 10,
+            background: 'rgba(255,214,10,0.05)',
+            border: '1px solid rgba(255,214,10,0.1)',
+          }}>
+            <p style={{ fontSize: 11, color: 'rgba(255,214,10,0.6)', margin: '0 0 4px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+              Dev Credentials
+            </p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', margin: 0, fontFamily: "'SF Mono', 'JetBrains Mono', Menlo, monospace", lineHeight: 1.8 }}>
+              admin@hive.local / admin<br />
+              operator@hive.local / operator<br />
+              viewer@hive.local / viewer
+            </p>
+          </div>
         </div>
 
         {/* Sign up link */}
         <p style={{ textAlign: 'center', marginTop: 24, fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>
-          No account? <a href="/signup" style={{ color: '#ffd60a', textDecoration: 'none', fontWeight: 500 }}>Create one</a>
+          No account?{' '}
+          <a
+            href="#"
+            onClick={async (e) => { e.preventDefault(); await login('register') }}
+            style={{ color: '#ffd60a', textDecoration: 'none', fontWeight: 500 }}
+          >
+            Create one
+          </a>
         </p>
 
         {/* Back to landing */}

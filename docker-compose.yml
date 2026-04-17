@@ -8,16 +8,32 @@
 #   docker compose --profile cpu  --env-file .env.docker up --build -d  (CPU Ollama)
 #   docker compose --profile gpu  --env-file .env.docker up --build -d  (GPU Ollama)
 #   docker compose --profile docs --env-file .env.docker up --build -d  (Include docs)
+#   docker compose --profile scout --env-file .env.docker up --build -d (Scout agent)
+#   docker compose --profile full --env-file .env.docker up --build -d  (Everything)
 #
 # Services:
-#   - node-server    : TTP ingestion & storage       (port 3000)
-#   - dashboard      : Next.js HIVE Dashboard        (port 3001)
-#   - docs           : Docusaurus Documentation      (port 3002)
 #   - postgres       : TimescaleDB for events        (port 5432)
 #   - redis          : Queue & caching               (port 6379)
+#   - keycloak-db    : Keycloak PostgreSQL            (internal)
+#   - keycloak       : Identity provider (OIDC/SSO)  (port 8080)
+#   - node-server    : TTP ingestion & auth API      (port 3000)
+#   - dashboard      : Next.js HIVE Dashboard        (port 3001)
 #   - ollama-proxy   : Transparent telemetry proxy   (port 11434, 11435)
 #   - ollama / cpu   : Local LLM runtime             (internal only)
+#   - docs           : Docusaurus Documentation      (port 3002, profile: docs)
 #   - scout          : Connector agent               (profile: scout)
+#
+# Auth:
+#   Keycloak provides OIDC/SSO with RBAC (viewer, operator, admin, super_admin,
+#   gov_auditor). The hive realm is auto-imported on first boot from
+#   keycloak/realms/. Default users: admin@hive.local / admin,
+#   operator@hive.local / operator, viewer@hive.local / viewer.
+#
+# Volumes:
+#   - postgres data   : .hive/data/postgres  (bind mount, survives down)
+#   - redis data      : .hive/data/redis     (bind mount)
+#   - keycloak-data   : named volume hive-keycloak-data
+#   - ollama-models   : named volume hive-ollama-models
 # ──────────────────────────────────────────────────────────────────────────────
 
 x-common: &common
@@ -36,7 +52,6 @@ services:
       POSTGRES_DB: hive
       POSTGRES_USER: hive
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hive_dev_password}
-      # PGDATA in a subdirectory so .gitkeep in the mount root doesn't block initdb
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - ./.hive/data/postgres:/var/lib/postgresql/data
@@ -60,7 +75,53 @@ services:
       timeout: 3s
       retries: 10
 
-  # ── Node Server — TTP ingestion ──────────────────────────────────────────
+  # ── Keycloak DB — dedicated Postgres for identity data ────────────────────
+  keycloak-db:
+    image: postgres:16-alpine
+    <<: *common
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD:-keycloak_dev}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - keycloak-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ── Keycloak — Identity Provider (OIDC, SAML, SSO) ──────────────────────
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    <<: *common
+    command: start-dev --import-realm
+    ports:
+      - "8080:8080"
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD:-keycloak_dev}
+      KC_HOSTNAME: localhost
+      KC_HTTP_PORT: "8080"
+      KC_HEALTH_ENABLED: "true"
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+    volumes:
+      - ./keycloak/realms:/opt/keycloak/data/import
+    depends_on:
+      keycloak-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080 && echo -e 'GET /health/ready HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3 && cat <&3 | grep -q '\"status\":\"UP\"'"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 30s
+
+  # ── Node Server — TTP ingestion + auth API ───────────────────────────────
   node-server:
     build:
       context: .
@@ -69,19 +130,29 @@ services:
     ports:
       - "3000:3000"
     environment:
-      # ── App config (from .env.docker) ──
+      # ── App config ──
       NODE_PORT: "3000"
       NODE_REGION: ${NODE_REGION:-AE}
       NODE_ID: ${NODE_ID:-hive-node-01}
       NODE_INGEST_TOKEN: ${NODE_INGEST_TOKEN:-hive-dev-token-2026}
       LOG_LEVEL: ${LOG_LEVEL:-info}
-      # ── Docker-internal URLs (not in .env — these are fixed network names) ──
+      # ── Docker-internal URLs ──
       NODE_DATABASE_URL: postgresql://hive:${POSTGRES_PASSWORD:-hive_dev_password}@postgres:5432/hive
       NODE_REDIS_URL: redis://redis:6379
+      # ── Keycloak (auth) ──
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM:-hive}
+      KEYCLOAK_CLIENT_ID: hive-api
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET:-hive-api-secret}
+      HIVE_AUTH_MODE: ${HIVE_AUTH_MODE:-keycloak}
+      HIVE_DEPLOYMENT_MODE: ${HIVE_DEPLOYMENT_MODE:-bespoke}
+      HIVE_DEFAULT_TENANT_ID: ${HIVE_DEFAULT_TENANT_ID:-00000000-0000-0000-0000-000000000001}
     depends_on:
       postgres:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      keycloak:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>{if(!r.ok)throw 1}).catch(()=>process.exit(1))"]
@@ -101,10 +172,14 @@ services:
     environment:
       HOSTNAME: "0.0.0.0"
       PORT: "3001"
-      # SSR fetches use Docker network name
+      # SSR fetches → Docker network name
       DASHBOARD_NODE_URL: http://node-server:3000
-      # Client-side (browser) fetches use host-mapped port
+      # Client-side (browser) fetches → host-mapped port
       NEXT_PUBLIC_NODE_URL: http://localhost:3000
+      # ── Keycloak (auth) ──
+      NEXT_PUBLIC_KEYCLOAK_URL: http://localhost:8080
+      NEXT_PUBLIC_KEYCLOAK_REALM: ${KEYCLOAK_REALM:-hive}
+      NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: hive-dashboard
     depends_on:
       node-server:
         condition: service_healthy
@@ -131,6 +206,7 @@ services:
         condition: service_completed_successfully
     profiles:
       - gpu
+      - full
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:11434/api/tags || exit 1"]
       interval: 10s
@@ -152,6 +228,7 @@ services:
         condition: service_completed_successfully
     profiles:
       - cpu
+      - full
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:11434/api/tags || exit 1"]
       interval: 10s
@@ -159,8 +236,6 @@ services:
       retries: 5
 
   # ── Ollama Model Puller — auto-pulls default model on first run ─────────
-  # Runs once, pulls llama3.2:3b into the shared volume, then exits.
-  # Subsequent starts skip if model already exists.
   ollama-pull:
     image: ollama/ollama:latest
     <<: *common
@@ -173,7 +248,6 @@ services:
         echo "Starting Ollama server for model pull..."
         ollama serve &
         SERVER_PID=$$!
-        # Wait for server to be ready
         for i in $$(seq 1 30); do
           wget -qO- http://127.0.0.1:11434/api/tags >/dev/null 2>&1 && break
           sleep 1
@@ -191,10 +265,9 @@ services:
     profiles:
       - cpu
       - gpu
+      - full
 
-  # ── Ollama Proxy — transparent reverse proxy capturing TTP telemetry ──────
-  # Sits between all clients and Ollama. Maps host:11434 → proxy → Ollama.
-  # This means `ollama chat`, `curl localhost:11434`, and dashboard chat are all captured.
+  # ── Ollama Proxy — transparent reverse proxy capturing TTP telemetry ────
   ollama-proxy:
     build:
       context: .
@@ -229,11 +302,9 @@ services:
       - "3002:3002"
     profiles:
       - docs
+      - full
 
   # ── Scout Agent — connector container for remote monitoring ──────────────
-  # Runs Scout with fetch-level connectors. Point HIVE_OLLAMA_HOST to the
-  # proxy and it auto-captures all traffic from any Node.js app in this container.
-  # Operators can use this as a sidecar for their AI workloads.
   scout:
     build:
       context: .
@@ -254,11 +325,15 @@ services:
         condition: service_healthy
     profiles:
       - scout
+      - full
 
-# Persistent data: postgres & redis on disk at .hive/data/, Ollama models in a Docker volume.
-# Named volume survives `docker compose down`. Use `docker volume rm hiveHQ_ollama-models` to purge.
+# ── Persistent Volumes ──────────────────────────────────────────────────────
+# postgres & redis on disk at .hive/data/. Keycloak + Ollama in named volumes.
+# Named volumes survive `docker compose down`. Use `-v` to purge.
 
 volumes:
+  keycloak-data:
+    name: hive-keycloak-data
   ollama-models:
     name: hive-ollama-models
 

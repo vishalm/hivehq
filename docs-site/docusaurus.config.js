@@ -45,7 +45,7 @@ const config = {
       },
       footer: {
         style: 'dark',
-        copyright: `HIVE - The Global AI Consumption Network. Built by Black N Green.`,
+        copyright: `HIVE - The Global AI Consumption Network. Token Economy. Token Governance.`,
       },
       prism: {
         theme: require('prism-react-renderer').themes.vsDark,

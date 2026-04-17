@@ -1,3 +1,6 @@
+// Auth bypass for tests — must be set before any imports that read process.env
+process.env['HIVE_AUTH_MODE'] = 'none'
+
 import { describe, expect, it } from 'vitest'
 import request from 'supertest'
 import {
@@ -97,12 +100,17 @@ describe('Node server', () => {
     expect(res.body.errors[0].code).toBe('RESIDENCY_VIOLATION')
   })
 
-  it('requires token when configured', async () => {
+  it('requires token when auth mode is keycloak', async () => {
+    // Temporarily switch auth mode for this test
+    const prev = process.env['HIVE_AUTH_MODE']
+    process.env['HIVE_AUTH_MODE'] = 'keycloak'
+    // No KEYCLOAK_URL — will still require Bearer token
     const { app } = buildApp({
       env: buildTestEnv({ NODE_INGEST_TOKEN: 'super-secret-token-12345' }),
     })
     const res = await request(app).post('/api/v1/ttp/ingest').send({})
     expect(res.status).toBe(401)
+    process.env['HIVE_AUTH_MODE'] = prev
   })
 
   it('serves Prometheus metrics at /metrics', async () => {

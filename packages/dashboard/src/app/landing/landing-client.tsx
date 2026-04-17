@@ -1372,7 +1372,7 @@ export default function LandingClient() {
 
         <div style={{ maxWidth: 1200, margin: '0 auto', paddingTop: 32, marginTop: 32, borderTop: '1px solid rgba(255,255,255,0.04)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
           <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>
-            HIVE — Black N Green. Built with conviction.
+            HIVE — Token Economy. Token Governance.
           </span>
           <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>
             Zero content. Full visibility. Total accountability.

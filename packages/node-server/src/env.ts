@@ -11,6 +11,15 @@ export const NodeEnvSchema = z.object({
     .default('AE'),
   NODE_ID: z.string().min(1).optional(),
   NODE_INGEST_TOKEN: z.string().min(16).optional(),
+
+  // ── Auth / Keycloak ──────────────────────────────────────────────────
+  KEYCLOAK_URL: z.string().optional(),
+  KEYCLOAK_REALM: z.string().min(1).default('hive'),
+  KEYCLOAK_CLIENT_ID: z.string().min(1).default('hive-api'),
+  KEYCLOAK_CLIENT_SECRET: z.string().min(1).optional(),
+  HIVE_AUTH_MODE: z.enum(['keycloak', 'none']).default('keycloak'),
+  HIVE_DEPLOYMENT_MODE: z.enum(['bespoke', 'saas']).default('bespoke'),
+  HIVE_DEFAULT_TENANT_ID: z.string().uuid().optional(),
 })
 
 export type NodeEnv = z.infer<typeof NodeEnvSchema>

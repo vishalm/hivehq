@@ -9,6 +9,14 @@ import {
   verifyBatch,
   type SignedBatchEnvelope,
 } from '@hive/shared'
+import {
+  KeycloakClient,
+  createAuthMiddleware,
+  requireRole,
+  loadAuthEnv,
+  type AuthEnv,
+  type AuthMiddlewareConfig,
+} from '@hive/auth'
 import type { PolicyEngine } from '@hive/policy'
 import type { NodeEnv } from './env.js'
 import { InMemoryEventStore, type EventStore } from './store.js'
@@ -58,6 +66,39 @@ export function buildApp(deps: AppDeps): AppContext {
   // Load config on startup
   void configStore.load().catch(() => {/* use defaults */})
 
+  // ── Auth setup ──────────────────────────────────────────────────────────
+  let authEnv: AuthEnv
+  try {
+    authEnv = loadAuthEnv(process.env)
+  } catch {
+    // Fall back to no-auth if env is incomplete (dev/test mode)
+    authEnv = {
+      HIVE_AUTH_MODE: 'none',
+      HIVE_DEPLOYMENT_MODE: 'bespoke',
+      KEYCLOAK_REALM: 'hive',
+      KEYCLOAK_CLIENT_ID: 'hive-api',
+    }
+    logger.warn('Auth env incomplete — running in no-auth mode')
+  }
+
+  let keycloak: KeycloakClient | undefined
+  if (authEnv.HIVE_AUTH_MODE === 'keycloak' && authEnv.KEYCLOAK_URL) {
+    try {
+      keycloak = new KeycloakClient(authEnv)
+      logger.info({ realm: authEnv.KEYCLOAK_REALM, url: authEnv.KEYCLOAK_URL }, 'Keycloak client initialized')
+    } catch (err) {
+      logger.warn({ err }, 'Failed to initialize Keycloak client — falling back to no-auth')
+    }
+  }
+
+  const authConfig: AuthMiddlewareConfig = {
+    env: authEnv,
+    keycloak,
+    // API key resolution will be wired up when DB is available
+  }
+
+  const authMiddleware = createAuthMiddleware(authConfig)
+
   const app = express()
   app.disable('x-powered-by')
 
@@ -90,7 +131,10 @@ export function buildApp(deps: AppDeps): AppContext {
   // ── Swagger UI at /api/docs ──────────────────────────────────────────────
   mountSwagger(app)
 
-  // ── Health check — governance blocker B3 ──────────────────────────────────
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PUBLIC ROUTES — no auth required
+  // ═══════════════════════════════════════════════════════════════════════════
+
   app.get('/health', async (_req, res) => {
     res.json({
       status: 'ok',
@@ -98,6 +142,8 @@ export function buildApp(deps: AppDeps): AppContext {
       region: deps.env.NODE_REGION,
       node_id: deps.env.NODE_ID ?? 'unspecified',
       events_ingested: await store.count(),
+      auth_mode: authEnv.HIVE_AUTH_MODE,
+      deployment_mode: authEnv.HIVE_DEPLOYMENT_MODE,
       policy: deps.policy?.name ?? null,
       trust_kids: deps.trustStore ? [...deps.trustStore.keys()] : [],
     })
@@ -107,16 +153,18 @@ export function buildApp(deps: AppDeps): AppContext {
     res.json({ name: '@hive/node-server', version: '0.1.0', TTP: '0.1' })
   })
 
-  // ── Prometheus metrics ────────────────────────────────────────────────────
   app.get('/metrics', (_req, res) => {
     res.set('Content-Type', 'text/plain; version=0.0.4')
     res.send(renderMetrics())
   })
 
-  // ── TTP ingest ───────────────────────────────────────────────────────────
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TTP INGEST — API key or legacy token auth
+  // ═══════════════════════════════════════════════════════════════════════════
+
   app.post(
     '/api/v1/ttp/ingest',
-    authenticate(deps.env),
+    authMiddleware,
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const batchResult = TTPBatchSchema.safeParse(req.body)
@@ -244,8 +292,63 @@ export function buildApp(deps: AppDeps): AppContext {
     },
   )
 
-  // ── Connector & Setup API ──────────────────────────────────────────────────
-  app.get('/api/v1/connectors', (_req, res) => {
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PROTECTED ROUTES — viewer+ (OIDC or API key)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // ── Read API (dashboard) ──────────────────────────────────────────────────
+  app.get('/api/v1/events/recent', authMiddleware, requireRole('viewer'), async (req, res) => {
+    const limit = Math.min(Number(req.query['limit'] ?? 50), 500)
+    res.json({ events: await store.recent(limit) })
+  })
+
+  app.get('/api/v1/rollups/aggregate', authMiddleware, requireRole('viewer'), async (_req, res) => {
+    res.json({ rows: await store.aggregate() })
+  })
+
+  // ── Intelligence API — viewer+ ────────────────────────────────────────────
+  app.get('/api/v1/intelligence/cost', authMiddleware, requireRole('viewer'), async (req, res) => {
+    const limit = Math.min(Number(req.query['limit'] ?? 500), 2000)
+    const events = await store.recent(limit)
+    const cost = estimateBatchCost(events)
+    res.json(cost)
+  })
+
+  app.get('/api/v1/intelligence/anomalies', authMiddleware, requireRole('viewer'), async (req, res) => {
+    const limit = Math.min(Number(req.query['limit'] ?? 500), 2000)
+    const events = await store.recent(limit)
+    const anomalies = detectAnomalies(events)
+    res.json({ anomalies, analyzedEvents: events.length })
+  })
+
+  app.get('/api/v1/intelligence/forecast', authMiddleware, requireRole('viewer'), async (req, res) => {
+    const limit = Math.min(Number(req.query['limit'] ?? 1000), 5000)
+    const horizon = Math.min(Number(req.query['horizon'] ?? 90), 365)
+    const events = await store.recent(limit)
+    const forecast = forecastSpend(events, { horizonDays: horizon })
+    res.json(forecast ?? { error: 'insufficient_data', message: 'Need at least 3 days of data for forecasting.' })
+  })
+
+  app.get('/api/v1/intelligence/clusters', authMiddleware, requireRole('viewer'), async (req, res) => {
+    const limit = Math.min(Number(req.query['limit'] ?? 500), 2000)
+    const events = await store.recent(limit)
+    const clusters = clusterBehavior(events)
+    const flows = analyzeFlows(events)
+    res.json({ clusters, flows, analyzedEvents: events.length })
+  })
+
+  app.get('/api/v1/intelligence/fingerprints', authMiddleware, requireRole('viewer'), async (req, res) => {
+    const limit = Math.min(Number(req.query['limit'] ?? 500), 2000)
+    const groupBy = req.query['groupBy'] ?? 'dept'
+    const events = await store.recent(limit)
+    const fingerprints = groupBy === 'project'
+      ? fingerprintByProject(events)
+      : fingerprintByDept(events)
+    res.json({ fingerprints, groupBy, analyzedEvents: events.length })
+  })
+
+  // ── Connector & Setup API — operator+ ─────────────────────────────────────
+  app.get('/api/v1/connectors', authMiddleware, requireRole('viewer'), (_req, res) => {
     res.json({
       connectors: [
         {
@@ -336,13 +439,13 @@ export function buildApp(deps: AppDeps): AppContext {
     })
   })
 
-  // ── Config API — replaces .env files entirely ──────────────────────────────
-  app.get('/api/v1/config', async (_req, res) => {
+  // ── Config API — operator+ (read), admin+ (write) ────────────────────────
+  app.get('/api/v1/config', authMiddleware, requireRole('operator'), async (_req, res) => {
     const config = await configStore.load()
     res.json(config)
   })
 
-  app.put('/api/v1/config', async (req: Request, res: Response) => {
+  app.put('/api/v1/config', authMiddleware, requireRole('admin'), async (req: Request, res: Response) => {
     try {
       const updated = await configStore.save(req.body as Partial<HiveConfig>)
       logger.info('Config updated via UI')
@@ -353,11 +456,11 @@ export function buildApp(deps: AppDeps): AppContext {
     }
   })
 
-  app.get('/api/v1/config/defaults', (_req, res) => {
+  app.get('/api/v1/config/defaults', authMiddleware, requireRole('operator'), (_req, res) => {
     res.json(ConfigStore.defaults())
   })
 
-  app.get('/api/v1/setup/status', async (_req, res) => {
+  app.get('/api/v1/setup/status', authMiddleware, requireRole('operator'), async (_req, res) => {
     const count = await store.count()
     const recentEvents = await store.recent(5)
     const providers = new Set(recentEvents.map((e) => e.provider))
@@ -373,55 +476,24 @@ export function buildApp(deps: AppDeps): AppContext {
     })
   })
 
-  // ── Read API (dashboard) ──────────────────────────────────────────────────
-  app.get('/api/v1/events/recent', async (req, res) => {
-    const limit = Math.min(Number(req.query['limit'] ?? 50), 500)
-    res.json({ events: await store.recent(limit) })
-  })
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ADMIN ROUTES — admin+ (user mgmt, API keys, audit log)
+  // ═══════════════════════════════════════════════════════════════════════════
 
-  app.get('/api/v1/rollups/aggregate', async (_req, res) => {
-    res.json({ rows: await store.aggregate() })
-  })
-
-  // ── Intelligence API ───────────────────────────────────────────────────────
-  app.get('/api/v1/intelligence/cost', async (req, res) => {
-    const limit = Math.min(Number(req.query['limit'] ?? 500), 2000)
-    const events = await store.recent(limit)
-    const cost = estimateBatchCost(events)
-    res.json(cost)
-  })
-
-  app.get('/api/v1/intelligence/anomalies', async (req, res) => {
-    const limit = Math.min(Number(req.query['limit'] ?? 500), 2000)
-    const events = await store.recent(limit)
-    const anomalies = detectAnomalies(events)
-    res.json({ anomalies, analyzedEvents: events.length })
-  })
-
-  app.get('/api/v1/intelligence/forecast', async (req, res) => {
-    const limit = Math.min(Number(req.query['limit'] ?? 1000), 5000)
-    const horizon = Math.min(Number(req.query['horizon'] ?? 90), 365)
-    const events = await store.recent(limit)
-    const forecast = forecastSpend(events, { horizonDays: horizon })
-    res.json(forecast ?? { error: 'insufficient_data', message: 'Need at least 3 days of data for forecasting.' })
-  })
-
-  app.get('/api/v1/intelligence/clusters', async (req, res) => {
-    const limit = Math.min(Number(req.query['limit'] ?? 500), 2000)
-    const events = await store.recent(limit)
-    const clusters = clusterBehavior(events)
-    const flows = analyzeFlows(events)
-    res.json({ clusters, flows, analyzedEvents: events.length })
-  })
-
-  app.get('/api/v1/intelligence/fingerprints', async (req, res) => {
-    const limit = Math.min(Number(req.query['limit'] ?? 500), 2000)
-    const groupBy = req.query['groupBy'] ?? 'dept'
-    const events = await store.recent(limit)
-    const fingerprints = groupBy === 'project'
-      ? fingerprintByProject(events)
-      : fingerprintByDept(events)
-    res.json({ fingerprints, groupBy, analyzedEvents: events.length })
+  app.get('/api/v1/admin/auth-info', authMiddleware, requireRole('viewer'), (req, res) => {
+    res.json({
+      auth_mode: authEnv.HIVE_AUTH_MODE,
+      deployment_mode: authEnv.HIVE_DEPLOYMENT_MODE,
+      user: req.auth ? {
+        user_id: req.auth.user_id,
+        email: req.auth.email,
+        name: req.auth.name,
+        roles: req.auth.roles,
+        tenant_id: req.auth.tenant_id,
+        tenant_type: req.auth.tenant_type,
+        auth_method: req.auth.auth_method,
+      } : null,
+    })
   })
 
   // ── Error handler ─────────────────────────────────────────────────────────
@@ -431,19 +503,4 @@ export function buildApp(deps: AppDeps): AppContext {
   })
 
   return { app, store, logger }
-}
-
-function authenticate(env: NodeEnv) {
-  return (req: Request, res: Response, next: NextFunction): void => {
-    if (!env.NODE_INGEST_TOKEN) {
-      next()
-      return
-    }
-    const header = req.header('authorization')
-    if (header !== `Bearer ${env.NODE_INGEST_TOKEN}`) {
-      res.status(401).json({ error: 'unauthorized' })
-      return
-    }
-    next()
-  }
 }

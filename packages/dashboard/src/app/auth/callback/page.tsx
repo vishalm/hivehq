@@ -1,24 +1,14 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useAuth } from '../../lib/auth-context'
+/**
+ * OIDC Callback Page
+ *
+ * Keycloak redirects here after authentication with ?code=...&state=...
+ * The AuthProvider handles the token exchange automatically.
+ * This page just shows a loading state.
+ */
 
-/* ── HIVE Signup — Redirects to Keycloak Registration ───────────────────── */
-
-export default function SignupClient() {
-  const { user, loading, login } = useAuth()
-
-  useEffect(() => {
-    if (!loading && user) {
-      window.location.href = '/dashboard'
-      return
-    }
-    if (!loading && !user) {
-      // Auto-redirect to Keycloak registration
-      void login('register')
-    }
-  }, [loading, user, login])
-
+export default function AuthCallbackPage() {
   return (
     <div style={{
       minHeight: '100vh',
@@ -29,6 +19,7 @@ export default function SignupClient() {
       fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', Roboto, sans-serif",
     }}>
       <div style={{ textAlign: 'center' }}>
+        {/* Spinner */}
         <div style={{
           width: 40,
           height: 40,
@@ -43,9 +34,13 @@ export default function SignupClient() {
           color: 'rgba(255,255,255,0.55)',
           margin: 0,
         }}>
-          Redirecting to registration...
+          Authenticating...
         </p>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        <style>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
     </div>
   )

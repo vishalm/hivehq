@@ -18,7 +18,7 @@ export const spec = {
       '**Zero Content Principle** — HIVE never reads prompts, completions, or API keys. Metadata only.\n\n' +
       '**Token Economy** — Every token is a unit of spend. This API makes invisible API calls visible.\n\n' +
       '**Token Governance** — Every event carries a GovernanceBlock with frozen privacy guarantees.',
-    contact: { name: 'Black N Green', url: 'https://blackngreen.com', email: 'vishal.mishra@blackngreen.com' },
+    contact: { name: 'HIVE', url: 'https://hivehq.dev', email: 'hello@hivehq.dev' },
     license: { name: 'MIT' },
   },
   servers: [

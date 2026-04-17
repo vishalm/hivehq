@@ -148,16 +148,21 @@ This runs `docker compose --env-file .env.docker up --build -d`, which builds an
 ```mermaid
 graph LR
     subgraph Compose ["docker-compose.yml"]
+        KDB["keycloak-db<br/>Postgres :internal"]
+        KC["keycloak<br/>OIDC/SSO :8080"]
         PG["postgres<br/>TimescaleDB :5432"]
         RD["redis<br/>Redis 7 :6379"]
         NS["node-server<br/>Express :3000"]
         DB["dashboard<br/>Next.js :3001"]
-        OL["ollama-cpu<br/>LLM :11434"]
+        OP["ollama-proxy<br/>Proxy :11434"]
     end
 
+    KDB -->|"healthcheck"| KC
     PG -->|"healthcheck"| NS
     RD -->|"healthcheck"| NS
+    KC -->|"healthcheck"| NS
     NS -->|"healthcheck"| DB
+    NS -->|"healthcheck"| OP
 ```
 
 ### 2. Check Status
@@ -171,15 +176,28 @@ npm run docker:logs
 
 # Node server health
 curl http://localhost:3000/health
+
+# Keycloak health
+curl -s http://localhost:8080/health/ready | jq .status
 ```
 
 ### 3. Open Dashboard
 
 - Dashboard: [http://localhost:3001](http://localhost:3001)
+- Login: [http://localhost:3001/login](http://localhost:3001/login)
+- Keycloak Admin: [http://localhost:8080/admin](http://localhost:8080/admin) (admin / admin)
 - Setup Wizard: [http://localhost:3001/setup](http://localhost:3001/setup)
 - Intelligence: [http://localhost:3001/intelligence](http://localhost:3001/intelligence)
 - Node API: [http://localhost:3000/health](http://localhost:3000/health)
 - Prometheus Metrics: [http://localhost:3000/metrics](http://localhost:3000/metrics)
+
+**Default login credentials** (auto-provisioned in Keycloak):
+
+| Email | Password | Role |
+|-------|----------|------|
+| `admin@hive.local` | `admin` | Admin (full access) |
+| `operator@hive.local` | `operator` | Operator (setup, connectors) |
+| `viewer@hive.local` | `viewer` | Viewer (read-only dashboards) |
 
 ### 4. Stop
 

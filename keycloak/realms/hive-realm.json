@@ -1,0 +1,302 @@
+{
+  "id": "hive",
+  "realm": "hive",
+  "displayName": "HIVE",
+  "displayNameHtml": "<strong style=\"color:#ffd60a\">HIVE</strong> — The Global AI Consumption Network",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": true,
+  "registrationEmailAsUsername": true,
+  "resetPasswordAllowed": true,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "verifyEmail": false,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "permanentLockout": false,
+  "maxFailureWaitSeconds": 900,
+  "minimumQuickLoginWaitSeconds": 60,
+  "waitIncrementSeconds": 60,
+  "quickLoginCheckMilliSeconds": 1000,
+  "maxDeltaTimeSeconds": 43200,
+  "failureFactor": 5,
+  "accessTokenLifespan": 3600,
+  "accessTokenLifespanForImplicitFlow": 900,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "offlineSessionIdleTimeout": 2592000,
+  "accessCodeLifespan": 60,
+  "accessCodeLifespanUserAction": 300,
+  "accessCodeLifespanLogin": 1800,
+  "actionTokenGeneratedByAdminLifespan": 43200,
+  "actionTokenGeneratedByUserLifespan": 300,
+  "defaultSignatureAlgorithm": "RS256",
+
+  "roles": {
+    "realm": [
+      {
+        "name": "viewer",
+        "description": "Read-only access to dashboard, events, and intelligence",
+        "composite": false
+      },
+      {
+        "name": "operator",
+        "description": "Viewer + setup, connectors, LLM config",
+        "composite": true,
+        "composites": {
+          "realm": ["viewer"]
+        }
+      },
+      {
+        "name": "admin",
+        "description": "Operator + user management, API keys, settings, audit log",
+        "composite": true,
+        "composites": {
+          "realm": ["operator"]
+        }
+      },
+      {
+        "name": "super_admin",
+        "description": "Admin + manage child companies, cross-company data (SaaS mode)",
+        "composite": true,
+        "composites": {
+          "realm": ["admin"]
+        }
+      },
+      {
+        "name": "gov_auditor",
+        "description": "Read-only across all companies in country for compliance auditing",
+        "composite": false
+      }
+    ]
+  },
+
+  "defaultRoles": ["viewer"],
+
+  "groups": [
+    {
+      "name": "HIVE Default",
+      "path": "/HIVE Default",
+      "attributes": {
+        "tenant_type": ["company"],
+        "country_code": ["AE"],
+        "data_residency": ["AE"]
+      },
+      "realmRoles": ["viewer"]
+    }
+  ],
+
+  "clients": [
+    {
+      "clientId": "hive-dashboard",
+      "name": "HIVE Dashboard",
+      "description": "Next.js HIVE Dashboard — public OIDC client with PKCE",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "protocol": "openid-connect",
+      "rootUrl": "http://localhost:3001",
+      "baseUrl": "/dashboard",
+      "redirectUris": [
+        "http://localhost:3001/*",
+        "http://localhost:3000/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3001",
+        "http://localhost:3000",
+        "+"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:3001/*"
+      },
+      "defaultClientScopes": [
+        "openid",
+        "profile",
+        "email",
+        "roles"
+      ],
+      "protocolMappers": [
+        {
+          "name": "realm-roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "config": {
+            "multivalued": "true",
+            "claim.name": "roles",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "name": "tenant_id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "tenant_id",
+            "claim.name": "tenant_id",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "name": "tenant_type",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "tenant_type",
+            "claim.name": "tenant_type",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "hive-api",
+      "name": "HIVE API Server",
+      "description": "Confidential client for Node server — validates tokens, manages users",
+      "enabled": true,
+      "publicClient": false,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true,
+      "protocol": "openid-connect",
+      "secret": "hive-api-secret",
+      "defaultClientScopes": [
+        "openid",
+        "profile",
+        "email",
+        "roles"
+      ],
+      "protocolMappers": [
+        {
+          "name": "realm-roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "config": {
+            "multivalued": "true",
+            "claim.name": "roles",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true"
+          }
+        },
+        {
+          "name": "tenant_id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "tenant_id",
+            "claim.name": "tenant_id",
+            "jsonType.label": "String",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+
+  "users": [
+    {
+      "username": "admin@hive.local",
+      "email": "admin@hive.local",
+      "firstName": "HIVE",
+      "lastName": "Admin",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["admin", "operator", "viewer"],
+      "attributes": {
+        "tenant_id": ["00000000-0000-0000-0000-000000000001"],
+        "tenant_type": ["company"]
+      },
+      "groups": ["/HIVE Default"]
+    },
+    {
+      "username": "viewer@hive.local",
+      "email": "viewer@hive.local",
+      "firstName": "Demo",
+      "lastName": "Viewer",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "viewer",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["viewer"],
+      "attributes": {
+        "tenant_id": ["00000000-0000-0000-0000-000000000001"],
+        "tenant_type": ["company"]
+      },
+      "groups": ["/HIVE Default"]
+    },
+    {
+      "username": "operator@hive.local",
+      "email": "operator@hive.local",
+      "firstName": "Demo",
+      "lastName": "Operator",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "operator",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["operator", "viewer"],
+      "attributes": {
+        "tenant_id": ["00000000-0000-0000-0000-000000000001"],
+        "tenant_type": ["company"]
+      },
+      "groups": ["/HIVE Default"]
+    }
+  ],
+
+  "scopeMappings": [
+    {
+      "client": "hive-dashboard",
+      "roles": ["viewer", "operator", "admin", "super_admin", "gov_auditor"]
+    }
+  ],
+
+  "clientScopeMappings": {},
+
+  "components": {
+    "org.keycloak.keys.KeyProvider": [
+      {
+        "name": "rsa-generated",
+        "providerId": "rsa-generated",
+        "config": {
+          "keySize": ["2048"],
+          "priority": ["100"]
+        }
+      }
+    ]
+  },
+
+  "browserFlow": "browser",
+  "registrationFlow": "registration",
+  "directGrantFlow": "direct grant",
+  "resetCredentialsFlow": "reset credentials",
+  "clientAuthenticationFlow": "clients"
+}

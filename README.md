@@ -451,8 +451,9 @@ hive/
 ├── .env.local               ← Local dev config (localhost URLs)
 ├── .env.docker              ← Docker Compose config (network names)
 ├── .env.example             ← Full reference of all variables
-├── docker-compose.yml       ← Full stack: Node + Dashboard + Postgres + Redis + Ollama
-├── Dockerfile.node          ← Multi-stage Node server image
+├── keycloak/realms/         ← Keycloak realm config (auto-imported on first boot)
+├── docker-compose.yml       ← Full stack: Node + Dashboard + Postgres + Redis + Keycloak + Ollama
+├── Dockerfile.node          ← Multi-stage Node server image (includes @hive/auth)
 ├── Dockerfile.dashboard     ← Multi-stage Next.js standalone image
 ├── QUICKSTART.md            ← Setup guide with diagrams
 └── package.json             ← Turborepo · npm workspaces · 9 packages + 7 connectors
@@ -464,7 +465,8 @@ hive/
 - **Connectors** — OpenAI, Anthropic, Google (Gemini + Vertex), Azure OpenAI, Bedrock, Mistral, plus `@hive/otel-bridge` for teams already on OpenTelemetry gen-AI conventions.
 - **Policy engine** — `@hive/policy` with ABAC predicates, first-match-wins ordering, and built-in recipes: UAE residency, shadow-AI routing, retention caps, composition.
 - **Node server** — Express app with ingest, signature verification, policy admission control, residency enforcement, `/metrics` Prometheus endpoint, Postgres/Timescale store with continuous aggregates.
-- **Dashboard** — Next.js with recharts: activity timeline, top providers, dept/project split, shadow-AI panel, regulation-tag roll-ups.
+- **Authentication** — Keycloak OIDC/SSO with PKCE, RBAC (5 roles), multi-tenant isolation (6-level hierarchy), API key management, immutable audit log. Supports bespoke (on-prem) and SaaS deployment modes.
+- **Dashboard** — Next.js with recharts: activity timeline, top providers, dept/project split, shadow-AI panel, regulation-tag roll-ups. Admin UI for users, API keys, audit log, and tenant hierarchy.
 
 
 ---
@@ -513,10 +515,12 @@ Two ways to run HIVE — pick one:
 
 ```bash
 git clone https://github.com/vishalm/hivehq.git && cd hivehq
-npm run docker:up
+docker compose --env-file .env.docker up --build -d
 ```
 
-Opens: Dashboard at `http://localhost:3001`, Node API at `http://localhost:3000`
+Opens: Dashboard at `http://localhost:3001`, Node API at `http://localhost:3000`, Keycloak at `http://localhost:8080`
+
+Default logins: `admin@hive.local` / `admin`, `operator@hive.local` / `operator`, `viewer@hive.local` / `viewer`
 
 ### Local Development
 
@@ -527,7 +531,7 @@ npm run local:setup    # copies .env.local -> .env
 npm run dev
 ```
 
-Requires: Node 20+, PostgreSQL 16, Redis 7 running locally.
+Requires: Node 20+, PostgreSQL 16, Redis 7 running locally. Set `HIVE_AUTH_MODE=none` in `.env` to bypass Keycloak for local dev.
 
 See **[QUICKSTART.md](./QUICKSTART.md)** for the full guide with architecture diagrams, API examples, and troubleshooting.
 
