@@ -21,6 +21,24 @@ export const ScoutEnvSchema = z
     HIVE_CONNECTORS: z.string().default('anthropic,openai,ollama'),
     /** Custom Ollama host (default: localhost:11434). */
     HIVE_OLLAMA_HOST: z.string().optional(),
+    /** Admin HTTP server port. Default 9477. Set 0 to disable. */
+    HIVE_ADMIN_PORT: z.coerce.number().int().min(0).max(65_535).default(9477),
+    /** Admin HTTP server bind address. Default loopback-only. */
+    HIVE_ADMIN_BIND: z.string().default('127.0.0.1'),
+    /** WAL directory for durable event buffering. Default: .hive/scout/queue */
+    HIVE_WAL_DIR: z.string().default('.hive/scout/queue'),
+    /** Max bytes held in the WAL before oldest is evicted. Default 500 MB. */
+    HIVE_WAL_MAX_BYTES: z.coerce
+      .number()
+      .int()
+      .positive()
+      .default(500 * 1024 * 1024),
+    /** How often the WAL replay loop sweeps. Default 15 s. */
+    HIVE_REPLAY_INTERVAL_MS: z.coerce.number().int().positive().default(15_000),
+    /** Log level — trace|debug|info|warn|error|fatal. Default info. */
+    HIVE_LOG_LEVEL: z
+      .enum(['trace', 'debug', 'info', 'warn', 'error', 'fatal'])
+      .default('info'),
   })
   .transform((e) => ({
     ...e,

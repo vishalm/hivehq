@@ -2,6 +2,9 @@ import { describe, expect, it, vi } from 'vitest'
 import { InMemorySink } from '@hive/connector'
 import { Scout } from './scout.js'
 import type { ScoutEnv } from './env.js'
+import { createLogger } from './logger.js'
+
+const silentLogger = createLogger({ component: 'test', level: 'fatal' })
 
 function buildEnv(overrides: Partial<ScoutEnv> = {}): ScoutEnv {
   return {
@@ -17,7 +20,7 @@ function buildEnv(overrides: Partial<ScoutEnv> = {}): ScoutEnv {
 
 describe('Scout Integration', () => {
   it('initializes with solo mode and local sink', () => {
-    const scout = new Scout({ env: buildEnv() })
+    const scout = new Scout({ env: buildEnv(), logger: silentLogger })
 
     expect(scout.localSink).toBeDefined()
     expect(scout.collector).toBeDefined()
@@ -27,26 +30,26 @@ describe('Scout Integration', () => {
   })
 
   it('initializes OpenAI connector', () => {
-    const scout = new Scout({ env: buildEnv() })
+    const scout = new Scout({ env: buildEnv(), logger: silentLogger })
 
     expect(scout.openai).toBeDefined()
   })
 
   it('initializes Anthropic connector', () => {
-    const scout = new Scout({ env: buildEnv() })
+    const scout = new Scout({ env: buildEnv(), logger: silentLogger })
 
     expect(scout.anthropic).toBeDefined()
   })
 
   it('initializes Ollama connector', () => {
-    const scout = new Scout({ env: buildEnv() })
+    const scout = new Scout({ env: buildEnv(), logger: silentLogger })
 
     expect(scout.ollama).toBeDefined()
   })
 
   it('wraps fetch for OpenAI calls', async () => {
     const sink = new InMemorySink()
-    const scout = new Scout({ env: buildEnv(), sinkOverride: sink })
+    const scout = new Scout({ env: buildEnv(), logger: silentLogger, sinkOverride: sink })
 
     const mockFetch = vi.fn<typeof fetch>().mockResolvedValue(
       new Response('{}', {
@@ -69,7 +72,7 @@ describe('Scout Integration', () => {
 
   it('wraps fetch for Anthropic calls', async () => {
     const sink = new InMemorySink()
-    const scout = new Scout({ env: buildEnv(), sinkOverride: sink })
+    const scout = new Scout({ env: buildEnv(), logger: silentLogger, sinkOverride: sink })
 
     const mockFetch = vi.fn<typeof fetch>().mockResolvedValue(
       new Response('{}', {
@@ -92,7 +95,7 @@ describe('Scout Integration', () => {
 
   it('wraps fetch for Ollama calls', async () => {
     const sink = new InMemorySink()
-    const scout = new Scout({ env: buildEnv(), sinkOverride: sink })
+    const scout = new Scout({ env: buildEnv(), logger: silentLogger, sinkOverride: sink })
 
     const mockFetch = vi.fn<typeof fetch>().mockResolvedValue(
       new Response('{"model":"llama3","message":{"content":"hi"}}', {
@@ -115,7 +118,7 @@ describe('Scout Integration', () => {
 
   it('passes through non-matching URLs', async () => {
     const sink = new InMemorySink()
-    const scout = new Scout({ env: buildEnv(), sinkOverride: sink })
+    const scout = new Scout({ env: buildEnv(), logger: silentLogger, sinkOverride: sink })
 
     const mockFetch = vi.fn<typeof fetch>().mockResolvedValue(new Response('ok'))
 
@@ -130,7 +133,7 @@ describe('Scout Integration', () => {
 
   it('chains multiple connectors', async () => {
     const sink = new InMemorySink()
-    const scout = new Scout({ env: buildEnv(), sinkOverride: sink })
+    const scout = new Scout({ env: buildEnv(), logger: silentLogger, sinkOverride: sink })
 
     const mockOpenAIFetch = vi.fn<typeof fetch>().mockResolvedValue(
       new Response('{}', {
@@ -167,7 +170,7 @@ describe('Scout Integration', () => {
 
   it('flushes events to sink on shutdown', async () => {
     const sink = new InMemorySink()
-    const scout = new Scout({ env: buildEnv(), sinkOverride: sink })
+    const scout = new Scout({ env: buildEnv(), logger: silentLogger, sinkOverride: sink })
 
     scout.collector.record({
       timestamp: Date.now(),
@@ -189,7 +192,7 @@ describe('Scout Integration', () => {
 
   it('respects custom sink override', async () => {
     const customSink = new InMemorySink()
-    const scout = new Scout({ env: buildEnv(), sinkOverride: customSink })
+    const scout = new Scout({ env: buildEnv(), logger: silentLogger, sinkOverride: customSink })
 
     scout.collector.record({
       timestamp: Date.now(),
@@ -209,7 +212,7 @@ describe('Scout Integration', () => {
 
   it('includes governance in all events', async () => {
     const sink = new InMemorySink()
-    const scout = new Scout({ env: buildEnv(), sinkOverride: sink })
+    const scout = new Scout({ env: buildEnv(), logger: silentLogger, sinkOverride: sink })
 
     scout.collector.record({
       timestamp: Date.now(),
@@ -231,7 +234,7 @@ describe('Scout Integration', () => {
   })
 
   it('respects HIVE_DEPLOYMENT configuration', () => {
-    const scout = new Scout({ env: buildEnv({ HIVE_DEPLOYMENT: 'node' }) })
+    const scout = new Scout({ env: buildEnv({ HIVE_DEPLOYMENT: "node" }), logger: silentLogger })
 
     expect(scout.collector).toBeDefined()
   })
@@ -294,7 +297,7 @@ describe('Scout Integration', () => {
 
   it('handles multiple events from different providers', async () => {
     const sink = new InMemorySink()
-    const scout = new Scout({ env: buildEnv(), sinkOverride: sink })
+    const scout = new Scout({ env: buildEnv(), logger: silentLogger, sinkOverride: sink })
 
     const mockOpenAI = vi.fn<typeof fetch>().mockResolvedValue(
       new Response('{}', {
