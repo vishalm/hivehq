@@ -298,6 +298,25 @@ a:hover{opacity:0.85}
 .stagger-3{transition-delay:0.3s}.stagger-4{transition-delay:0.4s}
 .stagger-5{transition-delay:0.5s}
 
+/* ── Token Flow Visual ────────────────────────────────────────────────────── */
+.tokenflow{padding-top:56px;padding-bottom:56px}
+.tokenflow-frame{
+  background:radial-gradient(ellipse at center,rgba(27,39,69,0.35) 0%,rgba(10,10,15,0) 70%),
+             linear-gradient(135deg,rgba(255,255,255,0.025),rgba(255,255,255,0.005));
+  backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  border:1px solid var(--glass-border);border-radius:24px;
+  padding:32px;overflow:hidden;
+  box-shadow:0 20px 80px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.tokenflow-frame svg{width:100%;height:auto;display:block}
+.tokenflow-legend{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:20px;
+  margin-top:24px;font-size:11px;font-weight:600;letter-spacing:0.5px;
+  color:var(--text-tertiary);text-transform:uppercase;
+}
+.tokenflow-legend span{display:inline-flex;align-items:center;gap:8px}
+.tokenflow-legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+
 /* ── Responsive ───────────────────────────────────────────────────────────── */
 @media(max-width:768px){
   .nav-links{display:none}
@@ -364,6 +383,196 @@ a:hover{opacity:0.85}
     <span>GDPR</span><span>SOC 2</span><span>UAE AI LAW</span><span>EU AI ACT</span><span>ISO 27001</span><span>HIPAA</span>
   </div>
 </div>
+
+<!-- ── Token Flow Visual ─────────────────────────────────────────────────── -->
+<section class="section tokenflow" id="tokenflow">
+  <div class="reveal">
+    <div class="section-label">The Token Flow</div>
+    <div class="section-title">Seven providers. One pipeline. Zero content.</div>
+    <div class="section-subtitle">Every API call — OpenAI, Anthropic, Ollama, Mistral, Azure, Google, Bedrock — flows through Scout into the HIVE core. Governance is structural. Metadata only.</div>
+  </div>
+
+  <div class="tokenflow-frame reveal stagger-1">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img" aria-label="HIVE token flow visualization: animated tokens streaming from seven AI providers into the central governance core">
+      <defs>
+        <radialGradient id="tfCoreGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ffe066" stop-opacity="0.9"/>
+          <stop offset="45%" stop-color="#ffd60a" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#ffd60a" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="tfCoreFill" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ffe680"/>
+          <stop offset="45%" stop-color="#ffd60a"/>
+          <stop offset="100%" stop-color="#b8920a"/>
+        </linearGradient>
+        <linearGradient id="tfCoreRim" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.55)"/>
+          <stop offset="100%" stop-color="rgba(255,255,255,0.08)"/>
+        </linearGradient>
+        <filter id="tfGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="4" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="tfSoft" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="2" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Ambient core glow -->
+      <circle cx="600" cy="300" r="260" fill="url(#tfCoreGlow)" opacity="0.55"/>
+
+      <!-- Orbital guide rings -->
+      <circle cx="600" cy="300" r="220" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1" stroke-dasharray="2 6"/>
+      <circle cx="600" cy="300" r="150" fill="none" stroke="rgba(255,214,10,0.14)" stroke-width="1" stroke-dasharray="1 5"/>
+
+      <!-- Flow lines: connector centre to core edge -->
+      <g fill="none" stroke-linecap="round">
+        <path id="tfFlow0" d="M820,300 L685,300" stroke="rgba(255,214,10,0.38)" stroke-width="1.4"/>
+        <path id="tfFlow1" d="M710,491 L643,374" stroke="rgba(52,199,89,0.38)" stroke-width="1.4"/>
+        <path id="tfFlow2" d="M490,491 L557,374" stroke="rgba(0,122,255,0.38)" stroke-width="1.4"/>
+        <path id="tfFlow3" d="M380,300 L515,300" stroke="rgba(175,82,222,0.38)" stroke-width="1.4"/>
+        <path id="tfFlow4" d="M490,110 L557,226" stroke="rgba(255,149,0,0.38)" stroke-width="1.4"/>
+        <path id="tfFlow5" d="M710,110 L643,226" stroke="rgba(255,59,48,0.38)" stroke-width="1.4"/>
+      </g>
+
+      <!-- Expanding pulse rings from core -->
+      <g fill="none" stroke="#ffd60a" stroke-width="1.4">
+        <circle cx="600" cy="300" r="95" opacity="0.5">
+          <animate attributeName="r" values="95;150;95" dur="3.6s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.55;0;0.55" dur="3.6s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="600" cy="300" r="95" opacity="0.5">
+          <animate attributeName="r" values="95;180;95" dur="3.6s" begin="1.2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.45;0;0.45" dur="3.6s" begin="1.2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="600" cy="300" r="95" opacity="0.5">
+          <animate attributeName="r" values="95;210;95" dur="3.6s" begin="2.4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.35;0;0.35" dur="3.6s" begin="2.4s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+
+      <!-- HIVE central hexagon -->
+      <g filter="url(#tfGlow)">
+        <polygon points="600,215 674,258 674,342 600,385 526,342 526,258" fill="url(#tfCoreFill)" stroke="url(#tfCoreRim)" stroke-width="1.25"/>
+      </g>
+
+      <!-- Inner honeycomb motif on the core -->
+      <g opacity="0.82">
+        <polygon points="600,248 620,260 620,284 600,296 580,284 580,260" fill="#0a0a0f" opacity="0.78"/>
+        <polygon points="600,304 620,316 620,340 600,352 580,340 580,316" fill="#0a0a0f" opacity="0.42"/>
+        <polygon points="552,276 572,288 572,312 552,324 532,312 532,288" fill="#0a0a0f" opacity="0.42"/>
+        <polygon points="648,276 668,288 668,312 648,324 628,312 628,288" fill="#0a0a0f" opacity="0.42"/>
+      </g>
+
+      <text x="600" y="277" text-anchor="middle" font-family="'SF Pro Display',-apple-system,sans-serif" font-size="11" font-weight="700" fill="#ffd60a" letter-spacing="2.5" opacity="0.95">HIVE</text>
+      <text x="600" y="368" text-anchor="middle" font-family="'SF Pro Display',-apple-system,sans-serif" font-size="9" font-weight="600" fill="rgba(255,214,10,0.75)" letter-spacing="1.8">TTP CORE</text>
+
+      <!-- Streaming tokens along each flow -->
+      <g>
+        <circle r="4" fill="#ffd60a" filter="url(#tfSoft)"><animateMotion dur="2.2s" repeatCount="indefinite" begin="0s"><mpath href="#tfFlow0"/></animateMotion></circle>
+        <circle r="3" fill="#ffd60a" filter="url(#tfSoft)"><animateMotion dur="2.2s" repeatCount="indefinite" begin="0.7s"><mpath href="#tfFlow0"/></animateMotion></circle>
+        <circle r="2.5" fill="#ffd60a" filter="url(#tfSoft)"><animateMotion dur="2.2s" repeatCount="indefinite" begin="1.4s"><mpath href="#tfFlow0"/></animateMotion></circle>
+
+        <circle r="4" fill="#34c759" filter="url(#tfSoft)"><animateMotion dur="2.5s" repeatCount="indefinite" begin="0.3s"><mpath href="#tfFlow1"/></animateMotion></circle>
+        <circle r="3" fill="#34c759" filter="url(#tfSoft)"><animateMotion dur="2.5s" repeatCount="indefinite" begin="1.2s"><mpath href="#tfFlow1"/></animateMotion></circle>
+
+        <circle r="4" fill="#007aff" filter="url(#tfSoft)"><animateMotion dur="2.7s" repeatCount="indefinite" begin="0.5s"><mpath href="#tfFlow2"/></animateMotion></circle>
+        <circle r="3" fill="#007aff" filter="url(#tfSoft)"><animateMotion dur="2.7s" repeatCount="indefinite" begin="1.5s"><mpath href="#tfFlow2"/></animateMotion></circle>
+
+        <circle r="4" fill="#af52de" filter="url(#tfSoft)"><animateMotion dur="2.3s" repeatCount="indefinite" begin="0.2s"><mpath href="#tfFlow3"/></animateMotion></circle>
+        <circle r="3" fill="#af52de" filter="url(#tfSoft)"><animateMotion dur="2.3s" repeatCount="indefinite" begin="1.0s"><mpath href="#tfFlow3"/></animateMotion></circle>
+        <circle r="2.5" fill="#af52de" filter="url(#tfSoft)"><animateMotion dur="2.3s" repeatCount="indefinite" begin="1.7s"><mpath href="#tfFlow3"/></animateMotion></circle>
+
+        <circle r="4" fill="#ff9500" filter="url(#tfSoft)"><animateMotion dur="2.6s" repeatCount="indefinite" begin="0.6s"><mpath href="#tfFlow4"/></animateMotion></circle>
+        <circle r="3" fill="#ff9500" filter="url(#tfSoft)"><animateMotion dur="2.6s" repeatCount="indefinite" begin="1.6s"><mpath href="#tfFlow4"/></animateMotion></circle>
+
+        <circle r="4" fill="#ff3b30" filter="url(#tfSoft)"><animateMotion dur="2.8s" repeatCount="indefinite" begin="0.4s"><mpath href="#tfFlow5"/></animateMotion></circle>
+        <circle r="3" fill="#ff3b30" filter="url(#tfSoft)"><animateMotion dur="2.8s" repeatCount="indefinite" begin="1.4s"><mpath href="#tfFlow5"/></animateMotion></circle>
+      </g>
+
+      <!-- Connector node: OpenAI -->
+      <g>
+        <polygon points="820,262 853,281 853,319 820,338 787,319 787,281" fill="rgba(255,214,10,0.08)" stroke="rgba(255,214,10,0.55)" stroke-width="1.25"/>
+        <circle cx="820" cy="300" r="4.5" fill="#ffd60a" filter="url(#tfSoft)">
+          <animate attributeName="opacity" values="1;0.35;1" dur="2.4s" repeatCount="indefinite"/>
+        </circle>
+        <text x="820" y="360" text-anchor="middle" font-family="'SF Pro Display',-apple-system,sans-serif" font-size="11" font-weight="600" fill="rgba(255,255,255,0.78)" letter-spacing="0.5">OpenAI</text>
+      </g>
+
+      <!-- Connector node: Anthropic -->
+      <g>
+        <polygon points="710,453 743,472 743,510 710,529 677,510 677,472" fill="rgba(52,199,89,0.08)" stroke="rgba(52,199,89,0.55)" stroke-width="1.25"/>
+        <circle cx="710" cy="491" r="4.5" fill="#34c759" filter="url(#tfSoft)">
+          <animate attributeName="opacity" values="1;0.35;1" dur="2.7s" repeatCount="indefinite"/>
+        </circle>
+        <text x="710" y="551" text-anchor="middle" font-family="'SF Pro Display',-apple-system,sans-serif" font-size="11" font-weight="600" fill="rgba(255,255,255,0.78)" letter-spacing="0.5">Anthropic</text>
+      </g>
+
+      <!-- Connector node: Ollama -->
+      <g>
+        <polygon points="490,453 523,472 523,510 490,529 457,510 457,472" fill="rgba(0,122,255,0.08)" stroke="rgba(0,122,255,0.55)" stroke-width="1.25"/>
+        <circle cx="490" cy="491" r="4.5" fill="#007aff" filter="url(#tfSoft)">
+          <animate attributeName="opacity" values="1;0.35;1" dur="2.3s" repeatCount="indefinite"/>
+        </circle>
+        <text x="490" y="551" text-anchor="middle" font-family="'SF Pro Display',-apple-system,sans-serif" font-size="11" font-weight="600" fill="rgba(255,255,255,0.78)" letter-spacing="0.5">Ollama</text>
+      </g>
+
+      <!-- Connector node: Mistral -->
+      <g>
+        <polygon points="380,262 413,281 413,319 380,338 347,319 347,281" fill="rgba(175,82,222,0.08)" stroke="rgba(175,82,222,0.55)" stroke-width="1.25"/>
+        <circle cx="380" cy="300" r="4.5" fill="#af52de" filter="url(#tfSoft)">
+          <animate attributeName="opacity" values="1;0.35;1" dur="2.5s" repeatCount="indefinite"/>
+        </circle>
+        <text x="380" y="360" text-anchor="middle" font-family="'SF Pro Display',-apple-system,sans-serif" font-size="11" font-weight="600" fill="rgba(255,255,255,0.78)" letter-spacing="0.5">Mistral</text>
+      </g>
+
+      <!-- Connector node: Google -->
+      <g>
+        <polygon points="490,72 523,91 523,129 490,148 457,129 457,91" fill="rgba(255,149,0,0.08)" stroke="rgba(255,149,0,0.55)" stroke-width="1.25"/>
+        <circle cx="490" cy="110" r="4.5" fill="#ff9500" filter="url(#tfSoft)">
+          <animate attributeName="opacity" values="1;0.35;1" dur="2.8s" repeatCount="indefinite"/>
+        </circle>
+        <text x="490" y="50" text-anchor="middle" font-family="'SF Pro Display',-apple-system,sans-serif" font-size="11" font-weight="600" fill="rgba(255,255,255,0.78)" letter-spacing="0.5">Google</text>
+      </g>
+
+      <!-- Connector node: Azure -->
+      <g>
+        <polygon points="710,72 743,91 743,129 710,148 677,129 677,91" fill="rgba(255,59,48,0.08)" stroke="rgba(255,59,48,0.55)" stroke-width="1.25"/>
+        <circle cx="710" cy="110" r="4.5" fill="#ff3b30" filter="url(#tfSoft)">
+          <animate attributeName="opacity" values="1;0.35;1" dur="2.1s" repeatCount="indefinite"/>
+        </circle>
+        <text x="710" y="50" text-anchor="middle" font-family="'SF Pro Display',-apple-system,sans-serif" font-size="11" font-weight="600" fill="rgba(255,255,255,0.78)" letter-spacing="0.5">Azure</text>
+      </g>
+
+      <!-- Governance assertion band -->
+      <g font-family="'SF Pro Display',-apple-system,sans-serif" font-size="10" font-weight="600" letter-spacing="1.4" fill="rgba(255,255,255,0.42)">
+        <text x="40" y="582">PII_ASSERTED: FALSE</text>
+        <text x="600" y="582" text-anchor="middle" fill="rgba(255,214,10,0.55)">ED25519 SIGNED · MERKLE AUDITED · RESIDENCY ENFORCED</text>
+        <text x="1160" y="582" text-anchor="end">CONTENT_ASSERTED: FALSE</text>
+      </g>
+
+      <!-- Scout / Node midline badges -->
+      <g font-family="'SF Pro Display',-apple-system,sans-serif" font-size="9" font-weight="700" letter-spacing="1.5">
+        <rect x="90" y="18" width="64" height="22" rx="11" fill="rgba(255,214,10,0.1)" stroke="rgba(255,214,10,0.35)" stroke-width="0.8"/>
+        <text x="122" y="33" text-anchor="middle" fill="#ffd60a">SCOUT</text>
+        <rect x="170" y="18" width="58" height="22" rx="11" fill="rgba(0,122,255,0.08)" stroke="rgba(0,122,255,0.3)" stroke-width="0.8"/>
+        <text x="199" y="33" text-anchor="middle" fill="rgba(0,122,255,0.9)">NODE</text>
+        <rect x="1040" y="18" width="120" height="22" rx="11" fill="rgba(52,199,89,0.08)" stroke="rgba(52,199,89,0.3)" stroke-width="0.8"/>
+        <text x="1100" y="33" text-anchor="middle" fill="rgba(52,199,89,0.9)">ZERO CONTENT</text>
+      </g>
+    </svg>
+
+    <div class="tokenflow-legend">
+      <span><i style="background:#ffd60a"></i>OpenAI</span>
+      <span><i style="background:#34c759"></i>Anthropic</span>
+      <span><i style="background:#007aff"></i>Ollama</span>
+      <span><i style="background:#af52de"></i>Mistral</span>
+      <span><i style="background:#ff9500"></i>Google</span>
+      <span><i style="background:#ff3b30"></i>Azure</span>
+    </div>
+  </div>
+</section>
 
 <!-- ── Dashboard Demo ────────────────────────────────────────────────────── -->
 <section class="section">
